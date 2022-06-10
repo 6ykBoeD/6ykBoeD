@@ -5,6 +5,6 @@ ufloat numberofPoints;
 string nickName;
 byte levelPlayer;
 sbyte resistanceFire;
-bool workedLuck;
+bool didluckWork;
 Char dot;
 double damageReceived;
