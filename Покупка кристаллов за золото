@@ -1,0 +1,10 @@
+int currentGold = 1000;
+int priceCrustals = 55;
+int currentCrystals = 0;
+int numberBuyCrustals;
+
+Console.WriteLine("Сколько кристалов хотите купить ?");
+numberBuyCrustals = Convert.ToInt32(Console.ReadLine());
+currentCrystals += numberBuyCrustals;
+currentGold -= priceCrustals * numberBuyCrustals;
+Console.WriteLine($"Вы имеете {currentGold} золота и {currentCrystals } кристалов .");
