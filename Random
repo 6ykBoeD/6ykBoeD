@@ -1,0 +1,19 @@
+Random random = new Random();
+int number = random.Next(0,101);
+int sum;
+int sumThree = 0;
+int sumFive = 0;
+Console.WriteLine(number);
+
+for (int i = 3; i < number;  i += + 3)
+{
+  sumThree += i;
+}
+
+for (int i = 5; i < number; i += + 5)
+{
+  sumFive += i;
+}
+
+sum = sumThree + sumFive + number;
+Console.WriteLine(sum);
