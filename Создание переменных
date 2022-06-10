@@ -1,0 +1,10 @@
+int helhtPoints;
+uint runningSpeed;
+float squareMap;
+ufloat numberofPoints;
+string nickName;
+byte levelPlayer;
+sbyte resistanceFire;
+bool workedLuck;
+Char dot;
+double damageReceived;
