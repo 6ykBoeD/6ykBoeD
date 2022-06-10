@@ -1,0 +1,13 @@
+while (true)
+{
+  Console.WriteLine("Мир в опасности, введите секретное слово : ");
+  string secretWord = Console.ReadLine();
+                
+  if( secretWord == "exit" ) 
+    {
+      break;
+    }
+                
+}
+
+Console.WriteLine("Вы спасли мир");
