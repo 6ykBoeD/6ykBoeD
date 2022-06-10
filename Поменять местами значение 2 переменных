@@ -1,0 +1,11 @@
+string name = "Iskakov";
+string surname = "Artem";
+string correctedName;
+
+Console.WriteLine($"Меня зовут {name} , моя фамилия {surname}.");
+
+correctedName = surname;
+surname = name;
+name = correctedName;
+
+Console.WriteLine($"Меня зовут {name} , моя фамилия {surname}.");
