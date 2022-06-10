@@ -1,11 +1,11 @@
 string name = "Iskakov";
 string surname = "Artem";
-string name2;
+string str;
 
 Console.WriteLine($"Меня зовут {name} , моя фамилия {surname}.");
 
-name2 = surname;
+str = surname;
 surname = name;
-name = name2;
+name = str;
 
 Console.WriteLine($"Меня зовут {name} , моя фамилия {surname}.");
