@@ -2,9 +2,10 @@ int numberPeople;
 int waitingTime = 10;
 int waitingTimeHour;
 int waitingTimeMinute;
+int oneHour = 60;
 
 Console.Write("Сколько людей в очереди : ");
 numberPeople = Convert.ToInt32(Console.ReadLine());
-waitingTimeHour = numberPeople * waitingTime / 60;
-waitingTimeMinute = numberPeople * waitingTime % 60;
+waitingTimeHour = numberPeople * waitingTime / oneHour;
+waitingTimeMinute = numberPeople * waitingTime % oneHour;
 Console.WriteLine($"Время ожидания в очереди {waitingTimeHour} часа и {waitingTimeMinute } минут.");
