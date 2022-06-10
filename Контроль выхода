@@ -1,17 +1,9 @@
-Console.WriteLine("Мир в опасности, введите секретное слово : ");
-
-string secretWord = Console.ReadLine();
+string secretWord;
+Console.Write("Мир в опасности, введите секретное слово : ");
+secretWord = Console.ReadLine();
 
 while (secretWord != "exit")
-{
-  Console.WriteLine("Мир в опасности, введите секретное слово : ");
-  string exit = Console.ReadLine();
-                
-  if( exit == "exit" ) 
-  {
-     break;
-  }
-                
+{               
+ Console.Write("Мир в опасности, введите секретное слово : ");
+ secretWord = Console.ReadLine();
 }
-
-Console.WriteLine("Вы спасли мир");
