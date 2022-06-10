@@ -1,0 +1,9 @@
+int numberofPictures = 52;
+int numberofPicturesinRow = 3;
+int numberofRow;
+int remainingPictures;
+
+numberofRow = numberofPictures / numberofPicturesinRow;
+remainingPictures = numberofPictures % numberofPicturesinRow;
+
+Console.WriteLine($"Полностью заполненых рядов {numberofRow}, картинок осталось {remainingPictures}");
