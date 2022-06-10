@@ -1,11 +1,11 @@
 string name = "Iskakov";
 string surname = "Artem";
-string str;
+string addVeriable;
 
 Console.WriteLine($"Меня зовут {name} , моя фамилия {surname}.");
 
-str = surname;
+addVeriable = surname;
 surname = name;
-name = str;
+name = addVeriable;
 
 Console.WriteLine($"Меня зовут {name} , моя фамилия {surname}.");
