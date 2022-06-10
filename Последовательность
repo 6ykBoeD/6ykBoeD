@@ -1,0 +1,8 @@
+int number ;
+
+for (int i = 5; i < 96; )
+{
+  number = i;
+  Console.WriteLine(number);
+  i += +7;
+}                             
