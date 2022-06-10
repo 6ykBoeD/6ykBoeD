@@ -1,0 +1,18 @@
+  int age;
+  string name;
+  string zodiacSing;
+  string yourWork;
+  
+  Console.WriteLine("Как вас зовут ?");
+  name = Console.ReadLine();
+  
+  Console.WriteLine("Сколько вам лет ?");
+  age = Convert.ToInt32(Console.ReadLine());  
+ 
+  Console.WriteLine("Кто вы по знаку зодика ?");
+  zodiacSing = Console.ReadLine();
+  
+  Console.WriteLine("Где вы работаете ?");
+  yourWork = Console.ReadLine();
+  
+  Console.WriteLine($"Вас зовут {name} , вам {age} год , по знаку зодуаку {zodiacSing} , вы работаете {yourWork}.");
