@@ -1,7 +1,9 @@
 int seconds;
 Console.Write("Сколько секунд отсчитать : ");
 seconds = Convert.ToInt32(Console.ReadLine());
-while(seconds-- > 0)
+           
+for(int i = 0; i < seconds;)
 {
- Console.WriteLine($"До окончания цыкла осталось {seconds} секунд.");
+  Console.WriteLine($"До окончания цикла осталось {seconds--} секунд");
 }
+
