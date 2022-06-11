@@ -1,14 +1,15 @@
 string secretWord;
-bool isThatWordExit = true;
+string exitCommand = "exit";
+bool isWork = true;
 
-while (isThatWordExit)
+while (isWork)
 {               
- Console.Write("Мир в опасности, введите секретное слово : ");
- secretWord = Console.ReadLine();
-
- if(secretWord == "exit")
+  Console.Write("Мир в опасности, введите секретное слово : ");
+  secretWord = Console.ReadLine();
+  if (secretWord == exitCommand)
   {
-    isThatWordExit = false;
+    isWork = false;
   }
-
 }
+
+
