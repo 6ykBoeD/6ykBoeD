@@ -1,9 +1,14 @@
 string secretWord;
-Console.Write("Мир в опасности, введите секретное слово : ");
-secretWord = Console.ReadLine();
+bool isThatWordExit = true;
 
-while (secretWord != "exit")
+while (isThatWordExit)
 {               
  Console.Write("Мир в опасности, введите секретное слово : ");
  secretWord = Console.ReadLine();
+
+ if(secretWord == "exit")
+  {
+    isThatWordExit = false;
+  }
+
 }
