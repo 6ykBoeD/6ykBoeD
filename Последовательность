@@ -1,8 +1,8 @@
-int number ;
+int firstVariable = 5;
+int lastVariable = 96;
+int stepVariable = 7;
 
-for (int i = 5; i < 96; )
-{
-  number = i;
-  Console.WriteLine(number);
-  i += +7;
-}                             
+for (int i = firstVariable; i < lastVariable; i += +stepVariable)
+{                
+  Console.WriteLine(i);               
+}                          
