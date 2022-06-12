@@ -1,19 +1,27 @@
 Random random = new Random();
-int number = random.Next(0,101);
+int number = random.Next(15, 16);
 int sum;
-int sumThree = 0;
-int sumFive = 0;
-Console.WriteLine(number);
+int sumFirstMultiple = 0;
+int sumSecondMultiple = 0;
+int firstMultiple = 3;
+int secondMultiple = 5;
+Console.WriteLine($"Ваше случайное число {number}") ;
 
-for (int i = 3; i < number;  i += + 3)
+for (int i = 0; i <= number; i++)
 {
-  sumThree += i;
+  if (i % firstMultiple == 0)
+  {
+    sumFirstMultiple += i;
+  }  
+  else if (i % firstMultiple == i % secondMultiple)
+  {
+    continue;
+  }  
+  else if (i % secondMultiple == 0)
+  {
+    sumSecondMultiple += i;
+  }
 }
 
-for (int i = 5; i < number; i += + 5)
-{
-  sumFive += i;
-}
-
-sum = sumThree + sumFive + number;
-Console.WriteLine(sum);
+sum = sumFirstMultiple + sumSecondMultiple;
+Console.WriteLine($"Сумма чисел кратных {firstMultiple} и {secondMultiple} равна {sum}.");
