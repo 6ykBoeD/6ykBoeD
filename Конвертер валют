@@ -4,8 +4,9 @@
             int oneUsdInRub = 60;
             int oneEuroInrub = 70;
             float oneUsdInEuro = 0.8f;
-            float rubInUsd;
-            float rubInEuro;
+            float oneRubInUsd = 0.01666f;
+            float oneRubInEuro = 0.01428f;
+            float oneEuroInUsd = 1.2f;
             float numberRub;
             float numberUsd;
             float numberEuro;
@@ -39,6 +40,7 @@
                             Console.WriteLine($"Для данной операции у вас не достает {numberRub - balanceRub} рублей на счете.");
                         }
                         break;
+
                     case 2:
                         Console.WriteLine("Какое количество рублей вы хотите обменять:");
                         numberRub = Convert.ToSingle(Console.ReadLine());
@@ -52,45 +54,49 @@
                             Console.WriteLine($"Для данной операции у вас не достает {numberRub - balanceRub} рублей на счете.");
                         }
                         break;
+
                     case 3:
                         Console.WriteLine("Какое количество долларов вы хотите обменять:");
                         numberUsd = Convert.ToSingle(Console.ReadLine());
                         if (balanceUsd > numberUsd)
                         {
                             balanceUsd -= numberUsd;
-                            balanceRub += numberUsd * oneUsdInRub;
+                            balanceRub += numberUsd / oneRubInUsd;
                         }
                         else
                         {
                             Console.WriteLine($"Для данной операции у вас не достает {numberUsd - balanceUsd} рублей на счете.");
                         }
                         break;
+
                     case 4:
                         Console.WriteLine("Какое количество евро вы хотите обменять:");
                         numberEuro = Convert.ToSingle(Console.ReadLine());
                         if (balanceEuro > numberEuro)
                         {
                             numberEuro -= numberEuro;
-                            balanceRub += numberEuro * oneEuroInrub;
+                            balanceRub += numberEuro / oneRubInEuro;
                         }
                         else
                         {
                             Console.WriteLine($"Для данной операции у вас не достает {numberEuro - balanceEuro} рублей на счете.");
                         }
                         break;
+
                     case 5:
                         Console.WriteLine("Какое количество долларов вы хотите обменять:");
                         numberUsd = Convert.ToSingle(Console.ReadLine());
                         if (balanceUsd > numberUsd)
                         {
                             balanceUsd -= numberUsd;
-                            balanceEuro += numberUsd * oneUsdInEuro;
+                            balanceEuro += numberUsd / oneEuroInUsd;
                         }
                         else
                         {
                             Console.WriteLine($"Для данной операции у вас не достает {numberUsd - balanceUsd} рублей на счете.");
                         }
                         break;
+
                     case 6:
                         Console.WriteLine("Какое количество евро вы хотите обменять:");
                         numberEuro = Convert.ToSingle(Console.ReadLine());
@@ -104,13 +110,14 @@
                             Console.WriteLine($"Для данной операции у вас не достает {numberEuro - balanceEuro} рублей на счете.");
                         }
                         break;
+
                     default:
                         Console.WriteLine("Попробуйте снова");
                         break;
                 }
+
                 Console.WriteLine($"Ваш баланс состовляет {balanceRub} рублей , {balanceUsd} долларов , {balanceEuro} евро");
                 Console.WriteLine("Хотите продолжить - да/нет");
                 retry = Console.ReadLine();                
             }  
-            
               
