@@ -1,21 +1,21 @@
             float balanceRub = 10000;
             float balanceUsd = 200;
-            float balanceEuro = 50;
-            int oneUsdInRub = 60;
-            int oneEuroInrub = 70;
-            float oneUsdInEuro = 0.8f;
-            float oneRubInUsd = 0.01666f;
-            float oneRubInEuro = 0.01428f;
-            float oneEuroInUsd = 1.2f;
+            float balanceEur = 50;
+            float usdToRub = 60;
+            float eurToRub = 70;
+            float usdToEur = 0.8f;
+            float rubToUsd = 0.01666f;
+            float rubToEur = 0.01428f;
+            float eurToUsd = 1.2f;
             float numberRub;
             float numberUsd;
-            float numberEuro;
-            int userInput;
-            string retry = "да";
-            
-            while(retry == "да")
+            float numberEur;
+            string userInput;
+            bool isWork = true;
+
+            while(isWork)
             {
-                Console.WriteLine($"На вашем балансе {balanceRub} рублей , {balanceUsd} долларов , {balanceEuro} евро");
+                Console.WriteLine($"На вашем балансе {balanceRub} рублей , {balanceUsd} долларов , {balanceEur} евро");
                 Console.WriteLine("Какую вылюту хотите обменять :");
                 Console.WriteLine("1 - что бы обменять рубли на доллары");
                 Console.WriteLine("2 - что бы обменять рубли на евро");
@@ -23,17 +23,17 @@
                 Console.WriteLine("4 - что бы обменять евро на рубли");
                 Console.WriteLine("5 - что бы обменять доллары на евро");
                 Console.WriteLine("6 - что бы обменять евро на доллары");
-                userInput = Convert.ToInt32(Console.ReadLine());
+                userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
-                    case 1:
+                    case "1":
                         Console.WriteLine("Какое количество рублей вы хотите обменять:");
                         numberRub = Convert.ToSingle(Console.ReadLine());
-                        if (balanceRub > numberRub)
+                        if (balanceRub >= numberRub)
                         {
                             balanceRub -= numberRub;
-                            balanceUsd += numberRub / oneUsdInRub;
+                            balanceUsd += numberRub / usdToRub;
                         }
                         else
                         {
@@ -41,13 +41,13 @@
                         }
                         break;
 
-                    case 2:
+                    case "2":
                         Console.WriteLine("Какое количество рублей вы хотите обменять:");
                         numberRub = Convert.ToSingle(Console.ReadLine());
-                        if (balanceRub > numberRub)
+                        if (balanceRub >= numberRub)
                         {
                             balanceRub -= numberRub;
-                            balanceEuro += numberRub / oneEuroInrub;
+                            balanceEur += numberRub / eurToRub;
                         }
                         else
                         {
@@ -55,69 +55,84 @@
                         }
                         break;
 
-                    case 3:
+                    case "3":
                         Console.WriteLine("Какое количество долларов вы хотите обменять:");
                         numberUsd = Convert.ToSingle(Console.ReadLine());
-                        if (balanceUsd > numberUsd)
+                        if (balanceUsd >= numberUsd)
                         {
                             balanceUsd -= numberUsd;
-                            balanceRub += numberUsd / oneRubInUsd;
+                            balanceRub += numberUsd / rubToUsd;
                         }
                         else
                         {
-                            Console.WriteLine($"Для данной операции у вас не достает {numberUsd - balanceUsd} рублей на счете.");
+                            Console.WriteLine($"Для данной операции у вас не достает {numberUsd - balanceUsd} долларов на счете.");
                         }
                         break;
 
-                    case 4:
+                    case "4":
                         Console.WriteLine("Какое количество евро вы хотите обменять:");
-                        numberEuro = Convert.ToSingle(Console.ReadLine());
-                        if (balanceEuro > numberEuro)
+                        numberEur = Convert.ToSingle(Console.ReadLine());
+                        if (balanceEur >= numberEur)
                         {
-                            numberEuro -= numberEuro;
-                            balanceRub += numberEuro / oneRubInEuro;
+                            numberEur -= numberEur;
+                            balanceRub += numberEur / rubToEur;
                         }
                         else
                         {
-                            Console.WriteLine($"Для данной операции у вас не достает {numberEuro - balanceEuro} рублей на счете.");
+                            Console.WriteLine($"Для данной операции у вас не достает {numberEur - balanceEur} евро на счете.");
                         }
                         break;
 
-                    case 5:
-                        Console.WriteLine("Какое количество долларов вы хотите обменять:");
+                    case "5":
+                        Console.WriteLine("Какое количество долларов на евро вы хотите обменять:");
                         numberUsd = Convert.ToSingle(Console.ReadLine());
-                        if (balanceUsd > numberUsd)
+                        if (balanceUsd >= numberUsd)
                         {
                             balanceUsd -= numberUsd;
-                            balanceEuro += numberUsd / oneEuroInUsd;
+                            balanceEur += numberUsd / usdToEur;
                         }
                         else
                         {
-                            Console.WriteLine($"Для данной операции у вас не достает {numberUsd - balanceUsd} рублей на счете.");
+                            Console.WriteLine($"Для данной операции у вас не достает {numberUsd - balanceUsd} долларов на счете.");
                         }
                         break;
 
-                    case 6:
-                        Console.WriteLine("Какое количество евро вы хотите обменять:");
-                        numberEuro = Convert.ToSingle(Console.ReadLine());
-                        if (balanceEuro > numberEuro)
+                    case "6":
+                        Console.WriteLine("Какое количество евро на доллары вы хотите обменять:");
+                        numberEur = Convert.ToSingle(Console.ReadLine());
+                        if (balanceEur >= numberEur)
                         {
-                            numberEuro -= numberEuro;
-                            balanceUsd += numberEuro / oneEuroInrub;
+                            numberEur -= numberEur;
+                            balanceUsd += numberEur / eurToUsd;
                         }
                         else
                         {
-                            Console.WriteLine($"Для данной операции у вас не достает {numberEuro - balanceEuro} рублей на счете.");
+                            Console.WriteLine($"Для данной операции у вас не достает {numberEur - balanceEur} евро на счете.");
                         }
+                        break;
+                       
+                    default:
+                        Console.WriteLine("Такого значения нет\n");
+                        break;
+                }
+                
+                Console.WriteLine($"Ваш баланс состовляет {balanceRub} рублей , {balanceUsd} долларов , {balanceEur} евро\n");
+                Console.WriteLine("Хотите продолжить - да/нет\n");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "да":
+                        isWork = true;
+                        break;
+
+                    case "нет":
+                        isWork = false;
                         break;
 
                     default:
-                        Console.WriteLine("Попробуйте снова");
+                        Console.WriteLine("Такого значения нет\n");
                         break;
                 }
-
-                Console.WriteLine($"Ваш баланс состовляет {balanceRub} рублей , {balanceUsd} долларов , {balanceEuro} евро");
-                Console.WriteLine("Хотите продолжить - да/нет");
-                retry = Console.ReadLine();                
-            }  
-              
+                
+            }
