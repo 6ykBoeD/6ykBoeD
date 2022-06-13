@@ -12,8 +12,8 @@
             float numberEur;
             string userInput;
             bool isWork = true;
-
-            while(isWork)
+            
+            while (isWork)
             {
                 Console.WriteLine($"На вашем балансе {balanceRub} рублей , {balanceUsd} долларов , {balanceEur} евро");
                 Console.WriteLine("Какую вылюту хотите обменять :");
@@ -24,12 +24,14 @@
                 Console.WriteLine("5 - что бы обменять доллары на евро");
                 Console.WriteLine("6 - что бы обменять евро на доллары");
                 userInput = Console.ReadLine();
+                bool repeatRequest = true;
 
                 switch (userInput)
                 {
                     case "1":
                         Console.WriteLine("Какое количество рублей вы хотите обменять:");
                         numberRub = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceRub >= numberRub)
                         {
                             balanceRub -= numberRub;
@@ -44,6 +46,7 @@
                     case "2":
                         Console.WriteLine("Какое количество рублей вы хотите обменять:");
                         numberRub = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceRub >= numberRub)
                         {
                             balanceRub -= numberRub;
@@ -58,6 +61,7 @@
                     case "3":
                         Console.WriteLine("Какое количество долларов вы хотите обменять:");
                         numberUsd = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceUsd >= numberUsd)
                         {
                             balanceUsd -= numberUsd;
@@ -72,6 +76,7 @@
                     case "4":
                         Console.WriteLine("Какое количество евро вы хотите обменять:");
                         numberEur = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceEur >= numberEur)
                         {
                             numberEur -= numberEur;
@@ -86,6 +91,7 @@
                     case "5":
                         Console.WriteLine("Какое количество долларов на евро вы хотите обменять:");
                         numberUsd = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceUsd >= numberUsd)
                         {
                             balanceUsd -= numberUsd;
@@ -100,9 +106,10 @@
                     case "6":
                         Console.WriteLine("Какое количество евро на доллары вы хотите обменять:");
                         numberEur = Convert.ToSingle(Console.ReadLine());
+
                         if (balanceEur >= numberEur)
                         {
-                            numberEur -= numberEur;
+                            balanceEur -= numberEur;
                             balanceUsd += numberEur / eurToUsd;
                         }
                         else
@@ -116,23 +123,30 @@
                         break;
                 }
                 
-                Console.WriteLine($"Ваш баланс состовляет {balanceRub} рублей , {balanceUsd} долларов , {balanceEur} евро\n");
-                Console.WriteLine("Хотите продолжить - да/нет\n");
-                userInput = Console.ReadLine();
-
-                switch (userInput)
+                while (repeatRequest)
                 {
-                    case "да":
-                        isWork = true;
-                        break;
+                    Console.WriteLine($"Ваш баланс состовляет {balanceRub} рублей , {balanceUsd} долларов , {balanceEur} евро\n");
+                    Console.WriteLine("Хотите продолжить - да/нет\n");
+                    userInput = Console.ReadLine();
 
-                    case "нет":
-                        isWork = false;
-                        break;
+                    switch (userInput)
+                    {
+                        case "да":
+                            isWork = true;
+                            repeatRequest = false;
+                            break;
 
-                    default:
-                        Console.WriteLine("Такого значения нет\n");
-                        break;
+                        case "нет":
+                            isWork = false;
+                            repeatRequest = false;
+                            break;
+
+                        default:
+                            Console.WriteLine("Такого значения нет\n");
+                            repeatRequest = true;
+                            break;
+                    }
+               
                 }
                 
             }
