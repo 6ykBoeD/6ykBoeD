@@ -1,0 +1,248 @@
+            bool isWork = true;
+            string userInput;
+
+            while (isWork)
+            {
+                Console.WriteLine("Добро пожаловать ,выберите нужное действие:\n");
+                Console.WriteLine("ChangeSizeConsole - изменить размер консоли\n");
+                Console.WriteLine("ChangeConsoleTextColor - изменить цвет текста в консоли\n");
+                Console.WriteLine("CreationCharter - создайте своего персонажа\n");
+                Console.WriteLine("DiceGame - сыграем в кости\n");
+                Console.WriteLine("Exit - выход из программы\n");
+                string nameCharter = "Игрок";
+                string race = "Человек";
+                string gender = "Мужчина";
+                string classCharter = "воин";
+                string readyPlay;
+                Random rand = new Random();
+                bool repeatGame = true;
+                bool repeatGender = true;
+                bool repeatColorText = true;
+                bool repeatRace = true;
+                bool repeatClassCharter=true;
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "ChangeSizeConsole":
+                        int height;
+                        int width;
+                        Console.Write("Установите высоту консоли :");
+                        height = Convert.ToInt32(Console.ReadLine());
+                        Console.Write("Установите ширину консоли :");
+                        width = Convert.ToInt32(Console.ReadLine());
+                        Console.WindowHeight = height;
+                        Console.WindowWidth = width;
+                        break;
+
+                    case "ChangeConsoleTextColor":
+
+                        while (repeatColorText)
+                        {
+                            string colorText;
+                            Console.WriteLine("Какой цвет текста вы хотите использовать :");
+                            Console.WriteLine("Green - зеленый");
+                            Console.WriteLine("Yellow - желтый");
+                            Console.WriteLine("Red - красный");
+                            Console.WriteLine("White - белый");
+                            colorText = Console.ReadLine();
+
+                            switch (colorText)
+                            {
+                                case "Green":
+                                    Console.ForegroundColor = ConsoleColor.Green;
+                                    break;
+
+                                case "Yellow":
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    break;
+
+                                case "Red":
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    break;
+
+                                case "White":
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Неправильный ввод.Попробуйте снова\n");
+                                    isWork = false;
+                                    repeatColorText = true;
+                                    break;
+                            }
+                        }
+                        break;
+
+                    case "CreationCharter":
+
+                        while (repeatGender)
+                        {
+                            Console.Write("Придумайте имя персонажа : ");
+                            nameCharter = Console.ReadLine();
+                            Console.WriteLine("Выберите пол персонажа :");
+                            Console.WriteLine("1 - мужской");
+                            Console.WriteLine("2 - женский");
+                            gender = Console.ReadLine();
+
+                            switch (gender)
+                            {
+                                case "1":
+                                    gender = "мужчину";
+                                    break;
+                                case "2":
+                                    gender = "женщину";
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Неправильный ввод.Попробуйте снова\n");
+                                    isWork = false;
+                                    repeatGender = true;
+                                    break;
+                            }
+                        }
+
+                        while (repeatRace)
+                        {
+                            Console.WriteLine("Выберите расу : ");
+                            Console.WriteLine("1 - человек");
+                            Console.WriteLine("2 - орк");
+                            Console.WriteLine("3 - эльф");
+                            Console.WriteLine("4 - наглый гуль");
+                            race = Console.ReadLine();
+
+                            switch (race)
+                            {
+                                case "1":
+                                    race = "человек";
+                                    break;
+
+                                case "2":
+                                    race = "орк";
+                                    break;
+
+                                case "3":
+                                    race = "эльф";
+                                    break;
+
+                                case "4":
+                                    race = "наглый гуль";
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Неправильный ввод.Попробуйте снова\n");
+                                    isWork=false;
+                                    repeatRace = true;
+                                    break;
+
+                            }
+                        }
+
+                        while (repeatClassCharter)
+                        {
+                            Console.WriteLine("Выберите класс :");
+                            Console.WriteLine("1 - воин");
+                            Console.WriteLine("2 - маг");
+                            Console.WriteLine("3 - стрелок");
+                            classCharter = Console.ReadLine();
+
+                            switch (classCharter)
+                            {
+                                case "1":
+                                    classCharter = "воин";
+                                    break;
+
+                                case "2":
+                                    classCharter = "маг";
+                                    break;
+
+                                case "3":
+                                    classCharter = "стрелок";
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Неправильный ввод.Попробуйте снова\n");
+                                    isWork =false;
+                                    repeatClassCharter = true;
+                                    break;
+                            }
+                        }
+                        Console.WriteLine($"Вы создали {gender} по имени {nameCharter}.Ваше призвание быть {classCharter}ом и вы {race}");
+                        break;
+
+                    case "DiceGame":
+
+                        while (repeatGame)
+                        {
+                            Console.WriteLine($"Трактирщик видит,что вы умелый {classCharter} и предлагает сыграть вам в кости ,{nameCharter} вы готовы ? (да/нет)");
+                            readyPlay = Console.ReadLine();
+
+                            switch (readyPlay)
+                            {
+                                case "да":
+                                    int numberAtemmpts = 3;
+                                    Console.WriteLine($"У вас будет {numberAtemmpts} попытки и 2 кубика ,кто больше наберет очков тот и победил\n");
+
+                                    int sumPlayer = 0;
+                                    int sumNPC = 0;
+                                    int firstCubePlayer = 0;
+                                    int secondCubePlayer = 0;
+                                    int firstCubeNPC = 0;
+                                    int secondCubeNPC = 0;
+
+                                    for (int i = 1; i <= numberAtemmpts; i++)
+                                    {
+                                        firstCubePlayer = rand.Next(0, 7);
+                                        secondCubePlayer = rand.Next(0, 7);
+                                        sumPlayer += firstCubePlayer + secondCubePlayer;
+                                        Console.WriteLine($"{i} попытка.У {nameCharter}а выпало {firstCubePlayer} и {secondCubePlayer} ,общая сумма {sumPlayer}.");
+                                    }
+
+                                    for (int i = 1; i <= numberAtemmpts; i++)
+                                    {
+                                        firstCubeNPC = rand.Next(0, 7);
+                                        secondCubeNPC = rand.Next(0, 7);
+                                        sumNPC += firstCubeNPC + secondCubeNPC;
+                                        Console.WriteLine($"{i} попытка. У трактирщика на столе {firstCubeNPC} и {secondCubeNPC} ,общая сумма {sumNPC}");
+                                    }
+                                    if (sumPlayer > sumNPC)
+                                    {
+                                        Console.WriteLine($"{nameCharter} победил ,как всегда\n");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"Трактирщику просто повезло\n");
+                                    }
+                                    break;
+
+                                case "нет":
+                                    Console.WriteLine("1 - закрыть программу\n");
+                                    Console.WriteLine("Нажмите любую клавишу что бы вернуться в главное меню\n");
+                                    string exitGame = Console.ReadLine();
+                                    switch (exitGame)
+                                    {
+                                        case "1":
+                                            repeatGame= false;
+                                            isWork = false;
+                                            break;
+                                        default:
+                                            repeatGame= false;
+                                            break;
+                                    }
+                                    break;
+
+                                default:
+                                    Console.WriteLine("Неправильный ввод.Попробуйте снова\n");
+                                    isWork = false;
+                                    repeatGame = true;
+                                    break;
+                            }                           
+                        }
+                        break;
+
+                    case "Exit":
+                        isWork = false;
+                        break;
+                }
+            }
+            
