@@ -14,7 +14,7 @@
                 string gender = "Мужчина";
                 string classCharter = "воин";
                 string readyPlay;
-                Random rand = new Random();
+                Random random = new Random();
                 bool repeatGame = true;
                 bool repeatGender = true;
                 bool repeatColorText = true;
@@ -172,39 +172,43 @@
 
                     case "DiceGame":
 
+                        Console.WriteLine($"Трактирщик видит,что вы умелый {classCharter} и предлагает сыграть вам в кости ,{nameCharter} вы готовы ? (да/нет)\n");
+
                         while (repeatGame)
-                        {
-                            Console.WriteLine($"Трактирщик видит,что вы умелый {classCharter} и предлагает сыграть вам в кости ,{nameCharter} вы готовы ? (да/нет)");
+                        {                           
                             readyPlay = Console.ReadLine();
 
                             switch (readyPlay)
                             {
                                 case "да":
                                     int numberAtemmpts = 3;
-                                    Console.WriteLine($"У вас будет {numberAtemmpts} попытки и 2 кубика ,кто больше наберет очков тот и победил\n");
-
+                                    int numberCube = 2;
                                     int sumPlayer = 0;
                                     int sumNPC = 0;
-                                    int firstCubePlayer = 0;
-                                    int secondCubePlayer = 0;
-                                    int firstCubeNPC = 0;
-                                    int secondCubeNPC = 0;
+                                    int cubePlayer ;
+                                    int cubeNPC ;
+                                    int minValueCube = 1;
+                                    int maxValueCube = 7;
+                                    Console.WriteLine($"У вас будет {numberAtemmpts} попытки и {numberCube} кубика ,кто больше наберет очков тот и победил\n");
 
                                     for (int i = 1; i <= numberAtemmpts; i++)
                                     {
-                                        firstCubePlayer = rand.Next(0, 7);
-                                        secondCubePlayer = rand.Next(0, 7);
-                                        sumPlayer += firstCubePlayer + secondCubePlayer;
-                                        Console.WriteLine($"{i} попытка.У {nameCharter}а выпало {firstCubePlayer} и {secondCubePlayer} ,общая сумма {sumPlayer}.");
-                                    }
+                                        for (int j = 0; j < numberCube; j++)
+                                        {
+                                            cubeNPC = random.Next(minValueCube, maxValueCube);
+                                            sumNPC += cubeNPC;
+                                            Console.WriteLine($"{i} попытка.Трактирщику выпадает {cubeNPC}");
+                                        }
 
-                                    for (int i = 1; i <= numberAtemmpts; i++)
-                                    {
-                                        firstCubeNPC = rand.Next(0, 7);
-                                        secondCubeNPC = rand.Next(0, 7);
-                                        sumNPC += firstCubeNPC + secondCubeNPC;
-                                        Console.WriteLine($"{i} попытка. У трактирщика на столе {firstCubeNPC} и {secondCubeNPC} ,общая сумма {sumNPC}");
+                                        for (int k = 0; k < numberCube; k++)
+                                        {
+                                            cubePlayer = random.Next(minValueCube, maxValueCube);
+                                            sumPlayer += cubePlayer;
+                                            Console.WriteLine($"{i} попытка.У {nameCharter}а выпало {cubePlayer}");
+                                        }
                                     }
+                                    Console.WriteLine($"В общей сумме у трактирщика выпало {sumNPC} ,а у {nameCharter}а {sumPlayer}");
+
                                     if (sumPlayer > sumNPC)
                                     {
                                         Console.WriteLine($"{nameCharter} победил ,как всегда\n");
@@ -236,12 +240,17 @@
                                     isWork = false;
                                     repeatGame = true;
                                     break;
-                            }                           
+                            }
+                            Console.WriteLine("Хотите снова испытать удачу? да/нет");
                         }
                         break;
 
                     case "Exit":
                         isWork = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Такое значение отсутствует попробуйте снова\n");
                         break;
                 }
             }
