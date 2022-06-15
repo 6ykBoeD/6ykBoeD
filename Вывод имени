@@ -1,0 +1,23 @@
+            string name;
+            char symbol;
+            int numberSimbols;
+            int addSymbols = 2;
+            Console.Write("Введите имя :");
+            name = Console.ReadLine();
+            Console.Write("Введите символ :");
+            symbol = Convert.ToChar(Console.ReadLine());
+            numberSimbols = name.Length + addSymbols;
+
+            for (int i = 0; i < numberSimbols; i++)
+            {
+                Console.Write(symbol);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"{symbol}{name}{symbol}");
+
+            for (int i = 0; i < numberSimbols; i++)
+            {
+                Console.Write(symbol);
+            }
+            Console.WriteLine();
