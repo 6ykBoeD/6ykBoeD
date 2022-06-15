@@ -7,12 +7,12 @@
             Console.Write("Введите символ :");
             symbol = Convert.ToChar(Console.ReadLine());
             numberSimbols = name.Length + addSymbols;
-            string str = "";
+            string outputSymbol = "";
 
             for (int i = 0; i < numberSimbols; i++)
             {
-              str += symbol;
+              outputSymbol += symbol;
             }
-            Console.WriteLine(str);
+            Console.WriteLine(outputSymbol);
             Console.WriteLine($"{symbol}{name}{symbol}");
-            Console.WriteLine(str);
+            Console.WriteLine(outputSymbol);
