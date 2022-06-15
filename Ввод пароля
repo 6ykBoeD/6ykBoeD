@@ -1,0 +1,19 @@
+            string password = "123";
+            string inputPassword;
+            int numberAttempt = 3;
+            while (numberAttempt > 0)
+            {
+                Console.Write("Введите пароль :");
+                inputPassword = Console.ReadLine();
+                
+
+                if (inputPassword == password)
+                {
+                    Console.WriteLine("Пряники в шкафу");
+                    numberAttempt = 0;
+                }
+                else
+                {
+                    Console.WriteLine($"Попробуйте ещё раз,у вас осталось {numberAttempt--} попыток");
+                }
+            } 
