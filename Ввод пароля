@@ -1,11 +1,10 @@
             string password = "123";
             string inputPassword;
             int numberAttempt = 3;
-            while (numberAttempt > 0)
+            for (int i = 0; i < numberAttempt; i++)
             {
                 Console.Write("Введите пароль :");
                 inputPassword = Console.ReadLine();
-                
 
                 if (inputPassword == password)
                 {
@@ -14,6 +13,6 @@
                 }
                 else
                 {
-                    Console.WriteLine($"Попробуйте ещё раз,у вас осталось {numberAttempt--} попыток");
+                    Console.WriteLine($"Попыток у вас осталось {numberAttempt - i -1}");
                 }
             } 
