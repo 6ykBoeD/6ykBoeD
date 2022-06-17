@@ -1,0 +1,11 @@
+            Random random = new Random();
+            int randomNumber = random.Next(25,26);
+            int minValue = 100;
+            int maxValue = 150;
+            int numberAttempt = 0;
+            for (int i = minValue; i <= maxValue; i += randomNumber)
+            {
+                numberAttempt++;
+            }
+            Console.WriteLine($"Ваше число {randomNumber}");
+            Console.WriteLine($"Количество трех значных натуральных чисел = {numberAttempt}");
