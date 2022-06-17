@@ -1,0 +1,11 @@
+            Random random = new Random();
+            int randomNumber = random.Next(100);
+            int setNumber = 2;
+            int degreeNumber = 0;
+            int number = 1;
+            while ( number < randomNumber)
+            {
+                degreeNumber++;
+                number *= setNumber;               
+            }
+            Console.WriteLine($"Минимальная степень {setNumber} для числа {randomNumber} равняется {degreeNumber}");
