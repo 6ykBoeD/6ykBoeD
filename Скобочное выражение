@@ -1,0 +1,30 @@
+            string braketExpression;
+            Console.WriteLine("Введите скобочное выражение");
+            braketExpression = Console.ReadLine();
+            char openBraket = '(';
+            char closeBraket = ')';
+            int countBraket = 0; 
+            int count = 0;
+
+            for (int i = 0; i < braketExpression.Length; i++)
+            {
+                count++;
+
+                if (braketExpression[i] == openBraket && braketExpression[i] != braketExpression[braketExpression.Length - 1])
+                {
+                    countBraket++;
+                }
+                else if (braketExpression[i] == closeBraket && braketExpression[i] != braketExpression[0])
+                {
+                    countBraket--;
+                }
+            }
+
+            if (countBraket == 0)
+            {
+                Console.WriteLine($"Выражение верное ,глубина вложений {count/2 - 1}");
+            }
+            else
+            {
+                Console.WriteLine("Выражение не верное");
+            }
