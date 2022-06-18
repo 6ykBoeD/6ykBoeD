@@ -5,33 +5,33 @@
             char closeBraket = ')';
             int countOpenBraket = 0;
             int countCloseBraket = 0;
-            int count = 0;
+            int count = 1;
 
             for (int i = 0; i < braketExpression.Length; i++)
             {
-
                 if (braketExpression[i] == openBraket && braketExpression[i] != braketExpression[braketExpression.Length - 1])
                 {
                     countOpenBraket++;
-
                 }
                 else if (braketExpression[i] == closeBraket )
-                {
-                    
+                {    
                     countCloseBraket++;
-                    if (countOpenBraket >= countCloseBraket)
+                    
+                    if (braketExpression[i -1 ] == closeBraket)
                     {
                       count++;
                     }
                 }
+                
                 if (countOpenBraket < countCloseBraket)
                 {
                     break;
                 }
             }
+            
             if (countOpenBraket == countCloseBraket)
             {
-                Console.WriteLine($"Выражение верно,счетчик вложений {count - 1} ");
+                Console.WriteLine($"Выражение верно,счетчик вложений {count} ");
             }
             else
             {
