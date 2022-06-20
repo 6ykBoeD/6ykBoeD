@@ -6,9 +6,12 @@
             int maxValue = 999;
             int numberAttempt = 0;
 
-            for (int i = minValue; i <= maxValue; i += randomNumber)
+            for (int i = 0; i <= maxValue; i += randomNumber)
             {
-                numberAttempt++;
+                if(i >= minValue)
+                {
+                    numberAttempt++;
+                }               
             }
 
             Console.WriteLine($"Ваше число {randomNumber}");
