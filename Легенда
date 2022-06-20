@@ -1,0 +1,94 @@
+            Random random = new Random();
+            double healthPlayer = 100;
+            double fullHealthPlayer = healthPlayer;
+            int regenerationHealth = 10;
+            double armorPlayer = 30;
+            int minDamagePlayer = 30;
+            int maxDamagePlayer = 45;
+            double damagePlayer = random.Next(minDamagePlayer, maxDamagePlayer);
+            double healthBoss = 1000;
+            int armorBoss = 15;
+            int minDamageBoss = 15;
+            int maxDamageBoss = 25;
+            int damageBoss = random.Next(minDamageBoss, maxDamageBoss);
+            int fullDamageBoss = damageBoss;
+            int count = 0;
+            double powerShot = 4 * damagePlayer;
+            double amplifierDamagePlayer = 2 * damagePlayer;
+            double amplifireArmorPlayer = 0.5 * armorPlayer;
+            double penaltyArmor = 0.5 * armorPlayer;
+            int evasionPlayer = 0;
+            double penaltyDmage = 0.5 * damagePlayer;
+            int countPowerShot = 0;
+            int countEvasionPlayer = 0;
+            int countRegenerationHealth = 0;
+            int minNumberCube = 1;
+            int maxNumberCube = 4;
+            Console.WriteLine($"Характеристики :\n" +
+                $"Атака Лучника : {damagePlayer}\t Атака Босса : {damageBoss}\n" +
+                $"Защита Лучника : {armorPlayer}\t Защита Босса : {armorBoss}\n" +
+                $"Здоровье Лучника : {healthPlayer}\t Здоровье босса : {healthBoss}\n");
+
+            while (healthPlayer > 0 && healthBoss > 0)
+            {
+                int cube = random.Next(minNumberCube, maxNumberCube);
+                count++;
+
+                if(countPowerShot == count)
+                {
+                    Console.WriteLine("Атакующая стойка.Ваша атака повышена , но броня уменьшена.на следующий ход вы сможете использовать мощный выстрел\n");
+                    damagePlayer = powerShot;
+                }
+
+                if(countEvasionPlayer == count)
+                {
+                    Console.WriteLine("Защитная стойка.Ваша защита повышена,но атака уменьшена.На следующийй ход вы сможете использовать уклонение\n");
+                    damageBoss = evasionPlayer;
+                }
+                else
+                {
+                    damageBoss = fullDamageBoss;
+                }
+
+                if(countRegenerationHealth > count && fullHealthPlayer > healthPlayer)
+                {
+                    Console.WriteLine($"Регенерация. + {regenerationHealth} очков здоровья\n");
+                    healthPlayer += regenerationHealth;
+                }
+
+                healthPlayer -= damageBoss - damageBoss / 100 * armorPlayer;
+                healthBoss -= damagePlayer - damagePlayer / 100 * armorBoss;
+                Console.WriteLine($"Игрок нанес урона : {damagePlayer}\t Босс нанес урона: {damageBoss}");
+                Console.WriteLine($"Здоровье игрока :   {healthPlayer}\t Здоровье босса : {healthBoss}\n");
+
+                switch (cube)
+                {
+                    case 1:                        
+                        armorPlayer = penaltyArmor;
+                        damagePlayer = amplifierDamagePlayer;
+                        countPowerShot = count + 1;
+                        break;
+
+                    case 2:                       
+                        damagePlayer = penaltyDmage;
+                        armorPlayer = amplifireArmorPlayer;
+                        countEvasionPlayer = count + 1;
+                        break;
+
+                    case 3:                        
+                        countRegenerationHealth = count + 4;
+                        break;
+                }
+
+                if (healthBoss <= 0 && healthPlayer <= 0)
+                {
+                    Console.WriteLine("Оба соперника пали");
+                }
+                else if (healthBoss <= 0)
+                {
+                    Console.WriteLine("Игрок одержал сокрушительную победу");
+                }
+                else if (healthPlayer <= 0)
+                {
+                    Console.WriteLine("Босс нанес вам смертельный удар");
+                }
