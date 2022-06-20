@@ -4,7 +4,7 @@
             int regenerationHealth = 10;
             double armorPlayer = 30;
             int minDamagePlayer = 30;
-            int maxDamagePlayer = 45;
+            int maxDamagePlayer = 50;
             double damagePlayer = random.Next(minDamagePlayer, maxDamagePlayer);
             double healthBoss = 1000;
             int armorBoss = 15;
@@ -24,6 +24,10 @@
             int countRegenerationHealth = 0;
             int minNumberCube = 1;
             int maxNumberCube = 4;
+            int percent = 100;
+            int countWorkRegeneration = 4;
+            int countToPowerShot = 1;
+            int coountToEvasion = 1;
             Console.WriteLine($"Характеристики :\n" +
                 $"Атака Лучника : {damagePlayer}\t Атака Босса : {damageBoss}\n" +
                 $"Защита Лучника : {armorPlayer}\t Защита Босса : {armorBoss}\n" +
@@ -56,8 +60,8 @@
                     healthPlayer += regenerationHealth;
                 }
 
-                healthPlayer -= damageBoss - damageBoss / 100 * armorPlayer;
-                healthBoss -= damagePlayer - damagePlayer / 100 * armorBoss;
+                healthPlayer -= damageBoss - damageBoss / percent * armorPlayer;
+                healthBoss -= damagePlayer - damagePlayer / percent * armorBoss;
                 Console.WriteLine($"Игрок нанес урона : {damagePlayer}\t Босс нанес урона: {damageBoss}");
                 Console.WriteLine($"Здоровье игрока :   {healthPlayer}\t Здоровье босса : {healthBoss}\n");
 
@@ -66,29 +70,29 @@
                     case 1:                        
                         armorPlayer = penaltyArmor;
                         damagePlayer = amplifierDamagePlayer;
-                        countPowerShot = count + 1;
+                        countPowerShot = count + countToPowerShot;
                         break;
 
                     case 2:                       
                         damagePlayer = penaltyDmage;
                         armorPlayer = amplifireArmorPlayer;
-                        countEvasionPlayer = count + 1;
+                        countEvasionPlayer = count + coountToEvasion;
                         break;
 
                     case 3:                        
-                        countRegenerationHealth = count + 4;
+                        countRegenerationHealth = count + countWorkRegeneration;
                         break;
                 }
-
-                if (healthBoss <= 0 && healthPlayer <= 0)
-                {
-                    Console.WriteLine("Оба соперника пали");
-                }
-                else if (healthBoss <= 0)
-                {
-                    Console.WriteLine("Игрок одержал сокрушительную победу");
-                }
-                else if (healthPlayer <= 0)
-                {
-                    Console.WriteLine("Босс нанес вам смертельный удар");
-                }
+            }
+            if (healthBoss <= 0 && healthPlayer <= 0)
+            {
+                Console.WriteLine("Оба соперника пали");
+            }
+            else if (healthBoss <= 0)
+            {
+                Console.WriteLine("Игрок одержал сокрушительную победу");
+            }
+            else if (healthPlayer <= 0)
+            {
+                Console.WriteLine("Босс нанес вам смертельный удар");
+            }
