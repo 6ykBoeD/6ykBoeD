@@ -84,6 +84,7 @@
                         break;
                 }
             }
+            
             if (healthBoss <= 0 && healthPlayer <= 0)
             {
                 Console.WriteLine("Оба соперника пали");
