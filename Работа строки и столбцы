@@ -12,19 +12,19 @@
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
                     array[i, j] = random.Next(0, 10);
-
-                    if (i == numberRow)
-                    {
-                        sumTwoRow += array[i, j];
-                    }
-
-                    if (j == numberCol)
-                    {
-                        multiplicationOneCol *= array[i, j];
-                    }
                                       
                     Console.Write(array[i,j] + " ");
                 }
+            }
+
+            for (int i = 0; i < array.GetLength(1); i++)
+            {
+                sumTwoRow += array[numberRow,i];
+            }
+
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                multiplicationOneCol *= array[i,numberCol];
             }
 
             Console.WriteLine($"\nСумма 2 строки : {sumTwoRow}" +
