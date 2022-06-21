@@ -1,0 +1,31 @@
+            Random random = new Random();
+            int[,] array = new int[3,5];
+            int numberRow = 1;
+            int numberCol = 0;
+            int sumTwoRow = 0;
+            int multiplicationOneCol = 1;
+
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                Console.WriteLine();
+
+                for (int j = 0; j < array.GetLength(1); j++)
+                {
+                    array[i, j] = random.Next(0, 10);
+
+                    if (i == numberRow)
+                    {
+                        sumTwoRow += array[i, j];
+                    }
+
+                    if (j == numberCol)
+                    {
+                        multiplicationOneCol *= array[i, j];
+                    }
+                                      
+                    Console.Write(array[i,j] + " ");
+                }
+            }
+
+            Console.WriteLine($"\nСумма 2 строки : {sumTwoRow}" +
+                $"\nПроизведение 1 стобца : {multiplicationOneCol}");
