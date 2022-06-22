@@ -1,4 +1,4 @@
-            int[] array = new int[30] ;
+            int[] array = new int[30];
             Random random = new Random();
             int numberElement = 0;
             int minValue = 0;
@@ -14,20 +14,17 @@
                 Console.WriteLine($"Элемент под номером 1 = {array[0]} локальный максимум");
             }
 
-            for (int i = 0; i < array.Length; i++)
-            {               
+            for (int i = 1; i < array.Length - 1; i++)
+            {
                 numberElement = i + 1;
 
-                if (i != 0 && i != array.Length -1)
+                if (array[i - 1] < array[i] && array[i] > array[i + 1])
                 {
-                    if (array[i - 1] < array[i] && array[i] > array[i + 1])
-                    {
-                        Console.WriteLine($"Элемент под номером {numberElement} = {array[i]} локальный максимум");
-                    }
+                    Console.WriteLine($"Элемент под номером {numberElement} = {array[i]} локальный максимум");
                 }
             }
 
-            if ( array[array.Length - 2] < array[array.Length - 1])
+            if (array[array.Length - 2] < array[array.Length - 1])
             {
                 Console.WriteLine($"Элемент под номером {numberElement} = {array[array.Length - 1]} локальный максимум");
             }
