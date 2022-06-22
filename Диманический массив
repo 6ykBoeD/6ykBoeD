@@ -1,12 +1,10 @@
             int[] array = new int[1];
-            int[] advancedArray = new int[array.Length + 1];
-            int inputNumber;
             string userInput;
-            int sum = 0;
             bool isWork = true;
 
             while (isWork)
             {
+                int[] advancedArray = new int[array.Length + 1];
                 Console.WriteLine("Выберите действие.Введите\n " +
                     "\n1 - для ввода числа" +
                     "\nsum - для сложения всех введеных чисел" +
@@ -16,17 +14,20 @@
                 switch (userInput)
                 {
                     case "1":
+                        int inputNumber;
                         Console.WriteLine("Введите число :");
                         inputNumber = Convert.ToInt32(Console.ReadLine());
-
+                        
                         for (int i = 0; i < array.Length; i++)
                         {
                             array[i] = inputNumber; 
-                            advancedArray[i] = array[i];
+                            advancedArray[i] = array[i];                           
                         }
+
                         break;
 
                     case "sum":
+                        int sum = 0;
 
                         for (int i = 0; i < array.Length; i++)
                         {
@@ -44,5 +45,5 @@
                         Console.WriteLine("\nНеверное значение ,попробуйте снова\n");
                         break;
                 }
-
-                array = advancedArray;   
+                array = advancedArray;
+            }
