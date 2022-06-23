@@ -1,0 +1,7 @@
+            string text = "Дана строка с текстом";
+            string[] arrayText = text.Split(' ');
+
+            foreach(string item in arrayText)
+            {
+                Console.WriteLine($"{item}");
+            }
