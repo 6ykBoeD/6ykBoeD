@@ -1,7 +1,7 @@
             string text = "Дана строка с текстом";
             string[] arrayText = text.Split(' ');
 
-            foreach(string array in arrayText)
+            foreach(string word in arrayText)
             {
-                Console.WriteLine($"{array}");
+                Console.WriteLine($"{word}");
             }
