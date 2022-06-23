@@ -1,0 +1,34 @@
+            int[] array = new int[30];
+            Random random = new Random();
+            int minValue = 0;
+            int maxValue = 10;
+            int number = 0;
+            int maxRepeatNumber = 0;
+            int numberCount = 0;
+            int count = 1;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(minValue, maxValue);
+                Console.Write(array[i] + " ");
+            }
+
+            for (int i = 1; i < array.Length; i++)
+            {
+                if(array[i - 1] == array[i])
+                {
+                    number = array[i];
+                    count++;
+
+                    if(count > numberCount)
+                    {
+                        numberCount = count;
+                        maxRepeatNumber = number;
+                    }
+                    else
+                    {
+                        count = 0;
+                    }
+                }
+            }
+            Console.WriteLine($"\nЧисло {maxRepeatNumber} повторяется {numberCount} раз");
