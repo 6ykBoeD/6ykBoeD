@@ -1,0 +1,26 @@
+            int[] array = { 1, 2, 3, 4, 5};
+            int tempNumber;
+            int inputNumber;
+            Console.WriteLine("Введите число на которое хотите сдвинуть массив чисел :");
+            inputNumber = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < inputNumber; i++)
+            {
+                tempNumber = array[0];
+                for (int j = 1; j < array.Length; j++)
+                {
+                    
+                    array[j - 1] = array[j];
+
+                    if (array[array.Length - 1] == array[j])
+                    {
+                        array[array.Length - 1] = tempNumber;
+                    }
+                }
+                
+            }
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + " ");
+            }
