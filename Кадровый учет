@@ -8,23 +8,22 @@
             {
                 Console.WriteLine("Выберите нужное действие : \n 1 - Добавить досье\n 2 - Вывести все досье\n 3 - Удалить досье\n 4 - Поиск по фамилии\n 5 - Выход");
                 string inputUser = Console.ReadLine();
-                
                 switch (inputUser)
                 {
                     case "1":
-                        addDossier(ref name ,ref post);
+                        AddDossier(ref name ,ref post);
                         break;
 
                     case "2":
-                        outputDossier(name , post);
+                        OutputDossier(name , post);
                         break;
 
                     case "3":
-                        deleteDossier(ref name ,ref post);
+                        DeleteDossier(ref name ,ref post);
                         break;
 
                     case "4":
-                        searchName(name, post);
+                        SearchName(name, post);
                         break;
 
                     case "5":
@@ -37,7 +36,7 @@
                 }
             }
         }
-        static string[] addInfo(string[] info, string newInfo)
+        static string[] AddInfo(string[] info, string newInfo)
         {
             string[] tempArray = new string[info.Length + 1];
 
@@ -51,18 +50,18 @@
             return info;
         }
 
-        static void addDossier(ref string[] name ,ref string[] post)
+        static void AddDossier(ref string[] name ,ref string[] post)
         {
             Console.WriteLine("Введите ФИО работника :");
             string inputFullName = Console.ReadLine();
-            name = addInfo(name, inputFullName);
+            name = AddInfo(name, inputFullName);
 
             Console.WriteLine("Введите должность работника :");
             string inputPost = Console.ReadLine();
-            post = addInfo(post, inputPost);
+            post = AddInfo(post, inputPost);
         }
         
-        static void outputDossier(string[] name , string[] post)
+        static void OutputDossier(string[] name , string[] post)
         {
             int numberPosition = 0;
 
@@ -78,7 +77,24 @@
             }          
         }
 
-        static void deleteDossier(ref string[] name ,ref string[] post)
+        static string[] DecreaseArray(ref string[] info , int index)
+        {
+            string[] tempArray = new string[info.Length - 1];
+            
+            for (int i = 0; i < index; i++)
+            {
+                tempArray[i] = info[i];
+            }
+            
+            for (int i = index; i < tempArray.Length; i++)
+            {
+                tempArray[i] = info[i + 1];
+            }
+            
+            return info = tempArray;
+        }
+
+        static void DeleteDossier(ref string[] name ,ref string[] post)
         {
             bool isWork = true;
 
@@ -86,8 +102,6 @@
             {
                 Console.WriteLine("Укажите номер досье которое хотите удалить :\n");
                 int numberDossier = Convert.ToInt32(Console.ReadLine()) - 1;
-                string[] tempArrayName = new string[name.Length - 1];
-                string[] tempArrayPost = new string[post.Length - 1];
 
                 if (numberDossier > name.Length || numberDossier < 0)
                 {
@@ -95,41 +109,29 @@
                 }
                 else
                 {
-                    for (int i = 0; i < numberDossier; i++)
-                    {
-                        tempArrayName[i] = name[i];
-                        tempArrayPost[i] = post[i];
-                    }
-
-                    for (int i = numberDossier; i < tempArrayName.Length; i++)
-                    {
-                        tempArrayName[i] = name[i + 1];
-                        tempArrayPost[i] = post[i + 1];
-                    }
-
-                    name = tempArrayName;
-                    post = tempArrayPost;
+                    name = DecreaseArray(ref name, numberDossier);
+                    post = DecreaseArray(ref post, numberDossier);
                     Console.WriteLine("Досье удалено\n");
                     isWork = false;
                 }
             }
         }
 
-        static void searchName(string[] name, string[] post)
+        static void SearchName(string[] name, string[] post)
         {
             int numberDossier = 0;
             bool isWork = true;
+
+            if (name.Length == 0)
+            {
+                Console.WriteLine("База данных не заполнена\n");
+                isWork = false;
+            }
 
             while (isWork)
             {
                 Console.Write("Поиск :");
                 string searchName = Console.ReadLine();
-
-                if (name.Length == 0)
-                {
-                    Console.WriteLine("База данных не заполнена\n");
-                    isWork = false;
-                }
 
                 for (int i = 0; i < name.Length; i++)
                 {
