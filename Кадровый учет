@@ -1,7 +1,7 @@
-        static void Main(string[] args)
+    static void Main(string[] args)
         {
-            string[] name = { };
-            string[] post = { };
+            string[] fullNames = { };
+            string[] posts = { };
             bool isWork = true;
 
             while (isWork)
@@ -11,19 +11,19 @@
                 switch (inputUser)
                 {
                     case "1":
-                        AddDossier(ref name ,ref post);
+                        AddDossier(ref fullNames ,ref posts);
                         break;
 
                     case "2":
-                        OutputDossier(name , post);
+                        OutputDossier(fullNames , posts);
                         break;
 
                     case "3":
-                        DeleteDossier(ref name ,ref post);
+                        DeleteDossier(ref fullNames ,ref posts);
                         break;
 
                     case "4":
-                        SearchName(name, post);
+                        SearchName(fullNames, posts);
                         break;
 
                     case "5":
@@ -50,124 +50,83 @@
             return info;
         }
 
-        static void AddDossier(ref string[] name ,ref string[] post)
+        static void AddDossier(ref string[] fullNames ,ref string[] post)
         {
             Console.WriteLine("Введите ФИО работника :");
             string inputFullName = Console.ReadLine();
-            name = AddInfo(name, inputFullName);
+            fullNames = AddInfo(fullNames, inputFullName);
 
             Console.WriteLine("Введите должность работника :");
             string inputPost = Console.ReadLine();
             post = AddInfo(post, inputPost);
         }
         
-        static void OutputDossier(string[] name , string[] post)
+        static void OutputDossier(string[] fullNames , string[] post)
         {
             int numberPosition = 0;
 
-            if(name.Length == 0)
+            if(fullNames.Length == 0)
             {
                 Console.WriteLine("Данные отсутствуют\n");
             }
 
-            for (int i = 0; i < name.Length; i++)
+            for (int i = 0; i < fullNames.Length; i++)
             {
                 numberPosition++;
-                Console.WriteLine($"{numberPosition}-{name[i]} должность {post[i]}.\n") ;
+                Console.WriteLine($"{numberPosition}-{fullNames[i]} должность {post[i]}.\n") ;
             }          
         }
 
         static string[] DecreaseArray(ref string[] info , int index)
         {
             string[] tempArray = new string[info.Length - 1];
-            
             for (int i = 0; i < index; i++)
             {
                 tempArray[i] = info[i];
             }
-            
             for (int i = index; i < tempArray.Length; i++)
             {
                 tempArray[i] = info[i + 1];
             }
-            
             return info = tempArray;
         }
 
-        static void DeleteDossier(ref string[] name ,ref string[] post)
+        static void DeleteDossier(ref string[] fullNames ,ref string[] post)
         {
-            bool isWork = true;
+            Console.WriteLine("Укажите номер досье которое хотите удалить :\n");
+            int numberDossier = Convert.ToInt32(Console.ReadLine()) - 1;
 
-            while (isWork)
-            {
-                Console.WriteLine("Укажите номер досье которое хотите удалить :\n");
-                int numberDossier = Convert.ToInt32(Console.ReadLine()) - 1;
+            fullNames = DecreaseArray(ref fullNames, numberDossier);
+            post = DecreaseArray(ref post, numberDossier);
+            Console.WriteLine("Досье удалено\n");
 
-                if (numberDossier > name.Length || numberDossier < 0)
-                {
-                    Console.WriteLine("Такого номера нет , попробуйте заново\n");
-                }
-                else
-                {
-                    name = DecreaseArray(ref name, numberDossier);
-                    post = DecreaseArray(ref post, numberDossier);
-                    Console.WriteLine("Досье удалено\n");
-                    isWork = false;
-                }
-            }
         }
 
-        static void SearchName(string[] name, string[] post)
+        static void SearchName(string[] fullNames, string[] posts)
         {
             int numberDossier = 0;
-            bool isWork = true;
 
-            if (name.Length == 0)
+            if (fullNames.Length == 0)
             {
                 Console.WriteLine("База данных не заполнена\n");
-                isWork = false;
             }
 
-            while (isWork)
+            Console.Write("Поиск :");
+            string searchName = Console.ReadLine();
+            string tempString;
+
+            for (int i = 0; i < fullNames.Length; i++)
             {
-                Console.Write("Поиск :");
-                string searchName = Console.ReadLine();
+                numberDossier++;
 
-                for (int i = 0; i < name.Length; i++)
+                tempString = fullNames[i];
+                string[] words = tempString.Split(' ');
+
+                for (int j = 0; j < words.Length; j++)
                 {
-                    numberDossier++;
-
-                    if (name[i] == searchName)
+                    if (words[j] == searchName)
                     {
-                        Console.WriteLine($"Сотрудник {name[i]} под номером {numberDossier} работает {post[i]}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Такой сотрудник не найден");
-                    }
-
-
-                    bool isRepeat = true;
-
-                    while (isRepeat)
-                    {
-                        Console.WriteLine("Хотите продолжить ? да/нет");
-                        string inputUser = Console.ReadLine();
-
-                        switch (inputUser.ToLower())
-                        {
-                            case "да":
-                                break;
-
-                            case "нет":
-                                isWork = false;
-                                isRepeat = false;
-                                break;
-
-                            default:
-                                Console.WriteLine("Такого значения нет попробуйте заново");
-                                break;
-                        }
+                        Console.WriteLine($"\nСотрудник {fullNames[i]} под номером {numberDossier} работает {posts[i]}ом\n");
                     }
                 }
             }
