@@ -1,4 +1,4 @@
-        static int ConvertNumber()
+        static int GetNumber()
         {
             int result = 0;
             bool isWork = true;
