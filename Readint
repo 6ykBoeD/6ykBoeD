@@ -1,0 +1,23 @@
+        static int ConvertNumber()
+        {
+            int result = 0;
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.Write("Введите число :");
+                bool isSucces = int.TryParse(Console.ReadLine(), out result);
+
+                if (isSucces == true)
+                {
+                    Console.WriteLine($"Число {result} сконвертированов тип int") ;
+                    isWork = false;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение , попробуйте снова ");
+                }
+            }
+
+            return result;
+        }
