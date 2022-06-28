@@ -1,0 +1,24 @@
+        static void DrawBar(int percentValue, int maxValue, ConsoleColor color, int positionX, int positionY, char symbol = ' ')
+        {
+            ConsoleColor defaultColor = Console.BackgroundColor;
+            string bar = "";
+            int percent = 10;
+            int value = percentValue / percent;
+
+            for (int i = 0; i < value; i++)
+            {
+                bar += symbol;
+            }
+            Console.SetCursorPosition(positionX, positionY);
+            Console.Write('[');
+            Console.BackgroundColor = color;
+            Console.Write(bar);
+            Console.BackgroundColor = defaultColor;
+            bar = "";
+            for (int i = value; i < maxValue; i++)
+            {
+                bar += symbol;
+            }
+
+            Console.Write(bar + ']');
+        }
