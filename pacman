@@ -1,0 +1,101 @@
+ static void Main(string[] args)
+        {
+            Console.CursorVisible = false;
+
+            bool isPlaying = true;
+            int moveCharacterX = 0; int moveCharacterY = 1;
+            int characterX , characterY ;
+            char[,] map = ReadMap("map1",out characterX,out characterY);
+
+            DrawMap(map);
+
+            while (isPlaying)
+            {
+                Console.SetCursorPosition(characterY,characterX);
+                Console.Write('@');
+
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+                    ChangeDirection(key,ref moveCharacterX,ref moveCharacterY);
+                }
+
+                if (map[characterX + moveCharacterX, characterY + moveCharacterY] != '#')
+                {
+                    Move(ref characterX,ref characterY, moveCharacterX, moveCharacterY);
+                }
+
+                System.Threading.Thread.Sleep(200);
+            }
+        }
+
+        static void Move(ref int characterX, ref int characterY , int moveX , int moveY)
+        {
+            Console.SetCursorPosition(characterY, characterX);
+            Console.Write(" ");
+
+            characterX += moveX;
+            characterY += moveY;
+
+            Console.SetCursorPosition(characterY, characterX);
+            Console.Write('@');
+        }
+
+        static void ChangeDirection(ConsoleKeyInfo key,ref int moveX, ref int moveY)
+        {
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    moveX = -1; moveY = 0;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    moveX = 1; moveY = 0;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    moveX = 0; moveY = -1;
+                    break;
+
+                case ConsoleKey.RightArrow:
+                    moveX = 0; moveY = 1;
+                    break;
+            }
+        }
+
+        static char[,] ReadMap(string mapName, out int characterX , out int characterY)
+        {
+            characterX = 0;
+            characterY = 0;
+            string[] newFile = File.ReadAllLines($"maps/{mapName}.txt");
+            char[,] newMap = new char[newFile.Length, newFile[0].Length];
+
+            for (int i = 0; i < newMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < newMap.GetLength(1); j++)
+                {
+                    newMap[i, j] = newFile[i][j];
+
+                    if(newMap[i, j] == '@')
+                    {
+                        characterX = i;
+                        characterY = j;
+                    }
+                }
+            }
+
+            return newMap;
+        }
+
+        static void DrawMap(char[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    Console.Write(map[i,j]);
+                }
+                
+                Console.WriteLine();
+            }
+        }
