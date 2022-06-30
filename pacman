@@ -3,15 +3,17 @@
             Console.CursorVisible = false;
 
             bool isPlaying = true;
-            int moveCharacterX = 0; int moveCharacterY = 1;
-            int characterX , characterY ;
+            int moveCharacterX = 0;
+            int moveCharacterY = 1;
+            int positionCharacterX ;
+            int positionCharacterY ;
             char[,] map = ReadMap("map1",out characterX,out characterY);
 
             DrawMap(map);
 
             while (isPlaying)
             {
-                Console.SetCursorPosition(characterY,characterX);
+                Console.SetCursorPosition(positionCharacterY,positionCharacterX);
                 Console.Write('@');
 
                 if (Console.KeyAvailable)
@@ -20,24 +22,24 @@
                     ChangeDirection(key,ref moveCharacterX,ref moveCharacterY);
                 }
 
-                if (map[characterX + moveCharacterX, characterY + moveCharacterY] != '#')
+                if (map[positionCharacterX + moveCharacterX, positionCharacterY + moveCharacterY] != '#')
                 {
-                    Move(ref characterX,ref characterY, moveCharacterX, moveCharacterY);
+                    Move(ref positionCharacterX,ref positionCharacterY, moveCharacterX, moveCharacterY);
                 }
 
                 System.Threading.Thread.Sleep(200);
             }
         }
 
-        static void Move(ref int characterX, ref int characterY , int moveX , int moveY)
+        static void Move(ref int positionCharacterX, ref int positionCharacterY , int moveX , int moveY)
         {
-            Console.SetCursorPosition(characterY, characterX);
+            Console.SetCursorPosition(positionCharacterY, positionCharacterX);
             Console.Write(" ");
 
-            characterX += moveX;
-            characterY += moveY;
+            positionCharacterX += moveX;
+            positionCharacterY += moveY;
 
-            Console.SetCursorPosition(characterY, characterX);
+            Console.SetCursorPosition(positionCharacterY, positionCharacterX);
             Console.Write('@');
         }
 
@@ -46,27 +48,31 @@
             switch (key.Key)
             {
                 case ConsoleKey.UpArrow:
-                    moveX = -1; moveY = 0;
+                    moveX = -1;
+                    moveY = 0;
                     break;
 
                 case ConsoleKey.DownArrow:
-                    moveX = 1; moveY = 0;
+                    moveX = 1; 
+                    moveY = 0;
                     break;
 
                 case ConsoleKey.LeftArrow:
-                    moveX = 0; moveY = -1;
+                    moveX = 0; 
+                    moveY = -1;
                     break;
 
                 case ConsoleKey.RightArrow:
-                    moveX = 0; moveY = 1;
+                    moveX = 0;
+                    moveY = 1;
                     break;
             }
         }
 
-        static char[,] ReadMap(string mapName, out int characterX , out int characterY)
+        static char[,] ReadMap(string mapName, out int positionCharacterX , out int positionCharacterY)
         {
-            characterX = 0;
-            characterY = 0;
+            positionCharacterX = 0;
+            positionCharacterY = 0;
             string[] newFile = File.ReadAllLines($"maps/{mapName}.txt");
             char[,] newMap = new char[newFile.Length, newFile[0].Length];
 
@@ -78,8 +84,8 @@
 
                     if(newMap[i, j] == '@')
                     {
-                        characterX = i;
-                        characterY = j;
+                        positionCharacterX = i;
+                        positionCharacterY = j;
                     }
                 }
             }
