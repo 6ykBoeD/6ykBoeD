@@ -1,0 +1,37 @@
+
+            List<int> numbers = new List<int>();
+
+            string userInput;
+            bool isWork = true;
+
+            while (isWork)
+            {
+
+                Console.WriteLine("Выберите действие.Введите\n " +
+                    "\n1 - для ввода числа" +
+                    "\nsum - для сложения всех введеных чисел" +
+                    "\nexit - для выхода из программы");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        int inputNumber;
+                        Console.WriteLine("Введите число :");
+                        inputNumber = Convert.ToInt32(Console.ReadLine());
+                        numbers.Add(inputNumber);
+                        break;
+
+                    case "sum":
+                        Console.WriteLine(numbers.Sum());
+                        break;
+
+                    case "exit":
+                        isWork = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("\nНеверное значение ,попробуйте снова\n");
+                        break;
+                }
+            }
