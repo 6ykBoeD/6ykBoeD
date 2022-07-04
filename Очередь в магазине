@@ -4,19 +4,16 @@
             int countBuyers = 0;
 
             Queue<int> buyers = new Queue<int>();
-
-            buyers.Enqueue(32);
-            buyers.Enqueue(48);
-            buyers.Enqueue(24);
-            buyers.Enqueue(65);
+            AddBuyers(buyers);
 
             while (buyers.Count > 0)
             {
-                ShowBuyers(buyers,ref countBuyers);
-                ShowAccount(ref buyers,ref account);
+                ShowBuyers(buyers, ref countBuyers);
+                ShowAccount(buyers, ref account);
             }
         }
-        static void ShowAccount(ref Queue<int> buyers, ref int account)
+        
+        static void ShowAccount(Queue<int> buyers, ref int account)
         {
             account += buyers.Dequeue();
             Console.WriteLine($"На нашем счете {account}\n");
@@ -24,8 +21,25 @@
             Console.ReadKey();
             Console.Clear();
         }
+        
         static void ShowBuyers(Queue<int> buyers, ref int countBuyers)
         {
             countBuyers++;
             Console.WriteLine($"Клиент номер {countBuyers} совершает покупку на сумму {buyers.Peek()}\n");
+        }
+        
+        static void AddBuyers(Queue<int> buyers)
+        {
+            Random random = new Random();
+            int minValue = 0;
+            int maxValueBuyers = 10;
+            int maxValue = 100;
+            int numbersBuyers = random.Next(minValue, maxValueBuyers);
+
+            for (int i = 0; i < numbersBuyers; i++)
+            {
+                buyers.Enqueue(random.Next(minValue, maxValue));
+            }
+
+            Console.WriteLine($"Клиентов в очереди {buyers.Count}\n") ;
         }
