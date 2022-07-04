@@ -1,4 +1,3 @@
-
             List<int> numbers = new List<int>();
 
             string userInput;
@@ -6,32 +5,32 @@
 
             while (isWork)
             {
-
-                Console.WriteLine("Выберите действие.Введите\n " +
-                    "\n1 - для ввода числа" +
+                Console.WriteLine("\nВведите число или команду\n " +
                     "\nsum - для сложения всех введеных чисел" +
-                    "\nexit - для выхода из программы");
+                    "\nexit - для выхода из программы\n");
+                bool isSuccess;
+                int inputNumber; 
                 userInput = Console.ReadLine();
+                isSuccess = int.TryParse(userInput, out inputNumber);
 
-                switch (userInput)
+                if (isSuccess == true)
                 {
-                    case "1":
-                        int inputNumber;
-                        Console.WriteLine("Введите число :");
-                        inputNumber = Convert.ToInt32(Console.ReadLine());
-                        numbers.Add(inputNumber);
-                        break;
-
-                    case "sum":
-                        Console.WriteLine(numbers.Sum());
-                        break;
-
-                    case "exit":
-                        isWork = false;
-                        break;
-
-                    default:
-                        Console.WriteLine("\nНеверное значение ,попробуйте снова\n");
-                        break;
+                    numbers.Add(inputNumber);
                 }
+                else if (userInput == "sum")
+                {
+                    Console.WriteLine(numbers.Sum());
+                }
+                else if (userInput == "Exit")
+                {
+                    isWork = false;
+                }
+                else
+                {
+                    Console.WriteLine("\nНеверное значение ,попробуйте снова\n");
+                }
+
+                Console.WriteLine("Для продолжения нажмите любую клавишу");
+                Console.ReadKey();
+                Console.Clear();
             }
