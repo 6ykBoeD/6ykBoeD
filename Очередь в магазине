@@ -1,0 +1,15 @@
+            int account = 0;
+
+            Queue<string> buyer = new Queue<string>();
+
+            buyer.Enqueue("Василий");
+            buyer.Enqueue("Аркадий");
+            buyer.Enqueue("Роман");
+            buyer.Enqueue("Владимир");
+
+            while(buyer.Count > 0)
+            {
+                Console.WriteLine("Введите сумму покупки :");
+                int price = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine($"{buyer.Dequeue()} совершил покупку на {price} рублей.На нашем счете {account += price}");
+            }
