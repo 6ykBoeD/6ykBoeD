@@ -1,20 +1,24 @@
+        static void Main(string[] args)
+        {
             string[] numbers1 = { "1", "2", "1", };
-            string[] numbers2 = { "5", "7", "2","8" };
+            string[] numbers2 = { "5", "7", "2", "8" };
             List<string> numbers = new List<string>();
-            numbers.AddRange(numbers1);
-            numbers.AddRange(numbers2);
-            List<string> strings = new List<string>();
+
+            unityCollection(numbers, numbers1);
+            unityCollection(numbers, numbers2);
 
             for (int i = 0; i < numbers.Count; i++)
             {
-                if(strings.Contains(numbers[i]) == false)
+                Console.WriteLine(numbers[i]);
+            }
+        }
+        static void unityCollection(List<string> numbers, string[] strings)
+        {
+            for (int i = 0; i < strings.Length; i++)
+            {
+                if (numbers.Contains(strings[i])== false)
                 {
-                    strings.Add(numbers[i]);
+                    numbers.Add(strings[i]);
                 }
             }
-
-            for (int i = 0; i < strings.Count; i++)
-            {
-                Console.WriteLine(strings[i]);
-            }     
         }
