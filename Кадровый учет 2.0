@@ -8,6 +8,7 @@
             {
                 Console.WriteLine("\nВыберите нужное действие : \n 1 - Добавить досье\n 2 - Вывести все досье\n 3 - Удалить досье\n 4 - Выход");
                 string inputUser = Console.ReadLine();
+                
                 switch (inputUser)
                 {
                     case "1":
