@@ -1,0 +1,17 @@
+            Console.WriteLine("Введите слово : ");
+            string inputWord = Console.ReadLine();
+
+            Dictionary<string, string> words = new Dictionary<string, string>();
+
+            words.Add("IJunior", "школа программирования и разработки игр Романа Сакутина");
+            words.Add("C#", "современный объектно-ориентированный и типобезопасный язык программирования");
+            words.Add("Unity", "межплатформенная среда разработки компьютерных игр, разработанная американской компанией Unity Technologies");
+
+            if (words.ContainsKey(inputWord))
+            {
+                Console.WriteLine($"{inputWord} - это {words[inputWord]}");
+            }
+            else
+            {
+                Console.WriteLine("Такое значение отсутствует");
+            }
