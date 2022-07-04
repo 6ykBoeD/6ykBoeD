@@ -1,0 +1,79 @@
+        static void Main(string[] args)
+        {
+            List<string> fullNames = new List<string>();
+            List<string> posts = new List<string>();
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("\nВыберите нужное действие : \n 1 - Добавить досье\n 2 - Вывести все досье\n 3 - Удалить досье\n 4 - Выход");
+                string inputUser = Console.ReadLine();
+                switch (inputUser)
+                {
+                    case "1":
+                        AddDossier(ref fullNames, ref posts);
+                        break;
+
+                    case "2":
+                        OutputDossier(fullNames, posts);
+                        break;
+
+                    case "3":
+                        DeleteDossier(ref fullNames, ref posts);
+                        break;
+
+                    case "4":
+                        isWork = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Нет такого значения.Попробуйте заново");
+                        break;
+                }
+            }
+        }
+
+        static void AddDossier(ref List<string> fullNames,ref List<string> posts)
+        {
+            Console.WriteLine("\nВведите ФИО работника :");
+            string name = Console.ReadLine();
+            fullNames.Add(name);
+
+            Console.WriteLine("\nВведите должность работника :");
+            string post = Console.ReadLine();
+            posts.Add(post);
+        }
+
+        static void OutputDossier(List<string> fullNames, List<string> posts)
+        {
+            int numberPosition = 0;
+
+            if(fullNames.Count == 0)
+            {
+                Console.WriteLine("Данныйх нет");
+            }
+
+            for (int i = 0; i < fullNames.Count; i++)
+            {
+                numberPosition++;
+                Console.WriteLine($"\n{numberPosition}){fullNames[i]} должность {posts[i]}");
+            }
+        }
+
+        static void DeleteDossier(ref List<string> fullNames,ref List<string> posts)
+        {
+            Console.WriteLine("\nВведите номер досье которое хотите удалить :");
+            int numberDosier;
+            bool isSuccess = int.TryParse(Console.ReadLine(), out numberDosier);
+
+            if (isSuccess == true)
+            {
+                fullNames.RemoveAt(numberDosier - 1);
+                posts.RemoveAt(numberDosier - 1);
+                Console.WriteLine("\nДосье удаленно");
+            }
+            else
+            {
+                Console.WriteLine("Такого значения нет");
+            }
+        }
