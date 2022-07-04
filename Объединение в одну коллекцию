@@ -4,14 +4,15 @@
             string[] numbers2 = { "5", "7", "2", "8" };
             List<string> numbers = new List<string>();
 
-            unityCollection(numbers, numbers1);
-            unityCollection(numbers, numbers2);
+            UnityCollection(numbers, numbers1);
+            UnityCollection(numbers, numbers2);
 
             for (int i = 0; i < numbers.Count; i++)
             {
                 Console.WriteLine(numbers[i]);
             }
         }
+        
         static void unityCollection(List<string> numbers, string[] strings)
         {
             for (int i = 0; i < strings.Length; i++)
