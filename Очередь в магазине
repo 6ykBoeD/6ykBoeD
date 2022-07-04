@@ -1,15 +1,31 @@
+        static void Main(string[] args)
+        {
             int account = 0;
+            int countBuyers = 0;
 
-            Queue<string> buyer = new Queue<string>();
+            Queue<int> buyers = new Queue<int>();
 
-            buyer.Enqueue("Василий");
-            buyer.Enqueue("Аркадий");
-            buyer.Enqueue("Роман");
-            buyer.Enqueue("Владимир");
+            buyers.Enqueue(32);
+            buyers.Enqueue(48);
+            buyers.Enqueue(24);
+            buyers.Enqueue(65);
 
-            while(buyer.Count > 0)
+            while (buyers.Count > 0)
             {
-                Console.WriteLine("Введите сумму покупки :");
-                int price = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine($"{buyer.Dequeue()} совершил покупку на {price} рублей.На нашем счете {account += price}");
+                ShowBuyers(buyers,ref countBuyers);
+                ShowAccount(ref buyers,ref account);
             }
+        }
+        static void ShowAccount(ref Queue<int> buyers, ref int account)
+        {
+            account += buyers.Dequeue();
+            Console.WriteLine($"На нашем счете {account}\n");
+            Console.WriteLine("Для продолжения нажмите любую клавишу");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        static void ShowBuyers(Queue<int> buyers, ref int countBuyers)
+        {
+            countBuyers++;
+            Console.WriteLine($"Клиент номер {countBuyers} совершает покупку на сумму {buyers.Peek()}\n");
+        }
