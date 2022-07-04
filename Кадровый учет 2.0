@@ -12,7 +12,7 @@
                 switch (inputUser)
                 {
                     case "1":
-                        AddDossier(ref fullNames, ref posts);
+                        AddDossier(fullNames, posts);
                         break;
 
                     case "2":
@@ -20,7 +20,7 @@
                         break;
 
                     case "3":
-                        DeleteDossier(ref fullNames, ref posts);
+                        DeleteDossier(fullNames, posts);
                         break;
 
                     case "4":
@@ -34,7 +34,7 @@
             }
         }
 
-        static void AddDossier(ref List<string> fullNames,ref List<string> posts)
+        static void AddDossier(List<string> fullNames, List<string> posts)
         {
             Console.WriteLine("\nВведите ФИО работника :");
             string name = Console.ReadLine();
@@ -61,7 +61,7 @@
             }
         }
 
-        static void DeleteDossier(ref List<string> fullNames,ref List<string> posts)
+        static void DeleteDossier(List<string> fullNames, List<string> posts)
         {
             Console.WriteLine("\nВведите номер досье которое хотите удалить :");
             int numberDosier;
