@@ -3,8 +3,8 @@
         static void Main(string[] args)
         {
             Player player = new Player(2, 4, '@');
-            DrawPlayer drawplayer = new DrawPlayer();
-            drawplayer.DrawPlayers(player.PositionX, player.PositionY, player.Symbol);
+            PositionPlayer positionPlayer = new PositionPlayer();
+            positionPlayer.DrawPlayer(player.PositionX, player.PositionY, player.Symbol);
 
         }
     }
@@ -16,19 +16,19 @@
 
         public char Symbol { get; private set; }
 
-        public Player(int x, int y, char symbol)
+        public Player(int positionX, int positionY, char symbol)
         {
-            PositionX = x;
-            PositionY = y;
+            PositionX = positionX;
+            PositionY = positionY;
             Symbol = symbol;
         }
     }
 
-    class DrawPlayer
-    {
-        public void DrawPlayers(int x,int y,char symbol)
+    class PositionPlayer
+    { 
+        public void DrawPlayer(int positionX, int positionY, char symbol)
         {
-            Console.SetCursorPosition(x, y);
+            Console.SetCursorPosition(positionX, positionY);
             Console.Write(symbol);
         }
     }
