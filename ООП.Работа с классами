@@ -1,4 +1,4 @@
-    internal class Program
+       internal class Program
     {
         static void Main(string[] args)
         {
@@ -11,23 +11,25 @@
 
     class Player
     {
+        private static int _ids;
         private string _name;
-        static private int _ids;
         private int _health;
         private int _damage;
         private int _armor;
         private int _id;
+
         public Player(string name, int health, int damage, int armor)
         {
+            _id = ++_ids;
             _name = name;
-            this._health = health;
-            this._damage = damage;
-            this._armor = armor;
+            _health = health;
+            _damage = damage;
+            _armor = armor;
         }
 
         public void ShowInfo()
         {
-            _id = ++_ids;
+            
             Console.WriteLine($"ID - {_id}\nИмя - {_name}\nЗдоровье - {_health}\nБроня - {_armor}\nУрон - {_damage}");
         }
     }
