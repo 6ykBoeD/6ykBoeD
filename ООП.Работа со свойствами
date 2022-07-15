@@ -1,0 +1,36 @@
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Hero drawPlayer = new Hero(3, 4);
+            drawPlayer.DrawPlayers();
+        }
+    }
+
+    class Player
+    {
+        public int X { get; private set; }
+        public int Y { get; private set; }
+
+        public Player(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
+    class Hero : Player
+    {
+        public char Symbol;
+
+        public Hero(int x , int y,char symbol = '@') : base (x,y)
+        {
+           Symbol = symbol;
+        } 
+        
+        public void DrawPlayers()
+        {
+            Console.SetCursorPosition(X,Y);
+            Console.Write(Symbol);
+        }
+    }
