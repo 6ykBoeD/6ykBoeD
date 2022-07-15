@@ -2,35 +2,33 @@
     {
         static void Main(string[] args)
         {
-            Hero hero = new Hero(3, 4);
-            hero.DrawPlayers();
+            Player player = new Player(2, 4, '@');
+            DrawPlayer drawplayer = new DrawPlayer();
+            drawplayer.DrawPlayers(player.PositionX, player.PositionY, player.Symbol);
+
         }
     }
 
     class Player
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
 
-        public Player(int x, int y)
+        public char Symbol { get; private set; }
+
+        public Player(int x, int y, char symbol)
         {
-            X = x;
-            Y = y;
+            PositionX = x;
+            PositionY = y;
+            Symbol = symbol;
         }
     }
 
-    class Hero : Player
+    class DrawPlayer
     {
-        public char Symbol;
-
-        public Hero(int x , int y,char symbol = '@') : base (x,y)
+        public void DrawPlayers(int x,int y,char symbol)
         {
-           Symbol = symbol;
-        } 
-        
-        public void DrawPlayers()
-        {
-            Console.SetCursorPosition(X,Y);
-            Console.Write(Symbol);
+            Console.SetCursorPosition(x, y);
+            Console.Write(symbol);
         }
     }
