@@ -2,8 +2,8 @@
     {
         static void Main(string[] args)
         {
-            Hero drawPlayer = new Hero(3, 4);
-            drawPlayer.DrawPlayers();
+            Hero hero = new Hero(3, 4);
+            hero.DrawPlayers();
         }
     }
 
