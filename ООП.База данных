@@ -1,0 +1,65 @@
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            DataBase players = new DataBase("Artem",1);
+            players.AddPlayer("Boris", 2);
+            players.AddPlayer("Ivan", 3);
+            players.AddPlayer("Volodia", 4);
+            players.BanPlayer(3);
+            players.UnBanPlayer(3);
+            players.DeletePlayer(1);
+    
+            for (int i = 0; i < players.players.Count; i++)
+            {
+                players.players[i].ShowInfo();
+            }
+        }
+    }
+
+    class DataBase
+    {
+        protected static int Ids = - 1;
+        protected int Id;
+        public string Name { get; private set; }
+        public int Level { get; private set; }
+        public bool IsBan { get; private set; }
+
+        public List<DataBase> players = new List<DataBase>();
+
+        public DataBase(string name, int level, bool isBan = false)
+        {
+            Id = ++Ids;
+            Name = name;
+            Level = level;
+            IsBan = isBan;
+        }
+
+        public void AddPlayer(string name, int level)
+        {
+            players.Add(new DataBase(name, level));
+        }
+
+        public void ShowInfo()
+        {
+            if (IsBan == false)
+            {
+                Console.WriteLine($"id - {Id},Имя - {Name},Уровень - {Level}\n");
+            }
+        }
+
+        public void BanPlayer(int numberId)
+        {
+            players[numberId - 1].IsBan = true;
+        }
+
+        public void UnBanPlayer(int numberId)
+        {
+            players[numberId - 1].IsBan = false;
+        }
+
+        public void DeletePlayer(int numberId)
+        {
+            players.RemoveAt(numberId - 1);
+        }
+    }
