@@ -2,34 +2,78 @@
     {
         static void Main(string[] args)
         {
-            DataBase players = new DataBase();
-            players.AddPlayer("Artem", 2);
-            players.AddPlayer("Boris", 3);
-            players.AddPlayer("Semen", 4);
-            players.BanPlayer(1);
-            players.UnBanPlayer(1);
-            players.DeletePlayer(2);
-
-            for (int i = 0; i < players.Players.Count; i++)
+            Database players = new Database();
+            Console.WriteLine("1 - для добавления игрока\n2 - для бана игрока\n3 - для разблокировки игрока\n4 - для удаления игрока\n5 - показать информацию о игроках\n6 - для выходи из программы");
+            int id = 0;
+            bool isRepeat = true;
+            while (isRepeat)
             {
-                players.Players[i].ShowInfo();
+                Console.WriteLine("Выберите действие");
+                switch (Console.ReadLine())
+                {
+                    case "1":
+
+                        bool isWork = true;
+                        while (isWork)
+                        {
+                            Console.WriteLine("Введите имя :");
+                            string name = Console.ReadLine();
+                            Console.WriteLine("Какой уровень :");
+                            int level = 0;
+                            bool isSucces = int.TryParse(Console.ReadLine(), out level);
+
+                            if (isSucces == true)
+                            {
+                                players.AddPlayer(name, level);
+                                isWork = false;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Попробуйте снова");
+                            }
+                            
+                        }
+                        break;
+
+                        case "2":
+                        Console.WriteLine("Введиет номер Id для бана игрока :");
+                        id = Convert.ToInt32(Console.ReadLine());
+                        players.BanPlayer(id);
+                        break;
+
+                    case "3":
+                        Console.WriteLine("Введиет номер Id для разблокировки игрока :");
+                        id = Convert.ToInt32(Console.ReadLine());
+                        players.UnBanPlayer(id);
+                        break;
+
+                    case "4":
+                        Console.WriteLine("Введите номер Id для удаления игрока ");
+                        id = Convert.ToInt32(Console.ReadLine());
+                        players.DeletePlayer(id);
+                        break;
+                        
+                    case "5":
+                        players.ShowInfo();
+                        break;
+
+                    case "6":
+                        isRepeat = false;
+                        break;
+
+                }
             }
         }
     }
 
     class Player
     {
-        protected static int Ids ;
+        public bool IsBan;
+        private static int Ids ;
         public string Name { get; private set; }
         public int Level { get; private set; }
-        protected int Id;
-        protected bool IsBan;
+        public int Id { get; private set; }
 
-        public Player()
-        {
-
-        }
-        
         public Player(string name , int level , bool isBan = false)
         {
             Id = ++Ids;
@@ -38,31 +82,24 @@
             IsBan = isBan;
         }
     }
-    class DataBase : Player
+
+    class Database
     {
-
-        public List<DataBase> Players = new List<DataBase>();
-
-        public DataBase()
-        {
-
-        }
-        
-        public DataBase(string name, int level): base(name , level)
-        {
-
-        }
+        private List<Player> Players = new List<Player>();
 
         public void AddPlayer(string name, int level)
         {
-            Players.Add(new DataBase(name, level));
+            Players.Add(new Player(name, level));
         }
 
         public void ShowInfo()
         {
-            if (IsBan == false)
+            for (int i = 0; i < Players.Count; i++)
             {
-                Console.WriteLine($"id - {Id},Имя - {Name},Уровень - {Level}\n");
+                if (Players[i].IsBan == false)
+                {
+                    Console.WriteLine($"id - {Players[i].Id},Имя - {Players[i].Name},Уровень - {Players[i].Level}\n");
+                }
             }
         }
 
