@@ -110,7 +110,7 @@ namespace CSLight
                     int numberId;
                     bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
 
-                    if (isSucces == true)
+                    if (isSucces == true && numberId > 0 && numberId <= players.Count)
                     {
                         players[numberId - 1].IsBan = true;
                         isWork = false;
@@ -135,7 +135,7 @@ namespace CSLight
                     int numberId;
                     bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
 
-                    if (isSucces == true)
+                    if (isSucces == true && numberId > 0 && numberId <= players.Count)
                     {
                         players[numberId - 1].IsBan = false;
                         isWork = false;
@@ -160,7 +160,7 @@ namespace CSLight
                     int numberId;
                     bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
 
-                    if (isSucces == true)
+                    if (isSucces == true && numberId > 0 && numberId <= players.Count)
                     {
                         players.RemoveAt(numberId - 1);
                         isWork = false;
