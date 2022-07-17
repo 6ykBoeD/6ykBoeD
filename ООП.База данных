@@ -1,56 +1,32 @@
+namespace CSLight
+{
     internal class Program
     {
         static void Main(string[] args)
         {
             Database players = new Database();
             Console.WriteLine("1 - для добавления игрока\n2 - для бана игрока\n3 - для разблокировки игрока\n4 - для удаления игрока\n5 - показать информацию о игроках\n6 - для выходи из программы");
-            int id = 0;
             bool isRepeat = true;
+
             while (isRepeat)
             {
                 Console.WriteLine("Выберите действие");
                 switch (Console.ReadLine())
                 {
                     case "1":
-
-                        bool isWork = true;
-                        while (isWork)
-                        {
-                            Console.WriteLine("Введите имя :");
-                            string name = Console.ReadLine();
-                            Console.WriteLine("Какой уровень :");
-                            int level = 0;
-                            bool isSucces = int.TryParse(Console.ReadLine(), out level);
-
-                            if (isSucces == true)
-                            {
-                                players.AddPlayer(name, level);
-                                isWork = false;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Попробуйте снова");
-                            }
-                            
-                        }
+                        players.AddPlayer();
                         break;
 
                         case "2":
-                        Console.WriteLine("Введиет номер Id для бана игрока :");
-                        id = Convert.ToInt32(Console.ReadLine());
-                        players.BanPlayer(id);
+                        players.BanPlayer();
                         break;
 
                     case "3":
-                        Console.WriteLine("Введиет номер Id для разблокировки игрока :");
-                        id = Convert.ToInt32(Console.ReadLine());
-                        players.UnBanPlayer(id);
+                        players.UnBanPlayer();
                         break;
 
                     case "4":
-                        Console.WriteLine("Введите номер Id для удаления игрока ");
-                        id = Convert.ToInt32(Console.ReadLine());
-                        players.DeletePlayer(id);
+                        players.DeletePlayer();
                         break;
                         
                     case "5":
@@ -69,14 +45,14 @@
     class Player
     {
         public bool IsBan;
-        private static int Ids ;
+        private static int _ids ;
         public string Name { get; private set; }
         public int Level { get; private set; }
         public int Id { get; private set; }
 
         public Player(string name , int level , bool isBan = false)
         {
-            Id = ++Ids;
+            Id = ++_ids;
             Name = name;
             Level = level;
             IsBan = isBan;
@@ -85,36 +61,121 @@
 
     class Database
     {
-        private List<Player> Players = new List<Player>();
+        private List<Player> players = new List<Player>();
 
-        public void AddPlayer(string name, int level)
+        public void AddPlayer()
         {
-            Players.Add(new Player(name, level));
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("Введите имя :");
+                string name = Console.ReadLine();
+                Console.WriteLine("Какой уровень :");
+                int level;
+                bool isSucces = int.TryParse(Console.ReadLine(), out level);
+
+                if (isSucces == true)
+                {
+                    players.Add(new Player(name, level));
+                    isWork = false;
+                }
+                else
+                {
+                    Console.WriteLine("Попробуйте снова");
+                }
+            }    
         }
 
         public void ShowInfo()
         {
-            for (int i = 0; i < Players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                if (Players[i].IsBan == false)
+                if (players[i].IsBan == false)
                 {
-                    Console.WriteLine($"id - {Players[i].Id},Имя - {Players[i].Name},Уровень - {Players[i].Level}\n");
+                    Console.WriteLine($"id - {players[i].Id},Имя - {players[i].Name},Уровень - {players[i].Level}\n");
                 }
             }
         }
 
-        public void BanPlayer(int numberId)
+        public void BanPlayer()
         {
-            Players[numberId - 1].IsBan = true;
+            if (TryGetPlayer(players))
+            {
+                bool isWork = true;
+
+                while (isWork)
+                {
+                    Console.WriteLine("Введиет номер Id для бана игрока :");
+                    int numberId;
+                    bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
+
+                    if (isSucces == true)
+                    {
+                        players[numberId - 1].IsBan = true;
+                        isWork = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Попробуйте снова");
+                    }
+                }
+            }
         }
 
-        public void UnBanPlayer(int numberId)
+        public void UnBanPlayer()
         {
-            Players[numberId - 1].IsBan = false;
+            if (TryGetPlayer(players))
+            {
+                bool isWork = true;
+
+                while (isWork)
+                {
+                    Console.WriteLine("Введиет номер Id разблокировки игрока :");
+                    int numberId;
+                    bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
+
+                    if (isSucces == true)
+                    {
+                        players[numberId - 1].IsBan = false;
+                        isWork = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Попробуйте снова");
+                    }
+                }
+            }
         }
 
-        public void DeletePlayer(int numberId)
+        public void DeletePlayer()
         {
-            Players.RemoveAt(numberId - 1);
+            if (TryGetPlayer(players))
+            {
+                bool isWork = true;
+
+                while (isWork)
+                {
+                    Console.WriteLine("Введите номер Id для удаления игрока ");
+                    int numberId;
+                    bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
+
+                    if (isSucces == true)
+                    {
+                        players.RemoveAt(numberId - 1);
+                        isWork = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Попробуйте снова");
+                    }
+                }
+            }
+        }
+
+        private bool TryGetPlayer(List<Player> players)
+        {
+            return players.Count > 0;
         }
     }
+}
