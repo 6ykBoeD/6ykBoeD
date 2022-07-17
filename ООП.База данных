@@ -11,6 +11,7 @@ namespace CSLight
             while (isRepeat)
             {
                 Console.WriteLine("Выберите действие");
+                
                 switch (Console.ReadLine())
                 {
                     case "1":
