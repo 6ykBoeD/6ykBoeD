@@ -2,42 +2,60 @@
     {
         static void Main(string[] args)
         {
-            DataBase players = new DataBase("Artem",1);
-            players.AddPlayer("Boris", 2);
-            players.AddPlayer("Ivan", 3);
-            players.AddPlayer("Volodia", 4);
-            players.BanPlayer(3);
-            players.UnBanPlayer(3);
-            players.DeletePlayer(1);
-    
-            for (int i = 0; i < players.players.Count; i++)
+            DataBase players = new DataBase();
+            players.AddPlayer("Artem", 2);
+            players.AddPlayer("Boris", 3);
+            players.AddPlayer("Semen", 4);
+            players.BanPlayer(1);
+            players.UnBanPlayer(1);
+            players.DeletePlayer(2);
+
+            for (int i = 0; i < players.Players.Count; i++)
             {
-                players.players[i].ShowInfo();
+                players.Players[i].ShowInfo();
             }
         }
     }
 
-    class DataBase
+    class Player
     {
-        protected static int Ids = - 1;
-        protected int Id;
+        protected static int Ids ;
         public string Name { get; private set; }
         public int Level { get; private set; }
-        public bool IsBan { get; private set; }
+        protected int Id;
+        protected bool IsBan;
 
-        public List<DataBase> players = new List<DataBase>();
+        public Player()
+        {
 
-        public DataBase(string name, int level, bool isBan = false)
+        }
+        
+        public Player(string name , int level , bool isBan = false)
         {
             Id = ++Ids;
             Name = name;
             Level = level;
             IsBan = isBan;
         }
+    }
+    class DataBase : Player
+    {
+
+        public List<DataBase> Players = new List<DataBase>();
+
+        public DataBase()
+        {
+
+        }
+        
+        public DataBase(string name, int level): base(name , level)
+        {
+
+        }
 
         public void AddPlayer(string name, int level)
         {
-            players.Add(new DataBase(name, level));
+            Players.Add(new DataBase(name, level));
         }
 
         public void ShowInfo()
@@ -50,16 +68,16 @@
 
         public void BanPlayer(int numberId)
         {
-            players[numberId - 1].IsBan = true;
+            Players[numberId - 1].IsBan = true;
         }
 
         public void UnBanPlayer(int numberId)
         {
-            players[numberId - 1].IsBan = false;
+            Players[numberId - 1].IsBan = false;
         }
 
         public void DeletePlayer(int numberId)
         {
-            players.RemoveAt(numberId - 1);
+            Players.RemoveAt(numberId - 1);
         }
     }
