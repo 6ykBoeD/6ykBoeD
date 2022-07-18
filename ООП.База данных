@@ -1,3 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
 namespace CSLight
 {
     internal class Program
@@ -11,7 +18,7 @@ namespace CSLight
             while (isRepeat)
             {
                 Console.WriteLine("Выберите действие");
-                
+
                 switch (Console.ReadLine())
                 {
                     case "1":
@@ -45,8 +52,8 @@ namespace CSLight
 
     class Player
     {
-        public bool IsBan;
         private static int _ids ;
+        public bool IsBan { get; private set; }
         public string Name { get; private set; }
         public int Level { get; private set; }
         public int Id { get; private set; }
@@ -58,16 +65,26 @@ namespace CSLight
             Level = level;
             IsBan = isBan;
         }
+
+        public void Ban()
+        {
+            IsBan = true;
+        }
+
+        public void UnBan()
+        {
+            IsBan = false;
+        }
     }
 
     class Database
     {
         private List<Player> players = new List<Player>();
-
+        
         public void AddPlayer()
         {
             bool isWork = true;
-
+            
             while (isWork)
             {
                 Console.WriteLine("Введите имя :");
@@ -113,7 +130,7 @@ namespace CSLight
 
                     if (isSucces == true && numberId > 0 && numberId <= players.Count)
                     {
-                        players[numberId - 1].IsBan = true;
+                        players[numberId - 1].Ban();
                         isWork = false;
                     }
                     else
@@ -138,7 +155,7 @@ namespace CSLight
 
                     if (isSucces == true && numberId > 0 && numberId <= players.Count)
                     {
-                        players[numberId - 1].IsBan = false;
+                        players[numberId - 1].UnBan();
                         isWork = false;
                     }
                     else
@@ -180,3 +197,4 @@ namespace CSLight
         }
     }
 }
+
