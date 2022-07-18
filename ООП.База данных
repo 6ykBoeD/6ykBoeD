@@ -79,7 +79,7 @@ namespace CSLight
 
     class Database
     {
-        private List<Player> players = new List<Player>();
+        private List<Player> _players = new List<Player>();
         
         public void AddPlayer()
         {
@@ -95,7 +95,7 @@ namespace CSLight
 
                 if (isSucces == true)
                 {
-                    players.Add(new Player(name, level));
+                    _players.Add(new Player(name, level));
                     isWork = false;
                 }
                 else
@@ -107,18 +107,18 @@ namespace CSLight
 
         public void ShowInfo()
         {
-            for (int i = 0; i < players.Count; i++)
+            for (int i = 0; i < _players.Count; i++)
             {
-                if (players[i].IsBan == false)
+                if (_players[i].IsBan == false)
                 {
-                    Console.WriteLine($"id - {players[i].Id},Имя - {players[i].Name},Уровень - {players[i].Level}\n");
+                    Console.WriteLine($"id - {_players[i].Id},Имя - {_players[i].Name},Уровень - {_players[i].Level}\n");
                 }
             }
         }
 
         public void BanPlayer()
         {
-            if (TryGetPlayer(players))
+            if (TryGetPlayer(out Player player))
             {
                 bool isWork = true;
 
@@ -128,9 +128,9 @@ namespace CSLight
                     int numberId;
                     bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
 
-                    if (isSucces == true && numberId > 0 && numberId <= players.Count)
+                    if (isSucces == true && numberId > 0 && numberId <= _players.Count)
                     {
-                        players[numberId - 1].Ban();
+                        _players[numberId - 1].Ban();
                         isWork = false;
                     }
                     else
@@ -143,7 +143,7 @@ namespace CSLight
 
         public void UnBanPlayer()
         {
-            if (TryGetPlayer(players))
+            if (TryGetPlayer(out Player player))
             {
                 bool isWork = true;
 
@@ -153,9 +153,9 @@ namespace CSLight
                     int numberId;
                     bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
 
-                    if (isSucces == true && numberId > 0 && numberId <= players.Count)
+                    if (isSucces == true && numberId > 0 && numberId <= _players.Count)
                     {
-                        players[numberId - 1].UnBan();
+                        _players[numberId - 1].UnBan();
                         isWork = false;
                     }
                     else
@@ -168,32 +168,50 @@ namespace CSLight
 
         public void DeletePlayer()
         {
-            if (TryGetPlayer(players))
+            for (int i = 0; i < _players.Count; i++)
             {
-                bool isWork = true;
-
-                while (isWork)
+                if (TryGetPlayer(out Player player))
                 {
-                    Console.WriteLine("Введите номер Id для удаления игрока ");
-                    int numberId;
-                    bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
+                    bool isWork = true;
 
-                    if (isSucces == true && numberId > 0 && numberId <= players.Count)
+                    while (isWork)
                     {
-                        players.RemoveAt(numberId - 1);
-                        isWork = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Попробуйте снова");
+                        Console.WriteLine("Введите номер Id для удаления игрока ");
+                        int numberId;
+                        bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
+
+                        if (isSucces == true && numberId > 0 && numberId <= _players.Count)
+                        {
+                            _players.RemoveAt(numberId - 1);
+                            isWork = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Попробуйте снова");
+                        }
                     }
                 }
             }
         }
 
-        private bool TryGetPlayer(List<Player> players)
+        private bool TryGetPlayer(out Player player)
         {
-            return players.Count > 0;
+            player = null;
+
+            for (int i = 0; i < _players.Count; i++)
+            {
+                player = new Player(_players[i].Name, _players[i].Level);
+
+            }
+
+            if (player == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
