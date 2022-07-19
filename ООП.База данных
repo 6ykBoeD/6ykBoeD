@@ -44,7 +44,6 @@ namespace CSLight
                     case "6":
                         isRepeat = false;
                         break;
-
                 }
             }
         }
@@ -90,8 +89,7 @@ namespace CSLight
                 Console.WriteLine("Введите имя :");
                 string name = Console.ReadLine();
                 Console.WriteLine("Какой уровень :");
-                int level;
-                bool isSucces = int.TryParse(Console.ReadLine(), out level);
+                bool isSucces = int.TryParse(Console.ReadLine(), out int level);
 
                 if (isSucces == true)
                 {
@@ -118,100 +116,65 @@ namespace CSLight
 
         public void BanPlayer()
         {
-            if (TryGetPlayer(out Player player))
+            Console.WriteLine("Введите номер Id для бана игрока ");
+            TryFindPlayer(out Player player);
+            
+            for (int i = 0; i < _players.Count; i++)
             {
-                bool isWork = true;
-
-                while (isWork)
+                if (_players[i] == player)
                 {
-                    Console.WriteLine("Введиет номер Id для бана игрока :");
-                    int numberId;
-                    bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
-
-                    if (isSucces == true && numberId > 0 && numberId <= _players.Count)
-                    {
-                        _players[numberId - 1].Ban();
-                        isWork = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Попробуйте снова");
-                    }
+                    _players[i].Ban();
                 }
             }
         }
 
         public void UnBanPlayer()
         {
-            if (TryGetPlayer(out Player player))
+            Console.WriteLine("Введите номер Id для разбана игрока ");
+            TryFindPlayer(out Player player);
+            
+            for (int i = 0; i < _players.Count; i++)
             {
-                bool isWork = true;
-
-                while (isWork)
+                if (_players[i] == player)
                 {
-                    Console.WriteLine("Введиет номер Id разблокировки игрока :");
-                    int numberId;
-                    bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
-
-                    if (isSucces == true && numberId > 0 && numberId <= _players.Count)
-                    {
-                        _players[numberId - 1].UnBan();
-                        isWork = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Попробуйте снова");
-                    }
+                    _players[i].UnBan();
                 }
             }
         }
 
         public void DeletePlayer()
         {
+            Console.WriteLine("Введите номер Id для удаления игрока ");
+            TryFindPlayer(out Player player);
+            
             for (int i = 0; i < _players.Count; i++)
             {
-                if (TryGetPlayer(out Player player))
+                if (_players[i] == player)
                 {
-                    bool isWork = true;
-
-                    while (isWork)
-                    {
-                        Console.WriteLine("Введите номер Id для удаления игрока ");
-                        int numberId;
-                        bool isSucces = int.TryParse(Console.ReadLine(), out numberId);
-
-                        if (isSucces == true && numberId > 0 && numberId <= _players.Count)
-                        {
-                            _players.RemoveAt(numberId - 1);
-                            isWork = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Попробуйте снова");
-                        }
-                    }
+                    _players.RemoveAt(i);
                 }
             }
         }
 
-        private bool TryGetPlayer(out Player player)
+        private bool TryFindPlayer(out Player foundPlayer)
         {
-            player = null;
+            bool isSucces = int.TryParse(Console.ReadLine(), out int numberId);
 
-            for (int i = 0; i < _players.Count; i++)
+            if (isSucces == true && numberId > 0 && numberId <= _players.Count)
             {
-                player = new Player(_players[i].Name, _players[i].Level);
-
+                foreach (Player player in _players)
+                {
+                    if (player.Id == numberId)
+                    {
+                        foundPlayer = player;
+                        return true;
+                    }
+                }
             }
 
-            if (player == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            Console.WriteLine("Игрок с таким ID отсутствует.");
+            foundPlayer = null;
+            return false;
         }
     }
 }
