@@ -1,0 +1,215 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace CSLight
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Deck deckCard = new Deck();
+            deckCard.FillDeck();
+           
+            Console.WriteLine("1 - взять карты\n2 - посмотреть какие карты у вас в руке\n3 - какие карты остались в колоде");
+            bool isRepeat = true;
+
+            while (isRepeat)
+            {
+                Console.WriteLine("Выберите действие :");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        deckCard.GetCard();
+                        break;
+
+                    case "2":
+                        deckCard.ShowCardsHand();
+                        break;
+
+                    case "3":
+                        deckCard.ShowCardsDeck();
+                        break;
+                }
+            }
+        }
+    }
+
+    class Card
+    {
+        public string Value { get;  private set; }
+        public string Suit { get; private set; }
+
+        public  Card( string value, string suit)
+        {
+            Value = value;
+            Suit = suit;
+        }
+    }
+
+    class Deck
+    {
+        private int _numberCard  = 52;
+        private Random random = new Random();
+        private List<Card> _cards = new List<Card>();
+        private List<Card> _cardsHand = new List<Card>();
+
+        public void FillDeck()
+        {
+            int count = 0;
+            while(count < _numberCard)
+            {
+                Card tempCard = new Card( RandomValue() , RandomSuit());
+
+                if (_cards.Contains(tempCard) == false)
+                {
+                    _cards.Add(tempCard);
+                    count++;
+                }
+            }
+        }
+        public string RandomSuit()
+        {
+            string suit = null;
+
+            switch (random.Next(1, 5))
+            {
+                case 1:
+                     suit = "Черви";
+                    break;
+
+                case 2:
+                    suit = "Буби";
+                    break;
+
+                case 3:
+                    suit = "Крусти";
+                    break;
+
+                case 4:
+                    suit = "Пики";
+                    break;
+            }
+            
+            return suit;
+        }
+
+        public string RandomValue()
+        {
+            string value = null;
+            
+            switch (random.Next(1, 14))
+            {
+                case 1:
+                    value = "2";
+                    break;
+
+                case 2:
+                    value = "3";
+                    break;
+
+                case 3:
+                    value = "4";
+                    break;
+
+                case 4:
+                    value = "5";
+                    break;
+
+                case 5:
+                    value = "6";
+                    break;
+
+                case 6:
+                    value = "7";
+                    break;
+
+                case 7:
+                    value = "8";
+                    break;
+
+                case 8:
+                    value = "9";
+                    break;
+
+                case 9:
+                    value = "10";
+                    break;
+
+                case 10:
+                    value = "Валет";
+                    break;
+
+                case 11:
+                    value = "Дама";
+                    break;
+
+                case 12:
+                    value = "Король";
+                    break;
+
+                case 13:
+                    value = "Туз";
+                    break;
+            }
+            return value;
+        }
+
+        public void GetCard()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("Сколько карт вы хотите взять :");
+                bool isSucces = int.TryParse(Console.ReadLine(), out int numberCard);
+
+                if (isSucces == true && numberCard > 0 && numberCard <= _numberCard)
+                {
+                    if(numberCard <= _cards.Count)
+                    {
+                        for (int i = 0; i < numberCard; )
+                        {
+                            _cardsHand.Add(_cards[i]);
+                            _cards.RemoveAt(i);
+                            numberCard--;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"В колоде недостаточно карт,осталось {_cards.Count}");
+                    }
+
+                    isWork = false;
+
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение.Попробуйте снова");
+                }
+            }
+        }
+
+        public void ShowCardsHand()
+        {
+
+            foreach (var card in _cardsHand)
+            {
+                Console.WriteLine(card.Suit + "-" + card.Value);
+            }
+        }
+
+        public void ShowCardsDeck()
+        {
+            foreach (var card in _cards)
+            {
+                Console.WriteLine(card.Suit + "-" + card.Value);
+            }
+        }
+    }
+}
+
