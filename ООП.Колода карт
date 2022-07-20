@@ -13,12 +13,12 @@ namespace CSLight
         {
             Deck deckCard = new Deck();
             deckCard.FillDeck();
-           
-            Console.WriteLine("1 - взять карты\n2 - посмотреть какие карты у вас в руке\n3 - какие карты остались в колоде");
+            deckCard.ShuffleDeck();
             bool isRepeat = true;
 
             while (isRepeat)
             {
+                Console.WriteLine("1 - взять карты\n2 - посмотреть какие карты у вас в руке\n3 - какие карты остались в колоде");
                 Console.WriteLine("Выберите действие :");
 
                 switch (Console.ReadLine())
@@ -35,6 +35,10 @@ namespace CSLight
                         deckCard.ShowCardsDeck();
                         break;
                 }
+
+                Console.WriteLine("Нижмите любую клавишу");
+                Console.ReadKey();
+                Console.Clear();
             }
         }
     }
@@ -54,109 +58,50 @@ namespace CSLight
     class Deck
     {
         private int _numberCard  = 52;
-        private Random random = new Random();
+        private Random _random = new Random();
         private List<Card> _cards = new List<Card>();
         private List<Card> _cardsHand = new List<Card>();
+        private List<string> _suit = new List<string>();
+        private List<string> _value = new List<string>();
+        
+        public void Suit()
+        {
+            
+            _suit.AddRange(new string[] { "Черви", "Буби", "Крести", "Пики" });
+        }
+
+        public void Value()
+        {
+
+            _value.AddRange(new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Валет", "Королева", "Король", "Туз" });
+        }
 
         public void FillDeck()
         {
-            int count = 0;
-            while(count < _numberCard)
-            {
-                Card tempCard = new Card( RandomValue() , RandomSuit());
+            Suit();
+            Value();
 
-                if (_cards.Contains(tempCard) == false)
+            for (int i = 0; i < _suit.Count; i++)
+            {
+                for (int j = 0; j < _value.Count; j++)
                 {
-                    _cards.Add(tempCard);
-                    count++;
+                    _cards.Add(new Card( _value[j] ,_suit[i] ));
                 }
             }
         }
-        public string RandomSuit()
+
+        public void ShuffleDeck()
         {
-            string suit = null;
-
-            switch (random.Next(1, 5))
-            {
-                case 1:
-                     suit = "Черви";
-                    break;
-
-                case 2:
-                    suit = "Буби";
-                    break;
-
-                case 3:
-                    suit = "Крусти";
-                    break;
-
-                case 4:
-                    suit = "Пики";
-                    break;
-            }
+            Card tempNumber;
             
-            return suit;
-        }
 
-        public string RandomValue()
-        {
-            string value = null;
-            
-            switch (random.Next(1, 14))
+            for (int i = 0; i < _cards.Count; i++)
             {
-                case 1:
-                    value = "2";
-                    break;
-
-                case 2:
-                    value = "3";
-                    break;
-
-                case 3:
-                    value = "4";
-                    break;
-
-                case 4:
-                    value = "5";
-                    break;
-
-                case 5:
-                    value = "6";
-                    break;
-
-                case 6:
-                    value = "7";
-                    break;
-
-                case 7:
-                    value = "8";
-                    break;
-
-                case 8:
-                    value = "9";
-                    break;
-
-                case 9:
-                    value = "10";
-                    break;
-
-                case 10:
-                    value = "Валет";
-                    break;
-
-                case 11:
-                    value = "Дама";
-                    break;
-
-                case 12:
-                    value = "Король";
-                    break;
-
-                case 13:
-                    value = "Туз";
-                    break;
+                int randomIndex = _random.Next(0, _cards.Count);
+                tempNumber = _cards[i];
+                _cards[i] = _cards[randomIndex];
+                _cards[randomIndex] = tempNumber;
             }
-            return value;
         }
 
         public void GetCard()
