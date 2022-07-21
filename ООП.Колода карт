@@ -58,7 +58,7 @@ namespace CSLight
 
     class Deck
     {
-        public int NumberCard { get { return NumberCard = 52; } private set { NumberCard = value; } }
+        public int NumberCard { get; private set; }
         private Random _random = new Random();
         private List<Card> _cardsDeck = new List<Card>();
 
@@ -75,6 +75,7 @@ namespace CSLight
                 for (int j = 0; j < _value.Count; j++)
                 {
                     _cardsDeck.Add(new Card( _value[j] ,_suit[i] ));
+                    NumberCard++;
                 }
             }
         }
