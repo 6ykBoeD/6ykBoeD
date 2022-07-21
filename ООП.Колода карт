@@ -25,7 +25,7 @@ namespace CSLight
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        player.GetCardsHand();
+                        player.GetCardsHand(deckCard);
                         break;
 
                     case "2":
@@ -92,7 +92,7 @@ namespace CSLight
             }
         }
         
-        public void GetCard(out Card cards)
+        public bool GetCard(out Card cards)
         {
             if(_cardsDeck.Count > 0 && _cardsDeck.Count < NumberCard)
             {
@@ -100,11 +100,13 @@ namespace CSLight
                 {
                     cards = card;
                     _cardsDeck.Remove(card);
-                    break;
+                    return true;
+                    
                 }
             }
 
             cards = null;
+            return false;
         }
 
         public void ShowCardsDeck()
@@ -119,17 +121,15 @@ namespace CSLight
     class Player
     {
         private List<Card> _cardsHand = new List<Card>();
-        private Deck deck = new Deck();
-
-        public void GetCardsHand()
+        
+        public void GetCardsHand(Deck deck)
         {
             Console.WriteLine("Сколько карт вы хотите взять :");
             bool isSucces = int.TryParse(Console.ReadLine(), out int numberId);
 
             if (isSucces == true && numberId > 0 && numberId <= deck.NumberCard)
             {
-                Deck cards = new Deck();
-                cards.GetCard(out Card card);
+                deck.GetCard(out Card card);
                 _cardsHand.Add(card);
             }
         }
