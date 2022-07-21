@@ -12,10 +12,11 @@ namespace CSLight
         static void Main(string[] args)
         {
             Deck deckCard = new Deck();
+            Player player = new Player();
             deckCard.FillDeck();
             deckCard.ShuffleDeck();
             bool isRepeat = true;
-
+  
             while (isRepeat)
             {
                 Console.WriteLine("1 - взять карты\n2 - посмотреть какие карты у вас в руке\n3 - какие карты остались в колоде");
@@ -24,11 +25,11 @@ namespace CSLight
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        deckCard.GetCard();
+                        player.GetCardsHand();
                         break;
 
                     case "2":
-                        deckCard.ShowCardsHand();
+                        player.ShowCardsHand();
                         break;
 
                     case "3":
@@ -57,35 +58,23 @@ namespace CSLight
 
     class Deck
     {
-        private int _numberCard  = 52;
+        public int NumberCard { get { return NumberCard = 52; } private set { NumberCard = value; } }
         private Random _random = new Random();
-        private List<Card> _cards = new List<Card>();
-        private List<Card> _cardsHand = new List<Card>();
-        private List<string> _suit = new List<string>();
-        private List<string> _value = new List<string>();
-        
-        public void Suit()
-        {
-            
-            _suit.AddRange(new string[] { "Черви", "Буби", "Крести", "Пики" });
-        }
-
-        public void Value()
-        {
-
-            _value.AddRange(new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Валет", "Королева", "Король", "Туз" });
-        }
+        private List<Card> _cardsDeck = new List<Card>();
 
         public void FillDeck()
         {
-            Suit();
-            Value();
+            List<string> _suit = new List<string>();
+            _suit.AddRange(new string[] { "Черви", "Буби", "Крести", "Пики" });
+
+            List<string> _value = new List<string>();
+            _value.AddRange(new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Валет", "Королева", "Король", "Туз" });
 
             for (int i = 0; i < _suit.Count; i++)
             {
                 for (int j = 0; j < _value.Count; j++)
                 {
-                    _cards.Add(new Card( _value[j] ,_suit[i] ));
+                    _cardsDeck.Add(new Card( _value[j] ,_suit[i] ));
                 }
             }
         }
@@ -94,63 +83,60 @@ namespace CSLight
         {
             Card tempNumber;
             
-
-            for (int i = 0; i < _cards.Count; i++)
+            for (int i = 0; i < _cardsDeck.Count; i++)
             {
-                int randomIndex = _random.Next(0, _cards.Count);
-                tempNumber = _cards[i];
-                _cards[i] = _cards[randomIndex];
-                _cards[randomIndex] = tempNumber;
+                int randomIndex = _random.Next(0, _cardsDeck.Count);
+                tempNumber = _cardsDeck[i];
+                _cardsDeck[i] = _cardsDeck[randomIndex];
+                _cardsDeck[randomIndex] = tempNumber;
             }
         }
-
-        public void GetCard()
+        
+        public void GetCard(out Card cards)
         {
-            bool isWork = true;
-
-            while (isWork)
+            if(_cardsDeck.Count > 0 && _cardsDeck.Count < NumberCard)
             {
-                Console.WriteLine("Сколько карт вы хотите взять :");
-                bool isSucces = int.TryParse(Console.ReadLine(), out int numberCard);
-
-                if (isSucces == true && numberCard > 0 && numberCard <= _numberCard)
+                foreach (var card in _cardsDeck)
                 {
-                    if(numberCard <= _cards.Count)
-                    {
-                        for (int i = 0; i < numberCard; )
-                        {
-                            _cardsHand.Add(_cards[i]);
-                            _cards.RemoveAt(i);
-                            numberCard--;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"В колоде недостаточно карт,осталось {_cards.Count}");
-                    }
-
-                    isWork = false;
-
+                    cards = card;
+                    _cardsDeck.Remove(card);
+                    break;
                 }
-                else
-                {
-                    Console.WriteLine("Неверное значение.Попробуйте снова");
-                }
+            }
+
+            cards = null;
+        }
+
+        public void ShowCardsDeck()
+        {
+            foreach (var card in _cardsDeck)
+            {
+                Console.WriteLine(card.Suit + "-" + card.Value);
+            }
+        }
+    }
+
+    class Player
+    {
+        private List<Card> _cardsHand = new List<Card>();
+        private Deck deck = new Deck();
+
+        public void GetCardsHand()
+        {
+            Console.WriteLine("Сколько карт вы хотите взять :");
+            bool isSucces = int.TryParse(Console.ReadLine(), out int numberId);
+
+            if (isSucces == true && numberId > 0 && numberId <= deck.NumberCard)
+            {
+                Deck cards = new Deck();
+                cards.GetCard(out Card card);
+                _cardsHand.Add(card);
             }
         }
 
         public void ShowCardsHand()
         {
-
             foreach (var card in _cardsHand)
-            {
-                Console.WriteLine(card.Suit + "-" + card.Value);
-            }
-        }
-
-        public void ShowCardsDeck()
-        {
-            foreach (var card in _cards)
             {
                 Console.WriteLine(card.Suit + "-" + card.Value);
             }
