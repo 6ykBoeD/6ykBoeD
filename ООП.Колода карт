@@ -25,7 +25,7 @@ namespace CSLight
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        player.GetCardsHand(deckCard);
+                        player.TryTakeCard(deckCard);
                         break;
 
                     case "2":
@@ -60,15 +60,13 @@ namespace CSLight
     {
         private Random _random = new Random();
         private List<Card> _cardsDeck = new List<Card>();
+
         public int NumberCard { get; private set; }
 
         public void FillDeck()
         {
-            List<string> _suit = new List<string>();
-            _suit.AddRange(new string[] { "Черви", "Буби", "Крести", "Пики" });
-
-            List<string> _value = new List<string>();
-            _value.AddRange(new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Валет", "Королева", "Король", "Туз" });
+            List<string> _suit = new List<string>() { "Черви", "Буби", "Крести", "Пики" };
+            List<string> _value = new List<string>() { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Валет", "Королева", "Король", "Туз" };
 
             for (int i = 0; i < _suit.Count; i++)
             {
@@ -93,17 +91,15 @@ namespace CSLight
             }
         }
         
-        public bool GetCard(out Card cards)
+        public void GetCard(out Card cards)
         {
             foreach (var card in _cardsDeck)
             {
                 cards = card;
                 _cardsDeck.Remove(card);
-                return true;
             }
 
             cards = null;
-            return false;
         }
 
         public void ShowCardsDeck()
@@ -128,18 +124,22 @@ namespace CSLight
     {
         private List<Card> _cardsHand = new List<Card>();
         
-        public void GetCardsHand(Deck deck)
+        public void TryTakeCard(Deck deck)
         {
             Console.WriteLine("Сколько карт вы хотите взять :");
-            bool isSucces = int.TryParse(Console.ReadLine(), out int numberId);
+            bool isSucces = int.TryParse(Console.ReadLine(), out int countCard);
 
-            for (int i = 0; i < numberId; i++)
+            if (isSucces == true && countCard > 0 && countCard <= deck.NumberCard)
             {
-                if (isSucces == true && numberId > 0 && numberId <= deck.NumberCard)
+                for (int i = 0; i < countCard; i++)
                 {
                     deck.GetCard(out Card card);
                     _cardsHand.Add(card);
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Попробуйте снова, в колоде осталось {deck.NumberCard} карт");
             }
         }
 
