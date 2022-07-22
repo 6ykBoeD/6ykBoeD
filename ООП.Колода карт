@@ -61,8 +61,6 @@ namespace CSLight
         private Random _random = new Random();
         private List<Card> _cardsDeck = new List<Card>();
 
-        public int NumberCard { get; private set; }
-
         public void FillDeck()
         {
             List<string> _suit = new List<string>() { "Черви", "Буби", "Крести", "Пики" };
@@ -73,9 +71,13 @@ namespace CSLight
                 for (int j = 0; j < _value.Count; j++)
                 {
                     _cardsDeck.Add(new Card( _value[j] ,_suit[i] ));
-                    NumberCard++;
                 }
             }
+        }
+
+        public int CountCardDeck()
+        {
+            return _cardsDeck.Count;
         }
 
         public void ShuffleDeck()
@@ -129,7 +131,7 @@ namespace CSLight
             Console.WriteLine("Сколько карт вы хотите взять :");
             bool isSucces = int.TryParse(Console.ReadLine(), out int countCard);
 
-            if (isSucces == true && countCard > 0 && countCard <= deck.NumberCard)
+            if (isSucces == true && countCard > 0 && countCard <= deck.CountCardDeck())
             {
                 for (int i = 0; i < countCard; i++)
                 {
@@ -139,7 +141,7 @@ namespace CSLight
             }
             else
             {
-                Console.WriteLine($"Попробуйте снова, в колоде осталось {deck.NumberCard} карт");
+                Console.WriteLine($"Попробуйте снова, в колоде осталось {deck.CountCardDeck()} карт");
             }
         }
 
