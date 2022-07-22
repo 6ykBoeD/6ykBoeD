@@ -37,7 +37,7 @@ namespace CSLight
                         break;
                 }
 
-                Console.WriteLine("Нижмите любую клавишу");
+                Console.WriteLine("\nНижмите любую клавишу");
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -58,9 +58,9 @@ namespace CSLight
 
     class Deck
     {
-        public int NumberCard { get; private set; }
         private Random _random = new Random();
         private List<Card> _cardsDeck = new List<Card>();
+        public int NumberCard { get; private set; }
 
         public void FillDeck()
         {
@@ -95,15 +95,11 @@ namespace CSLight
         
         public bool GetCard(out Card cards)
         {
-            if(_cardsDeck.Count > 0 && _cardsDeck.Count < NumberCard)
+            foreach (var card in _cardsDeck)
             {
-                foreach (var card in _cardsDeck)
-                {
-                    cards = card;
-                    _cardsDeck.Remove(card);
-                    return true;
-                    
-                }
+                cards = card;
+                _cardsDeck.Remove(card);
+                return true;
             }
 
             cards = null;
@@ -112,10 +108,19 @@ namespace CSLight
 
         public void ShowCardsDeck()
         {
-            foreach (var card in _cardsDeck)
+            if(_cardsDeck.Count > 0)
             {
-                Console.WriteLine(card.Suit + "-" + card.Value);
+                foreach (var card in _cardsDeck)
+                {
+                    Console.WriteLine(card.Suit + "-" + card.Value);
+                }
             }
+            else
+            {
+                Console.WriteLine("\nКарт в колоде нет");
+            }
+
+            Console.WriteLine($"\nВ колоде осталось {_cardsDeck.Count} карт");
         }
     }
 
@@ -128,18 +133,28 @@ namespace CSLight
             Console.WriteLine("Сколько карт вы хотите взять :");
             bool isSucces = int.TryParse(Console.ReadLine(), out int numberId);
 
-            if (isSucces == true && numberId > 0 && numberId <= deck.NumberCard)
+            for (int i = 0; i < numberId; i++)
             {
-                deck.GetCard(out Card card);
-                _cardsHand.Add(card);
+                if (isSucces == true && numberId > 0 && numberId <= deck.NumberCard)
+                {
+                    deck.GetCard(out Card card);
+                    _cardsHand.Add(card);
+                }
             }
         }
 
         public void ShowCardsHand()
         {
-            foreach (var card in _cardsHand)
+            if( _cardsHand.Count > 0)
             {
-                Console.WriteLine(card.Suit + "-" + card.Value);
+                foreach (var card in _cardsHand)
+                {
+                    Console.WriteLine(card.Suit + "-" + card.Value);
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nКарт в руке нет ");
             }
         }
     }
