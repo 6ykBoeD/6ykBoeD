@@ -1,4 +1,4 @@
-      using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +25,7 @@ namespace CSLight
                         break;
 
                     case "2":
-                        repositoryBook.SortBook();
+                        repositoryBook.ShowBookCategory();
                         break;
 
                     case "3":
@@ -50,13 +50,17 @@ namespace CSLight
 
     class Book
     {
-        public string TitleBook { get; private set; }
-        public string Author { get; private set; }
-        public string YearRelease { get; private set; }
+        static private int _ids;
 
-        public Book(string titleBook, string author, string yearRelease)
+        public int Id { get; private set; }
+        public int YearRelease { get; private set; }
+        public string Title { get; private set; }
+        public string Author { get; private set; }
+
+        public Book(string title, string author, int yearRelease)
         {
-            TitleBook = titleBook;
+            Id = ++_ids;
+            Title = title;
             Author = author;
             YearRelease = yearRelease;
         }
@@ -69,41 +73,84 @@ namespace CSLight
         public void AddBook()
         {
             Console.WriteLine("Введите название книги :");
-            string getTitleBook = Console.ReadLine();
-            Console.WriteLine("Кто автор книги :");
-            string getAuthorBook = Console.ReadLine();
-            Console.WriteLine("В каком году книгу издали :");
-            string getYearRelease = Console.ReadLine();
+            string title = Console.ReadLine();
 
-            _books.Add(new Book(getTitleBook, getAuthorBook, getYearRelease));
+            Console.WriteLine("Кто автор книги :");
+            string author = Console.ReadLine();
+
+            Console.WriteLine("В каком году книгу издали :");
+            TryGetNumber(out int yearRelease);
+    
+            _books.Add(new Book(title, author, yearRelease));
         }
 
-        public void SortBook()
+        public void ShowBookCategory()
         {
-            Console.WriteLine("Введите название/автора/год книги");
-            string showBookBy = Console.ReadLine();
+            bool isWork = true;
 
-            foreach (var book in _books)
+            while (isWork)
             {
-                if (book.TitleBook == showBookBy || book.Author == showBookBy || book.YearRelease == showBookBy)
+                Console.WriteLine("1 - показать книги по названию\n2 - показать книги по автору\n3 - показать книгу по году издания\n4 - выйти");
+
+                switch (Console.ReadLine())
                 {
-                    Console.WriteLine(book.TitleBook + " " + book.Author + " " + book.YearRelease);
-                }
-                else
-                {
-                    Console.WriteLine("Таких книг нет");
+                    case "1":
+                        Console.WriteLine("\nВведите название книги :");
+                        string title = Console.ReadLine();
+
+                        foreach (var book in _books)
+                        {
+                            if (book.Title == title)
+                            {
+                                TryGetBook(book);
+                            }
+                        }
+
+                        break;
+
+                    case "2":
+                        Console.WriteLine("Введите автора :");
+                        string author = Console.ReadLine();
+
+                        foreach (var book in _books)
+                        {
+                            if (book.Author == author)
+                            {
+                                TryGetBook(book);
+                            }
+                        }
+
+                        break;
+
+                    case "3":
+                        Console.WriteLine("Введите год издания :");
+                        TryGetNumber(out int yearRealase);
+
+                        foreach (var book in _books)
+                        {
+                            if (book.YearRelease == yearRealase)
+                            {
+                                TryGetBook(book);
+                            }
+                        }
+
+                        break;
+
+                    case "4":
+                        isWork = false;
+                        break;
                 }
             }
         }
 
         public void DeleteBook()
         {
-            Console.WriteLine("Введите название книги которую хотите убрать :");
-            string titleBook = Console.ReadLine();
+            Console.WriteLine("Введите номер книги которую хотите убрать :");
+            TryGetNumber(out int numberId);
 
             for (int i = 0; i < _books.Count; i++)
             {
-                if (_books[i].TitleBook == titleBook)
+                if (_books[i].Id == numberId)
                 {
                     _books.RemoveAt(i);
                 }
@@ -114,10 +161,42 @@ namespace CSLight
         {
             foreach (var book in _books)
             {
-                Console.WriteLine(book.TitleBook + " " + book.Author + " " + book.YearRelease);
+                TryGetBook(book);
             }
         }
 
+        public void TryGetBook(Book book)
+        {
+            if (_books.Contains(book))
+            {
+                Console.WriteLine(book.Id + " " + book.Title + " " + book.Author + " " + book.YearRelease);
+            }
+            else
+            {
+                Console.WriteLine("Нет такой книги");
+            }
+        }
+
+        public void TryGetNumber(out int number)
+        {
+            number = 0;
+            bool isRepeat = true;
+
+            while (isRepeat)
+            {
+                bool isWork = int.TryParse(Console.ReadLine(), out int tempVariable);
+
+                if (isWork)
+                {
+                    isRepeat = false;
+                    number = tempVariable;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+        }
     }
 }
 
