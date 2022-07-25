@@ -25,11 +25,11 @@ namespace CSLight
                         break;
 
                     case "2":
-                        repositoryBook.ShowBookCategory();
+                        repositoryBook.ShowBooksCategory();
                         break;
 
                     case "3":
-                        repositoryBook.ShowBooks();
+                        repositoryBook.ShowAllBooks();
                         break;
 
                     case "4":
@@ -84,7 +84,7 @@ namespace CSLight
             _books.Add(new Book(title, author, yearRelease));
         }
 
-        public void ShowBookCategory()
+        public void ShowBooksCategory()
         {
             bool isWork = true;
 
@@ -95,45 +95,15 @@ namespace CSLight
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        Console.WriteLine("\nВведите название книги :");
-                        string title = Console.ReadLine();
-
-                        foreach (var book in _books)
-                        {
-                            if (book.Title == title)
-                            {
-                                TryGetBook(book);
-                            }
-                        }
-
+                        ShowBooksByTitle();
                         break;
 
                     case "2":
-                        Console.WriteLine("Введите автора :");
-                        string author = Console.ReadLine();
-
-                        foreach (var book in _books)
-                        {
-                            if (book.Author == author)
-                            {
-                                TryGetBook(book);
-                            }
-                        }
-
+                        ShowBooksByAuthor();
                         break;
 
                     case "3":
-                        Console.WriteLine("Введите год издания :");
-                        TryGetNumber(out int yearRealase);
-
-                        foreach (var book in _books)
-                        {
-                            if (book.YearRelease == yearRealase)
-                            {
-                                TryGetBook(book);
-                            }
-                        }
-
+                        ShowBooksByYearRelease(); 
                         break;
 
                     case "4":
@@ -157,23 +127,58 @@ namespace CSLight
             }
         }
 
-        public void ShowBooks()
+        public void ShowAllBooks()
         {
             foreach (var book in _books)
             {
-                TryGetBook(book);
+                ShowBook(book);
             }
         }
 
-        public void TryGetBook(Book book)
+        public void ShowBook(Book book)
         {
-            if (_books.Contains(book))
+            Console.WriteLine(book.Id + " " + book.Title + " " + book.Author + " " + book.YearRelease);
+        }
+
+        public void ShowBooksByTitle()
+        {
+            Console.WriteLine("\nВведите название книги :");
+            string title = Console.ReadLine();
+
+            foreach (var book in _books)
             {
-                Console.WriteLine(book.Id + " " + book.Title + " " + book.Author + " " + book.YearRelease);
+                if (book.Title == title)
+                {
+                    ShowBook(book);
+                }
             }
-            else
+        }
+
+        public void ShowBooksByAuthor()
+        {
+            Console.WriteLine("Введите автора :");
+            string author = Console.ReadLine();
+
+            foreach (var book in _books)
             {
-                Console.WriteLine("Нет такой книги");
+                if (book.Author == author)
+                {
+                    ShowBook(book);
+                }
+            }
+        }
+
+        public void ShowBooksByYearRelease()
+        {
+            Console.WriteLine("Введите год издания :");
+            TryGetNumber(out int yearRealase);
+
+            foreach (var book in _books)
+            {
+                if (book.YearRelease == yearRealase)
+                {
+                    ShowBook(book);
+                }
             }
         }
 
