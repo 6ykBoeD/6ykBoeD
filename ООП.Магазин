@@ -1,0 +1,190 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace CSLight
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Seller seller = new Seller();
+            Buyer buyer = new Buyer();
+            buyer.AddMoney();
+            int positionX = 5;
+            bool isRepeat = true;
+            
+            while (isRepeat)
+            {
+                seller.ShowInfo();
+                Console.WriteLine();
+                buyer.ShowInfo();
+                Console.WriteLine();
+                Console.WriteLine($"1 - для добавление товара\n2 - Купить товар\n3 - выход\n");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        seller.AddProducts();
+                        break;
+
+                    case "2":
+                        buyer.BuyProduts(seller);
+                        break;
+
+                    case "3":
+                        isRepeat = false;
+                        break;
+                }
+
+                Console.WriteLine("\nНижмите любую клавишу");
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Product
+    {
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+        public int Count { get; private set; }
+        public Product( string name, int price, int count)
+        {
+            Name = name;
+            Price = price;
+            Count = count;
+        }
+
+        public void ChangeCount(int count)
+        {
+            Count = count;
+        }
+    }
+
+    class Seller
+    {
+        private List<Product> _products = new List<Product>();
+
+        public int Account { get; private set; }
+
+        public void AddProducts()
+        {
+            Console.WriteLine("Название продукта :\n");
+            string name = Console.ReadLine();
+
+            Console.WriteLine("Введите цену :\n");
+            int price = GetNumber();
+
+            Console.WriteLine("Введиет количество :\n");
+            int count = GetNumber();
+
+            _products.Add(new Product(name,price,count));
+        }
+
+        public void GetProduct(out Product name,out int count)
+        {
+            name = null;
+
+            Console.WriteLine("Название продукта :");
+            string nameProduct = Console.ReadLine();
+
+            Console.WriteLine("Какое количество требуется :");
+            count = GetNumber();
+
+            foreach (var product in _products)
+            {
+                if (nameProduct == product.Name && count <= product.Count)
+                {
+                    name = product;
+                    Account += product.Price * count;
+                    int remains = product.Count - count;
+                    product.ChangeCount(remains);
+
+                    if (product.Count == 0)
+                    {
+                        _products.Remove(product);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Операция невозможна.Попробуйте снова");
+
+                }
+            }
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Баланс на счете = {Account}");
+
+            foreach (var product in _products)
+            {
+                Console.WriteLine(product.Name + " = " + product.Price + " в количестве " + product.Count);
+            }
+        }
+
+        private int GetNumber()
+        {
+            bool isRepeat = true;
+
+            while (isRepeat)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    return count;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+            return 0;
+        }
+    }
+
+    class Buyer
+    {
+        private List<Product> _productsBuyer = new List<Product>();
+
+        public int Account { get; private set; }
+
+        public void AddMoney()
+        {
+            Account = 10000;
+        }
+        public void BuyProduts(Seller seller)
+        {
+            seller.GetProduct(out Product name,out int count);
+            int purchasePrice = name.Price * count;
+
+            if (purchasePrice >= 0)
+            {
+                int countProducts = 0;
+                countProducts += count;
+                Account -= name.Price * count;
+                _productsBuyer.Add(new Product(name.Name,name.Price,countProducts));
+            }
+            else
+            {
+                Console.WriteLine($"на вашем счете не хватает {name.Price * count - Account} рублей"); 
+            }
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Баланс на счете покупателя = {Account}");
+
+            foreach (var product in _productsBuyer)
+            {
+                Console.WriteLine(product.Name +" в количестве " + product.Count);
+            }
+        }
+    }
+}
+
