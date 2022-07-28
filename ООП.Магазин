@@ -15,7 +15,7 @@ namespace CSLight
             Buyer buyer = new Buyer();
             buyer.AddMoney();
             bool isRepeat = true;
-            
+
             while (isRepeat)
             {
                 seller.ShowInfo();
@@ -51,7 +51,7 @@ namespace CSLight
         public string Name { get; private set; }
         public int Price { get; private set; }
         public int Count { get; private set; }
-        public Product( string name, int price, int count)
+        public Product(string name, int price, int count)
         {
             Name = name;
             Price = price;
@@ -81,10 +81,10 @@ namespace CSLight
             Console.WriteLine("Введиет количество :\n");
             int count = GetNumber();
 
-            _products.Add(new Product(name,price,count));
+            _products.Add(new Product(name, price, count));
         }
 
-        public void GetProduct(out Product name,out int count)
+        public void GetProduct(out Product name, out int count)
         {
             name = null;
 
@@ -102,16 +102,10 @@ namespace CSLight
                     Account += product.Price * count;
                     int remains = product.Count - count;
                     product.ChangeCount(remains);
-
-                    if (product.Count == 0)
-                    {
-                        _products.Remove(product);
-                    }
                 }
                 else
                 {
-                    Console.WriteLine("Операция невозможна.Попробуйте снова");
-
+                    Console.WriteLine("Такого товара нет");
                 }
             }
         }
@@ -157,9 +151,10 @@ namespace CSLight
         {
             Account = 10000;
         }
+
         public void BuyProduts(Seller seller)
         {
-            seller.GetProduct(out Product name,out int count);
+            seller.GetProduct(out Product name, out int count);
             int purchasePrice = name.Price * count;
 
             if (purchasePrice >= 0)
@@ -167,11 +162,11 @@ namespace CSLight
                 int countProducts = 0;
                 countProducts += count;
                 Account -= name.Price * count;
-                _productsBuyer.Add(new Product(name.Name,name.Price,countProducts));
+                _productsBuyer.Add(new Product(name.Name, name.Price, countProducts));
             }
             else
             {
-                Console.WriteLine($"на вашем счете не хватает {name.Price * count - Account} рублей"); 
+                Console.WriteLine($"на вашем счете не хватает {name.Price * count - Account} рублей");
             }
         }
 
@@ -181,7 +176,7 @@ namespace CSLight
 
             foreach (var product in _productsBuyer)
             {
-                Console.WriteLine(product.Name +" в количестве " + product.Count);
+                Console.WriteLine(product.Name + " в количестве " + product.Count);
             }
         }
     }
