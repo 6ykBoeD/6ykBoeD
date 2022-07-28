@@ -84,30 +84,21 @@ namespace CSLight
             _products.Add(new Product(name, price, count));
         }
 
-        public void GetProduct(out Product name, out int count)
+        public void GetProduct(out Product name)
         {
             name = null;
 
-            Console.WriteLine("Название продукта :");
-            string nameProduct = Console.ReadLine();
-
-            Console.WriteLine("Какое количество требуется :");
-            count = GetNumber();
-
             foreach (var product in _products)
             {
-                if (nameProduct == product.Name && count <= product.Count)
-                {
-                    name = product;
-                    Account += product.Price * count;
-                    int remains = product.Count - count;
-                    product.ChangeCount(remains);
-                }
-                else
-                {
-                    Console.WriteLine("Такого товара нет");
-                }
+                name = product;
             }
+        }
+
+        public void ChangeAccount(Product product,int count)
+        {
+            Account += product.Price * count;
+            int remains = product.Count - count;
+            product.ChangeCount(remains);
         }
 
         public void ShowInfo()
@@ -120,7 +111,7 @@ namespace CSLight
             }
         }
 
-        private int GetNumber()
+        public int GetNumber()
         {
             bool isRepeat = true;
 
@@ -137,6 +128,7 @@ namespace CSLight
                     Console.WriteLine("Неверное значение");
                 }
             }
+            
             return 0;
         }
     }
@@ -154,19 +146,35 @@ namespace CSLight
 
         public void BuyProduts(Seller seller)
         {
-            seller.GetProduct(out Product name, out int count);
+
+            Console.WriteLine("Название продукта :");
+            string nameProduct = Console.ReadLine();
+
+            Console.WriteLine("Какое количество требуется :");
+            int count = seller.GetNumber();
+
+            seller.GetProduct(out Product name);
             int purchasePrice = name.Price * count;
 
-            if (purchasePrice >= 0)
+            if (name.Name == nameProduct && purchasePrice <= Account && name.Count >= count)
             {
                 int countProducts = 0;
                 countProducts += count;
+                seller.ChangeAccount(name, count);
                 Account -= name.Price * count;
                 _productsBuyer.Add(new Product(name.Name, name.Price, countProducts));
             }
+            else if (name == null)
+            {
+                Console.WriteLine("Такого товара нет");
+            }
+            else if (count > name.Count)
+            {
+                Console.WriteLine("Не хватает товара");
+            }
             else
             {
-                Console.WriteLine($"на вашем счете не хватает {name.Price * count - Account} рублей");
+                Console.WriteLine("Неверное Значение");
             }
         }
 
