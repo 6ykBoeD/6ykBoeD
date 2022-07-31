@@ -108,7 +108,7 @@ namespace CSLight
             _cells.Add(new Cell(new Product(inputName, inputPrice),inputCount));
         }
 
-        public void GetProduct(out Product product ,string nameProduct,int count)
+        public void FindProduct(out Product product ,string nameProduct,int count)
         {
             product = null;
             
@@ -177,33 +177,35 @@ namespace CSLight
         {
             Console.WriteLine("Название продукта :");
             string nameProduct = Console.ReadLine();
-
+            bool isRepeat = true;
             Console.WriteLine("Какое количество требуется :");
             int count = GetNumber();
 
-            seller.GetProduct(out Product product, nameProduct, count);
+            seller.FindProduct(out Product product, nameProduct, count);
 
             if(product != null)
             {
                 if(_cellsBuyer.Count > 0)
                 {
-                    foreach (var cell in _cellsBuyer)
+                    for (int i = 0; i < _cellsBuyer.Count; i++)
                     {
-                        if (cell.Product == product)
+                        if (_cellsBuyer[i].Product == product)
                         {
-                            cell.IncreaseCount(count);
-                        }
-                        else
-                        {
-                            _cellsBuyer.Add(new Cell(product, count));
+                            _cellsBuyer[i].IncreaseCount(count);
+                            isRepeat = false;
                         }
                     }
+                    while (isRepeat)
+                    {
+                        _cellsBuyer.Add(new Cell(product, count));
+                        isRepeat = false;
+                    }
+                    
                 }
                 else
                 {
                     _cellsBuyer.Add(new Cell(product, count));
                 }
-
             }
             else
             {
@@ -213,20 +215,20 @@ namespace CSLight
 
         public void BuyProducts(Seller seller)
         {
-            foreach (var cell in _cellsBuyer)
+            for (int i = 0; i < 1; i++)
             {
-                if (Account >= SumPurchase(cell.Count))
+                if (Account >= SumPurchase(_cellsBuyer[i].Count))
                 {
-                    Account -= SumPurchase(cell.Count);
-                    seller.IncreeseAccount(SumPurchase(cell.Count));
+                    Account -= SumPurchase(_cellsBuyer[i].Count);
+                    seller.IncreeseAccount(SumPurchase(_cellsBuyer[i].Count));
                     Console.WriteLine("Спасибо за покупку.Приходите к нам ещё");
                 }
                 else
                 {
-                    Console.WriteLine($"У вас недостаточно средств.Не хватает {SumPurchase(cell.Count) - Account} рублей");
+                    Console.WriteLine($"У вас недостаточно средств.Не хватает {SumPurchase(_cellsBuyer[i].Count) - Account} рублей");
                 }
             }
-            
+           
         }
 
         public void RemoveProduct()
@@ -258,10 +260,11 @@ namespace CSLight
 
         public void ShowInfo()
         {
-            int positionX = 1;
+            int sum = 0;
+            int positionX = 0;
             Console.SetCursorPosition(50, 0);
             Console.WriteLine("Корзина покупатель");
-            Console.SetCursorPosition(50, 1);
+            Console.SetCursorPosition(50, ++positionX);
             Console.WriteLine($"Баланс на счете покупателя = {Account}");
             
 
@@ -269,9 +272,11 @@ namespace CSLight
             {
                 Console.SetCursorPosition(50, ++positionX);
                 Console.WriteLine(_cellsBuyer[i].Product.Name +  " в количестве " + _cellsBuyer[i].Count);
-                Console.SetCursorPosition(50, (++positionX + 1));
-                Console.WriteLine($"Стоимость товаров {SumPurchase(_cellsBuyer[i].Count)}");
+                sum = SumPurchase(_cellsBuyer[i].Count);
             }
+
+            Console.SetCursorPosition(50, ++positionX);
+            Console.WriteLine($"Стоимость товаров {sum}");
         }
 
         public void GetProduct(out Cell cell,string nameProduct)
