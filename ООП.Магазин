@@ -21,7 +21,7 @@ namespace CSLight
                 seller.ShowInfo();
                 buyer.ShowInfo();
                 Console.SetCursorPosition(0, 10);
-                Console.WriteLine($"1 - для добавление товара\n2 - Купить товар\n3 - выход\n");
+                Console.WriteLine($"1 - Добавить товар в магазин\n2 - Положить в корзину\n3 - Совершить покупку\n4 - Убрать товар из корзины\n5 - выход\n");
                 string inputUser = Console.ReadLine();
 
                 switch (inputUser)
@@ -31,10 +31,18 @@ namespace CSLight
                         break;
 
                     case "2":
-                        buyer.BuyProduts(seller);
+                        buyer.PutInBasket(seller);
                         break;
 
                     case "3":
+                        buyer.BuyProducts();
+                        break;
+
+                    case "4":
+                        buyer.RemoveProduct();
+                        break;
+
+                    case "5":
                         isWork = false;
                         break;
                 }
@@ -50,24 +58,39 @@ namespace CSLight
     {
         public string Name { get; private set; }
         public int Price { get; private set; }
-        public int Count { get; private set; }
 
-        public Product(string name, int price, int count )
+        public Product(string name, int price)
         {
             Name = name;
             Price = price;
+        }
+    }
+
+    class Cell
+    {
+        public int Count { get; private set; }
+
+        public Cell( int count)
+        {
             Count = count;
         }
 
-        public void ChangeCount(int count)
+        public void DecreaseCount(int count)
         {
-            Count = count;
+            Count -= count;
+        }
+
+        public void IncreaseCount(int count)
+        {
+            Count += count;
         }
     }
 
     class Seller
     {
-        private List<Product> _products = new List<Product>() { new Product("Хлеб", 25, 1000), new Product("Сок", 50, 100) };
+        private List<Product> _products = new List<Product>() { new Product("Хлеб", 25), new Product("Сок", 50) };
+
+        private List<Cell> _cells = new List<Cell>() { new Cell(1000),new Cell(500)};
 
         public int Account { get; private set; }
 
@@ -80,53 +103,52 @@ namespace CSLight
             int price = GetNumber();
 
             Console.WriteLine("Введиет количество :\n");
-            int count = GetNumber();
+            int inputCount = GetNumber();
 
-            _products.Add(new Product(name, price, count));
+            _products.Add(new Product(name, price));
+            _cells.Add(new Cell(inputCount));
         }
 
         public void GetProduct(out Product name ,string nameProduct,int count)
         {
             name = null;
-
-            foreach (var product in _products)
+            
+            if (_products.Count > 0)
             {
-                if(nameProduct == product.Name)
+                for (int i = 0; i < _products.Count; i++)
                 {
-                    if (count <= product.Count)
+                    if (_products[i].Name == nameProduct)
                     {
-                        name = product;
-                        Account += product.Price * count;
-                        int remains = product.Count - count;
-                        product.ChangeCount(remains);
-                        Console.WriteLine($"Вы преобрели {product.Name} в количестве {count} штук ,общая стоимость {product.Price * count} рублей");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Не хватает товара");
+                        if (_cells[i].Count >= count)
+                        {
+                            name = _products[i];
+                            _cells[i].DecreaseCount(count);
+                        }
+                        else
+                        {
+                            Console.WriteLine("В магазине недостаточно товаров");
+                        }
                     }
                 }
             }
-        }
-
-        public void ChangeAccount(Product product,int count)
-        {
-            Account += product.Price * count;
-            int remains = product.Count - count;
-            product.ChangeCount(remains);
+            else
+            {
+                Console.WriteLine("В магазине нет товаров");
+            }
         }
 
         public void ShowInfo()
         {
-            Console.WriteLine($"Баланс на счете = {Account}");
+            Console.WriteLine("Магазин");
+            Console.WriteLine($"Касса = {Account}");
 
-            foreach (var product in _products)
+            for (int i = 0; i < _products.Count; i++)
             {
-                Console.WriteLine(product.Name + " = " + product.Price + " в количестве " + product.Count);
+                Console.WriteLine(_products[i].Name + " за " + _products[i].Price + " рубля в количестве " + _cells[i].Count);
             }
         }
 
-        public int GetNumber()
+        private int GetNumber()
         {
             bool isRepeat = true;
 
@@ -150,8 +172,8 @@ namespace CSLight
 
     class Buyer
     {
-        private List<Product> _productsBuyer = new List<Product>();
-
+        private List<Product> _basket = new List<Product>();
+        private List<Cell>  _cells = new List<Cell> ();
         public int Account { get; private set; }
 
         public void AddMoney()
@@ -159,28 +181,29 @@ namespace CSLight
             Account = 10000;
         }
 
-        public void BuyProduts(Seller seller)
+        public void PutInBasket(Seller seller)
         {
-
             Console.WriteLine("Название продукта :");
             string nameProduct = Console.ReadLine();
 
             Console.WriteLine("Какое количество требуется :");
-            int count = seller.GetNumber();
+            int count = GetNumber();
 
             seller.GetProduct(out Product name, nameProduct, count);
-            
 
             if(name != null)
             {
-                if (Account >= name.Price * count)
+                for (int i = 0; i <= _basket.Count; i++)
                 {
-                    _productsBuyer.Add(new Product(name.Name, name.Price, count));
-                    Account -= name.Price * count;
-                }
-                else
-                {
-                    Console.WriteLine("Недостаточно средств");
+                    if (_basket.Contains(name))
+                    {
+                        _cells[i].IncreaseCount(count);
+                    }
+                    else
+                    {
+                        _basket.Add(name);
+                        _cells.Add(new Cell(count));
+                    }
                 }
             }
             else
@@ -189,17 +212,117 @@ namespace CSLight
             }
         }
 
+        public void BuyProducts()
+        {
+            if(Account >= SumPurchase())
+            {
+                Account -= SumPurchase();
+                Console.WriteLine("Спасибо за покупку.Приходите к нам ещё");
+            }
+            else
+            {
+                Console.WriteLine($"У вас недостаточно средств.Не хватает {SumPurchase() - Account} рублей");
+            }
+        }
+
+        public void RemoveProduct()
+        {
+            Console.WriteLine("Название продукта который хотите убрать:");
+            string nameProduct = Console.ReadLine();
+
+            Console.WriteLine("Сколько хотите убрать :");
+            int count = GetNumber();
+            
+            GetProduct(out Product name,out Cell cell ,nameProduct,count);
+
+            if (name != null)
+            {
+                if (cell.Count > count)
+                {
+                    cell.IncreaseCount(count);
+                }
+                else
+                {
+                    _basket.Remove(name);
+                    _cells.Remove(cell);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Такого товара нет в корзине");
+            }
+        }
+
         public void ShowInfo()
         {
-            int positionX = 0;
-            Console.SetCursorPosition(50, positionX);
+            int positionX = 1;
+            Console.SetCursorPosition(50, 0);
+            Console.WriteLine("Корзина покупатель");
+            Console.SetCursorPosition(50, 1);
             Console.WriteLine($"Баланс на счете покупателя = {Account}");
+            
 
-            foreach (var product in _productsBuyer)
+            for (int i = 0; i < _basket.Count; i++)
             {
                 Console.SetCursorPosition(50, ++positionX);
-                Console.WriteLine(product.Name + " в количестве " + product.Count);
+                Console.WriteLine(_basket[i].Name +  " в количестве " + _cells[i].Count);
+                Console.WriteLine($"Стоимость товаров {SumPurchase()}");
             }
+        }
+
+        public void GetProduct(out Product name ,out Cell cell,string nameProduct, int count)
+        {
+            name = null;
+            cell = null;
+
+            if (_basket.Count > 0)
+            {
+                for (int i = 0; i < _basket.Count; i++)
+                {
+                    if (_basket[i].Name == nameProduct)
+                    {
+                        name = _basket[i];
+                        cell = _cells[i];
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("В корзине нет товаров");
+            }
+        }
+
+        private int GetNumber()
+        {
+            bool isRepeat = true;
+
+            while (isRepeat)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    return count;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+
+            return 0;
+        }
+
+        private int SumPurchase()
+        {
+            int sumPrice=0;
+
+            foreach (var product in _basket)
+            {
+                sumPrice += product.Price;
+            }
+
+            return sumPrice;
         }
     }
 }
