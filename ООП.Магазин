@@ -35,7 +35,7 @@ namespace CSLight
                         break;
 
                     case "3":
-                        buyer.BuyProducts();
+                        buyer.BuyProducts(seller);
                         break;
 
                     case "4":
@@ -125,6 +125,11 @@ namespace CSLight
             }
         }
 
+        public void IncreeseAccount(int sumPurchase)
+        {
+            Account += sumPurchase;
+        }
+
         public void ShowInfo()
         {
             Console.WriteLine("Магазин");
@@ -180,17 +185,25 @@ namespace CSLight
 
             if(product != null)
             {
-                foreach (var cell in _cellsBuyer)
+                if(_cellsBuyer.Count > 0)
                 {
-                    if (cell.Product == product)
+                    foreach (var cell in _cellsBuyer)
                     {
-                        cell.IncreaseCount(count);
-                    }
-                    else
-                    {
-                        _cellsBuyer.Add(new Cell(product, count));
+                        if (cell.Product == product)
+                        {
+                            cell.IncreaseCount(count);
+                        }
+                        else
+                        {
+                            _cellsBuyer.Add(new Cell(product, count));
+                        }
                     }
                 }
+                else
+                {
+                    _cellsBuyer.Add(new Cell(product, count));
+                }
+
             }
             else
             {
@@ -198,17 +211,22 @@ namespace CSLight
             }
         }
 
-        public void BuyProducts()
+        public void BuyProducts(Seller seller)
         {
-            if(Account >= SumPurchase())
+            foreach (var cell in _cellsBuyer)
             {
-                Account -= SumPurchase();
-                Console.WriteLine("Спасибо за покупку.Приходите к нам ещё");
+                if (Account >= SumPurchase(cell.Count))
+                {
+                    Account -= SumPurchase(cell.Count);
+                    seller.IncreeseAccount(SumPurchase(cell.Count));
+                    Console.WriteLine("Спасибо за покупку.Приходите к нам ещё");
+                }
+                else
+                {
+                    Console.WriteLine($"У вас недостаточно средств.Не хватает {SumPurchase(cell.Count) - Account} рублей");
+                }
             }
-            else
-            {
-                Console.WriteLine($"У вас недостаточно средств.Не хватает {SumPurchase() - Account} рублей");
-            }
+            
         }
 
         public void RemoveProduct()
@@ -251,7 +269,8 @@ namespace CSLight
             {
                 Console.SetCursorPosition(50, ++positionX);
                 Console.WriteLine(_cellsBuyer[i].Product.Name +  " в количестве " + _cellsBuyer[i].Count);
-                Console.WriteLine($"Стоимость товаров {SumPurchase()}");
+                Console.SetCursorPosition(50, (++positionX + 1));
+                Console.WriteLine($"Стоимость товаров {SumPurchase(_cellsBuyer[i].Count)}");
             }
         }
 
@@ -296,13 +315,13 @@ namespace CSLight
             return 0;
         }
 
-        private int SumPurchase()
+        private int SumPurchase(int count)
         {
             int sumPrice=0;
 
             foreach (var cell in _cellsBuyer)
             {
-                sumPrice += cell.Product.Price;
+                sumPrice += cell.Product.Price * count;
             }
 
             return sumPrice;
