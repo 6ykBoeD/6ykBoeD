@@ -54,6 +54,30 @@ namespace CSLight
         }
     }
 
+    abstract class Number
+    {
+        protected int GetNumber()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    return count;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+
+            return 0;
+        }
+    }
+
     class Product
     {
         public string Name { get; private set; }
@@ -88,7 +112,7 @@ namespace CSLight
         }
     }
 
-    class Seller
+    class Seller : Number
     {
         private List<Cell> _cells = new List<Cell>() { new Cell(new Product("Хлеб", 25),1000),new Cell (new Product("Сок", 50),500)};
 
@@ -130,7 +154,7 @@ namespace CSLight
             Account += sumPurchase;
         }
 
-        public void ShowInfo()
+        public  void ShowInfo()
         {
             Console.WriteLine("Магазин");
             Console.WriteLine($"Касса = {Account}");
@@ -141,29 +165,9 @@ namespace CSLight
             }
         }
 
-        private int GetNumber()
-        {
-            bool isRepeat = true;
-
-            while (isRepeat)
-            {
-                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
-
-                if (isSuccess)
-                {
-                    return count;
-                }
-                else
-                {
-                    Console.WriteLine("Неверное значение");
-                }
-            }
-
-            return 0;
-        }
     }
 
-    class Buyer
+    class Buyer : Number
     {
         private List<Cell>  _cellsBuyer = new List<Cell> ();
 
@@ -260,7 +264,7 @@ namespace CSLight
             }
         }
 
-        public void ShowInfo()
+        public  void ShowInfo()
         {
             int sum = 0;
             int positionX = 0;
@@ -301,27 +305,6 @@ namespace CSLight
             {
                 Console.WriteLine("В корзине нет товаров");
             }
-        }
-
-        private int GetNumber()
-        {
-            bool isWork = true;
-
-            while (isWork)
-            {
-                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
-
-                if (isSuccess)
-                {
-                    return count;
-                }
-                else
-                {
-                    Console.WriteLine("Неверное значение");
-                }
-            }
-
-            return 0;
         }
 
         private int SumPurchase()
