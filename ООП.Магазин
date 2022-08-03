@@ -54,8 +54,10 @@ namespace CSLight
         }
     }
 
-    abstract class Number
+    abstract class People
     {
+        public abstract int Account { get; protected set; }
+
         protected int GetNumber()
         {
             bool isWork = true;
@@ -76,6 +78,9 @@ namespace CSLight
 
             return 0;
         }
+
+        public abstract void ShowInfo();
+
     }
 
     class Product
@@ -112,11 +117,11 @@ namespace CSLight
         }
     }
 
-    class Seller : Number
+    class Seller : People
     {
         private List<Cell> _cells = new List<Cell>() { new Cell(new Product("Хлеб", 25),1000),new Cell (new Product("Сок", 50),500)};
-
-        public int Account { get; private set; }
+        
+        public override int Account { get; protected set; }
 
         public void AddProducts()
         {
@@ -154,7 +159,7 @@ namespace CSLight
             Account += sumPurchase;
         }
 
-        public  void ShowInfo()
+        public override void ShowInfo()
         {
             Console.WriteLine("Магазин");
             Console.WriteLine($"Касса = {Account}");
@@ -167,11 +172,11 @@ namespace CSLight
 
     }
 
-    class Buyer : Number
+    class Buyer : People
     {
         private List<Cell>  _cellsBuyer = new List<Cell> ();
 
-        public int Account { get; private set; }
+        public override int Account { get; protected set; }
 
         public void AddMoney()
         {
@@ -264,7 +269,7 @@ namespace CSLight
             }
         }
 
-        public  void ShowInfo()
+        public override void ShowInfo()
         {
             int sum = 0;
             int positionX = 0;
@@ -320,4 +325,3 @@ namespace CSLight
         }
     }
 }
-
