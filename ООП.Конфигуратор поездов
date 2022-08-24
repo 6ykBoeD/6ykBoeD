@@ -13,11 +13,11 @@ namespace CSLight
         {
             RailwayStation railwayStation = new RailwayStation();
             bool isWork = true;
-            int positionY = 0;
+            int positionY = 1;
 
             while (isWork)
             {
-                railwayStation.ShowInfo(positionY++);
+                railwayStation.ShowInfo(positionY);
                 Console.SetCursorPosition(0, 10);
                 Console.WriteLine("Выберите действие :\n1 - создать направление\n2 - отправить поезд\n3 - выйти из программы");
 
@@ -75,25 +75,52 @@ namespace CSLight
             _destinations.Add(new Cell(new Destination(nameTrip), new Passenger(countPassenger),new Train (countPassenger),ready));
         }
 
+        public int GetNumber()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    return count;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+
+            return 0;
+        }
+
         public void SendTrain()
         {
-            if(_destinations.Count != 0)
+            Console.WriteLine("Выберите номер поезда который хотите отправить");
+            int number = GetNumber();
+
+            if(_destinations.Count > 0)
             {
-                foreach (var destination in _destinations)
+                for (int i = 0; i < _destinations.Count; i++)
                 {
-                    destination.ChangeReady("В Пути");
+                    if(number == _destinations[i].Destination.Id)
+                    {
+                        _destinations[i].ChangeReady();
+                    }
                 }
             }
             else
             {
-                Console.WriteLine("Такого отправления нет");
+                Console.WriteLine("Отправления нет");
             }
         }
         
         public void ShowInfo(int positionY)
         {
             Console.WriteLine("Поезд №\t Отправление\t\tПассажиров\tКол. вагонов\tГотовность");
-
+            
             foreach (var destination in _destinations)
             {
                 Console.SetCursorPosition(0, positionY);
@@ -104,8 +131,9 @@ namespace CSLight
                 Console.Write($"{destination.Passenger.CountPassenger}");
                 Console.SetCursorPosition(48, positionY);
                 Console.Write($"{destination.Train.CountWagon}");
-                Console.SetCursorPosition(72, positionY);
+                Console.SetCursorPosition(64, positionY);
                 Console.Write($"{destination.Ready}");
+                ++positionY;
             }
         }
     }
@@ -131,7 +159,6 @@ namespace CSLight
             if (countPassenger % _countOfSeats == 0)
             {
                 CountWagon = countPassenger / _countOfSeats;
-
             }
             else
             {
@@ -154,9 +181,9 @@ namespace CSLight
             Ready = ready;
             Train = train;
         }
-        public void ChangeReady(string ready)
+        public void ChangeReady()
         {
-            Ready = ready;
+            Ready = "в пути";
         }
     }
 }
