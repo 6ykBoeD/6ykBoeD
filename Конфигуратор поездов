@@ -1,0 +1,162 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace CSLight
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            RailwayStation railwayStation = new RailwayStation();
+            bool isWork = true;
+            int positionY = 0;
+
+            while (isWork)
+            {
+                railwayStation.ShowInfo(positionY++);
+                Console.SetCursorPosition(0, 10);
+                Console.WriteLine("Выберите действие :\n1 - создать направление\n2 - отправить поезд\n3 - выйти из программы");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        railwayStation.CreateTrip();
+                        break;
+
+                    case "2":
+                        railwayStation.SendTrain();
+                        break;
+
+                    case "3":
+                        isWork = false;
+                        break;
+                }
+
+                Console.Clear();
+            }
+        }
+    }
+
+    class Destination
+    {
+        private static int _ids;
+
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+
+        public Destination(string name)
+        {
+            Id = ++_ids;
+            Name = name;
+        }
+    }
+
+    class RailwayStation
+    {
+        private List<Cell> _destinations = new List<Cell>();
+        private Random _random = new Random();
+
+        public void CreateTrip()
+        {
+            Console.WriteLine("\nПункт отправления");
+            string departure = Console.ReadLine();
+
+            Console.WriteLine("\nПункт назначения");
+            string destinationPoint = Console.ReadLine();
+            string nameTrip = $"{departure} - {destinationPoint}";
+
+            int countPassenger = _random.Next(1, 500);
+            string ready = "Готов к отправке";
+            
+            _destinations.Add(new Cell(new Destination(nameTrip), new Passenger(countPassenger),new Train (countPassenger),ready));
+        }
+
+        public void SendTrain()
+        {
+            if(_destinations.Count != 0)
+            {
+                foreach (var destination in _destinations)
+                {
+                    destination.ChangeReady("В Пути");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Такого отправления нет");
+            }
+        }
+        
+        public void ShowInfo(int positionY)
+        {
+            Console.WriteLine("Поезд №\t Отправление\t\tПассажиров\tКол. вагонов\tГотовность");
+
+            foreach (var destination in _destinations)
+            {
+                Console.SetCursorPosition(0, positionY);
+                Console.Write($"{destination.Destination.Id}");
+                Console.SetCursorPosition(9, positionY);
+                Console.Write($"{destination.Destination.Name}");
+                Console.SetCursorPosition(32, positionY);
+                Console.Write($"{destination.Passenger.CountPassenger}");
+                Console.SetCursorPosition(48, positionY);
+                Console.Write($"{destination.Train.CountWagon}");
+                Console.SetCursorPosition(72, positionY);
+                Console.Write($"{destination.Ready}");
+            }
+        }
+    }
+
+    class Passenger
+    {
+        public int CountPassenger { get; private set; }
+
+        public Passenger (int countPassenger)
+        {
+            CountPassenger = countPassenger;
+        }
+    }
+
+    class Train
+    {
+        private int _countOfSeats = 56;
+
+        public int CountWagon { get; private set; }
+
+        public Train(int countPassenger)
+        {
+            if (countPassenger % _countOfSeats == 0)
+            {
+                CountWagon = countPassenger / _countOfSeats;
+
+            }
+            else
+            {
+                CountWagon = countPassenger / _countOfSeats + 1;
+            }
+        }
+    }
+
+    class Cell
+    {
+        public Destination Destination { get; private set; }
+        public Passenger Passenger { get; private set; }
+        public Train Train { get; private set; }
+        public string Ready { get; private set; }
+
+        public Cell (Destination destination, Passenger passenger, Train train, string ready)
+        {
+            Destination = destination;
+            Passenger = passenger;
+            Ready = ready;
+            Train = train;
+        }
+        public void ChangeReady(string ready)
+        {
+            Ready = ready;
+        }
+    }
+}
