@@ -58,7 +58,7 @@ namespace CSLight
     class RailwayStation
     {
         private List<Cell> _destinations = new List<Cell>();
-        private Random _random = new Random();
+        private  Random _random = new Random();
 
         public void CreateTrip()
         {
@@ -69,10 +69,10 @@ namespace CSLight
             string destinationPoint = Console.ReadLine();
             string nameTrip = $"{departure} - {destinationPoint}";
 
+            string сondition = "Готов к отправке";
+
             int countPassenger = _random.Next(1, 500);
-            string ready = "Готов к отправке";
-            
-            _destinations.Add(new Cell(new Destination(nameTrip), new Passenger(countPassenger),new Train (countPassenger),ready));
+            _destinations.Add(new Cell(new Destination(nameTrip), new Train(countPassenger),countPassenger, сondition));
         }
 
         public int GetNumber()
@@ -101,13 +101,13 @@ namespace CSLight
             Console.WriteLine("Выберите номер поезда который хотите отправить");
             int number = GetNumber();
 
-            if(_destinations.Count > 0)
+            if (_destinations.Count > 0)
             {
                 for (int i = 0; i < _destinations.Count; i++)
                 {
-                    if(number == _destinations[i].Destination.Id)
+                    if (number == _destinations[i].Destination.Id)
                     {
-                        _destinations[i].ChangeReady();
+                        _destinations[i].ChangeCondition();
                     }
                 }
             }
@@ -116,11 +116,11 @@ namespace CSLight
                 Console.WriteLine("Отправления нет");
             }
         }
-        
+
         public void ShowInfo(int positionY)
         {
             Console.WriteLine("Поезд №\t Отправление\t\tПассажиров\tКол. вагонов\tГотовность");
-            
+
             foreach (var destination in _destinations)
             {
                 Console.SetCursorPosition(0, positionY);
@@ -128,23 +128,13 @@ namespace CSLight
                 Console.SetCursorPosition(9, positionY);
                 Console.Write($"{destination.Destination.Name}");
                 Console.SetCursorPosition(32, positionY);
-                Console.Write($"{destination.Passenger.CountPassenger}");
+                Console.Write($"{destination.CountPassanger}");
                 Console.SetCursorPosition(48, positionY);
                 Console.Write($"{destination.Train.CountWagon}");
                 Console.SetCursorPosition(64, positionY);
-                Console.Write($"{destination.Ready}");
+                Console.Write($"{destination.Condition}");
                 ++positionY;
             }
-        }
-    }
-
-    class Passenger
-    {
-        public int CountPassenger { get; private set; }
-
-        public Passenger (int countPassenger)
-        {
-            CountPassenger = countPassenger;
         }
     }
 
@@ -170,20 +160,20 @@ namespace CSLight
     class Cell
     {
         public Destination Destination { get; private set; }
-        public Passenger Passenger { get; private set; }
         public Train Train { get; private set; }
-        public string Ready { get; private set; }
+        public int CountPassanger { get; private set; }
+        public string Condition { get; private set; }
 
-        public Cell (Destination destination, Passenger passenger, Train train, string ready)
+        public Cell(Destination destination, Train train,int countPassanger, string сondition)
         {
             Destination = destination;
-            Passenger = passenger;
-            Ready = ready;
+            CountPassanger = countPassanger;
+            Condition = сondition;
             Train = train;
         }
-        public void ChangeReady()
+        public void ChangeCondition()
         {
-            Ready = "в пути";
+            Condition = "в пути";
         }
     }
 }
