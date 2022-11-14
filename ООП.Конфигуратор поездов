@@ -15,25 +15,25 @@ namespace CSLight
             const string CommandSendTrain = "2";
             const string CommandExit = "3";
 
-            Railwaystation railwaystation = new Railwaystation();
+            RailwayStation railwayStation = new RailwayStation();
             bool isWork = true;
             int positionYInfo = 1;
             int positionYContents = 2;
 
             while (isWork)
             {
-                railwaystation.ShowInfo(positionYInfo);
+                railwayStation.ShowInfo(positionYInfo);
                 Console.SetCursorPosition(0, ++positionYContents);
                 Console.WriteLine($"Выберите действие :\n{CommandCreateDirection} - Создать направление\n{CommandSendTrain} - Отправить поезд\n{CommandExit} - Выйти из программы");
 
                 switch (Console.ReadLine())
                 {
                     case CommandCreateDirection:
-                        railwaystation.CreateTrip();
+                        railwayStation.CreateTrip();
                         break;
 
                     case CommandSendTrain:
-                        railwaystation.SendTrain();
+                        railwayStation.SendTrain();
                         break;
 
                     case CommandExit:
@@ -79,7 +79,7 @@ namespace CSLight
         }
     }
 
-    class Railwaystation
+    class RailwayStation
     {
         private List<Train> _train = new List<Train>();
         private Random _random = new Random();
@@ -147,18 +147,18 @@ namespace CSLight
         {
             Console.WriteLine("Поезд №\t Отправление\t\tПассажиров\tКол. вагонов\tГотовность");
 
-            foreach (var destination in _train)
+            foreach (var train in _train)
             {
                 Console.SetCursorPosition(0, positionY);
-                Console.Write($"{destination.Id}");
+                Console.Write($"{train.Id}");
                 Console.SetCursorPosition(9, positionY);
-                Console.Write($"{destination.Name}");
+                Console.Write($"{train.Name}");
                 Console.SetCursorPosition(32, positionY);
-                Console.Write($"{destination.CountPassenger}");
+                Console.Write($"{train.CountPassenger}");
                 Console.SetCursorPosition(48, positionY);
-                Console.Write($"{destination.CountWagon}");
+                Console.Write($"{train.CountWagon}");
                 Console.SetCursorPosition(64, positionY);
-                Console.Write($"{destination.Condition}");
+                Console.Write($"{train.Condition}");
                 ++positionY;
             }
         }
