@@ -22,7 +22,6 @@ namespace CSLight
 
             while (isWork)
             {
-
                 railwaystation.ShowInfo(positionYInfo);
                 Console.SetCursorPosition(0, ++positionYContents);
                 Console.WriteLine($"Выберите действие :\n{CommandCreateDirection} - Создать направление\n{CommandSendTrain} - Отправить поезд\n{CommandExit} - Выйти из программы");
@@ -50,7 +49,6 @@ namespace CSLight
     class Train
     {
         private static int _ids;
-
         private int _countOfSeatsWagon = 56;
         public int CountWagon { get; private set; }
         public int Id { get; private set; }
@@ -74,15 +72,12 @@ namespace CSLight
                 CountWagon = countPassenger / _countOfSeatsWagon + 1;
             }
         }
+
         public void ChangeConditionTrain()
         {
             Condition = "в пути";
         }
     }
- 
-        
-
-
 
     class Railwaystation
     {
