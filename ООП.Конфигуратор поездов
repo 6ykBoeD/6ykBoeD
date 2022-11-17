@@ -48,20 +48,33 @@ namespace CSLight
 
     class Train
     {
-        private static int _ids;
-        private int _countOfSeatsWagon = 56;
-        public int CountWagon { get; private set; }
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public int CountPassenger { get; private set; }
         public string Condition { get; private set; }
+        private static int _ids;
 
-        public Train(string name, int countPassenger, string condition)
+        public Train(string name, string condition)
         {
             Id = ++_ids;
             Name = name;
-            CountPassenger = countPassenger;
             Condition = condition;
+        }
+
+        public void ChangeConditionTrain()
+        {
+            Condition = "в пути";
+        }
+    }
+
+    class Wagon
+    {
+        public int CountWagon { get; private set; }
+        public int CountPassenger { get; private set; }
+        private int _countOfSeatsWagon = 56;
+
+        public Wagon (int countPassenger)
+        {
+            CountPassenger = countPassenger;
 
             if (countPassenger % _countOfSeatsWagon == 0)
             {
@@ -72,16 +85,11 @@ namespace CSLight
                 CountWagon = countPassenger / _countOfSeatsWagon + 1;
             }
         }
-
-        public void ChangeConditionTrain()
-        {
-            Condition = "в пути";
-        }
     }
 
     class RailwayStation
     {
-        private List<Train> _train = new List<Train>();
+        private List<Cell> _train = new List<Cell>();
         private Random _random = new Random();
         private int _minCountPassenger = 1;
         private int _maxCountPassenger = 500;
@@ -98,7 +106,7 @@ namespace CSLight
             string сondition = "Готов к отправке";
 
             int countPassenger = _random.Next(_minCountPassenger, _maxCountPassenger);
-            _train.Add(new Train(nameTrip, countPassenger, сondition));
+            _train.Add(new Cell(new Train(nameTrip, сondition),new Wagon (countPassenger)));
         }
 
         private int GetNumber()
@@ -131,9 +139,9 @@ namespace CSLight
             {
                 for (int i = 0; i < _train.Count; i++)
                 {
-                    if (number == _train[i].Id)
+                    if (number == _train[i].Train.Id)
                     {
-                        _train[i].ChangeConditionTrain();
+                        _train[i].Train.ChangeConditionTrain();
                     }
                 }
             }
@@ -150,17 +158,29 @@ namespace CSLight
             foreach (var train in _train)
             {
                 Console.SetCursorPosition(0, positionY);
-                Console.Write($"{train.Id}");
+                Console.Write($"{train.Train.Id}");
                 Console.SetCursorPosition(9, positionY);
-                Console.Write($"{train.Name}");
+                Console.Write($"{train.Train.Name}");
                 Console.SetCursorPosition(32, positionY);
-                Console.Write($"{train.CountPassenger}");
+                Console.Write($"{train.Wagon.CountPassenger}");
                 Console.SetCursorPosition(48, positionY);
-                Console.Write($"{train.CountWagon}");
+                Console.Write($"{train.Wagon.CountWagon}");
                 Console.SetCursorPosition(64, positionY);
-                Console.Write($"{train.Condition}");
+                Console.Write($"{train.Train.Condition}");
                 ++positionY;
             }
         }
-    }  
+    }
+
+    class Cell
+    {
+        public Train Train { get;private set; }
+        public Wagon Wagon { get;private set; }
+
+        public Cell(Train train, Wagon wagon)
+        {
+            Train = train;
+            Wagon = wagon;
+        }
+    }
 }
