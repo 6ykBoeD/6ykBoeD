@@ -48,14 +48,19 @@ namespace CSLight
 
     class Wagon
     {
-        public int CountPassengerInWagon = 56;
+        public int CountPassengerInWagon { get; private set; }
+
+        public Wagon(int countPassengerInWagon = 56)
+        {
+            CountPassengerInWagon = countPassengerInWagon;
+        }
     }
 
     class Train
     {
         private static int _ids;
 
-        public Wagon Wagon { get; private set; }
+        private Wagon Wagon = new Wagon();
         public int Id { get; private set; }
         public string Name { get; private set; }
         public int CountWagon { get; private set; }
@@ -80,7 +85,7 @@ namespace CSLight
             CountPassenger = countPassenger;
         }
 
-        public void toSend()
+        public void ToSend()
         {
             Condition = "в пути";
         }
@@ -140,7 +145,7 @@ namespace CSLight
                 {
                     if (number == _trains[i].Id)
                     {
-                        _trains[i].toSend();
+                        _trains[i].ToSend();
                     }
                 }
             }
@@ -161,7 +166,7 @@ namespace CSLight
                 Console.SetCursorPosition(9, positionY);
                 Console.Write($"{train.Name}");
                 Console.SetCursorPosition(32, positionY);
-                Console.Write($"{train.Wagon.CountPassengerInWagon}");
+                Console.Write($"{train.CountPassenger}");
                 Console.SetCursorPosition(48, positionY);
                 Console.Write($"{train.CountWagon}");
                 Console.SetCursorPosition(64, positionY);
