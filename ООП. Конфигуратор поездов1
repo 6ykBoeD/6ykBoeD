@@ -1,0 +1,193 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace CSLight
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandCreateDirection = "1";
+            const string CommandSendTrain = "2";
+            const string CommandExit = "3";
+
+            RailwayStation railwayStation = new RailwayStation();
+            bool isWork = true;
+            int positionYInfo = 1;
+            int positionYContents = 2;
+
+            while (isWork)
+            {
+                railwayStation.ShowInfo(positionYInfo);
+                Console.SetCursorPosition(0, ++positionYContents);
+                Console.WriteLine($"Выберите действие :\n{CommandCreateDirection} - Создать направление\n{CommandSendTrain} - Отправить поезд\n{CommandExit} - Выйти из программы");
+
+                switch (Console.ReadLine())
+                {
+                    case CommandCreateDirection:
+                        railwayStation.CreateTrip();
+                        break;
+
+                    case CommandSendTrain:
+                        railwayStation.SendTrain();
+                        break;
+
+                    case CommandExit:
+                        isWork = false;
+                        break;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Wagon
+    {
+        public int CountPassengers { get; private set; }
+
+        public Wagon(int countPassengerInWagon = 56)
+        {
+            CountPassengers = countPassengerInWagon;
+        }
+    }
+
+    class Train
+    {
+        private static int _ids;
+
+        private Wagon _wagon = new Wagon();
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public int CountWagon { get; private set; }
+        public bool Condition { get; private set; }
+        public int CountPassenger { get; private set; }
+        public string ReadyToSend { get; private set; }
+
+        public Train(string name, bool condition, int countPassenger)
+        {
+            Id = ++_ids;
+            Name = name;
+            Condition = condition;
+            ReadyToSend = "Готов к отправке";
+
+            if (countPassenger % _wagon.CountPassengers == 0)
+            {
+                CountWagon = countPassenger / _wagon.CountPassengers;
+            }
+            else
+            {
+                CountWagon = countPassenger / _wagon.CountPassengers + 1;
+            }
+
+            CountPassenger = countPassenger;
+        }
+
+        public void ToSend()
+        {
+            Condition = true;
+            ReadyToSend = "В пути";
+        }
+    }
+
+    class RailwayStation
+    {
+        private List<Train> _trains = new List<Train>();
+        private Random _random = new Random();
+        private int _minCountPassenger = 1;
+        private int _maxCountPassenger = 500;
+
+        public void CreateTrip()
+        {
+            Console.WriteLine("\nПункт отправления");
+            string departure = Console.ReadLine();
+
+            Console.WriteLine("\nПункт назначения");
+            string destinationPoint = Console.ReadLine();
+            string nameTrip = $"{departure} - {destinationPoint}";
+
+            bool сondition = false;
+
+            int countPassenger = _random.Next(_minCountPassenger, _maxCountPassenger);
+            _trains.Add(new Train(nameTrip, сondition,countPassenger));
+        }
+
+        private int GetNumber()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    return count;
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+
+            return 0;
+        }
+
+        public void SendTrain()
+        {
+            Console.WriteLine("Выберите номер поезда который хотите отправить");
+            int number = GetNumber();
+
+            if (_trains.Count > 0)
+            {
+                for (int i = 0; i < _trains.Count; i++)
+                {
+                    if (number == _trains[i].Id)
+                    {
+                        if (_trains[i].Condition)
+                        {
+                            Console.WriteLine("Этот поезд уже в пути") ;
+                        }
+                        else
+                        {
+                            _trains[i].ToSend();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Такого поезда не существует");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Отправлений нет");
+            }
+        }
+
+        public void ShowInfo(int positionY)
+        {
+            Console.WriteLine("Поезд №\t Отправление\t\tПассажиров\tКол. вагонов\tГотовность");
+
+            foreach (var train in _trains)
+            {
+                Console.SetCursorPosition(0, positionY);
+                Console.Write($"{train.Id}");
+                Console.SetCursorPosition(9, positionY);
+                Console.Write($"{train.Name}");
+                Console.SetCursorPosition(32, positionY);
+                Console.Write($"{train.CountPassenger}");
+                Console.SetCursorPosition(48, positionY);
+                Console.Write($"{train.CountWagon}");
+                Console.SetCursorPosition(64, positionY);
+                Console.Write($"{train.ReadyToSend}");
+                ++positionY;
+            }
+        }
+    }
+}
