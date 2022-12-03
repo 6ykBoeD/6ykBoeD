@@ -1,0 +1,210 @@
+using System;
+using System.Collections.Generic;
+
+
+namespace CSLight
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            int fighterIndex ;
+
+            List<Fighter> fighters = new List<Fighter>() { 
+                new Warrior("Воин",250, 10, 20,10 ),
+                new Mage("Маг",180, 10, 0, 200,10), 
+                new Thief("Разбойник",225, 20, 5,20),
+                new Vampire("Дракула",200, 15, 15,15), 
+                new Knight("Рыцарь",300, 10, 30,10) };
+
+            for (int i = 0; i < fighters.Count; i++)
+            {
+                Console.Write(i + 1 + " ");
+                fighters[i].ShowStats();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Выберите первого бойца :");
+            fighterIndex = GetNumber();
+            Fighter firstFighter = fighters[fighterIndex - 1];
+
+            Console.WriteLine("Выберите второго бойца :");
+            fighterIndex = GetNumber();
+            Fighter secondFighter = fighters[fighterIndex - 1];
+
+            while (firstFighter.HP > 0 && secondFighter.HP > 0)
+            {
+                Console.WriteLine();
+
+                firstFighter.TakeDamage(secondFighter.Damage);
+                firstFighter.SpecialAbility(firstFighter.Damage);
+
+                secondFighter.TakeDamage(firstFighter.Damage);
+                secondFighter.SpecialAbility(secondFighter.Damage);
+
+                firstFighter.ShowStats();
+                secondFighter.ShowStats();
+
+                if (firstFighter.HP <= 0 && secondFighter.HP <= 0)
+                {
+                    Console.WriteLine("Оба бойца погибли!");
+                }
+                else if (secondFighter.HP <= 0)
+                {
+                    Console.WriteLine($"Победил {firstFighter.Name}");
+                }
+                else if (firstFighter.HP <= 0)
+                {
+                    Console.WriteLine($"Победил {secondFighter.Name}");
+                }
+            }
+
+            int GetNumber()
+            {
+                bool isTrue = true;
+
+                while (isTrue)
+                {
+                    bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                    if (isSuccess)
+                    {
+                        return count;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неверное значение");
+                    }
+                }
+
+                return 0;
+            }
+        }
+    }
+
+    class Fighter
+    {
+        protected float Armor;
+        public float HP { get ; protected set; }
+        public float Damage { get; protected set; }
+        public string Name { get; private set; }
+        public float FullDamage { get; private set; }
+        public int MoveCount { get; private set; }
+
+        public Fighter(string name , float hp, float damage, float armor, float fullDamage)
+        {
+            Name = name;
+            HP = hp;
+            Damage = damage;
+            Armor = armor;
+            FullDamage = fullDamage;
+        }
+
+        public void TakeDamage(float damage)
+        {
+            MoveCount++;
+            HP -= damage - damage/100*Armor;
+            Damage = FullDamage;
+        }
+
+        public virtual void SpecialAbility(float damage) { }
+
+
+        public void ShowStats()
+        {
+            Console.WriteLine($"{Name} - \t Здоровье = {HP}; Урон = {Damage}; Броня = {Armor}");
+        }
+    }
+
+    class Warrior:Fighter
+    {
+        private int MultiplierDamage = 3;
+
+        public Warrior(string name,float hp, float damage, float armor, float fullDamage) :base(name, hp,damage, armor,fullDamage)
+        {
+            SpecialAbility( damage);
+        }
+
+        public override void SpecialAbility(float damage)
+        {
+            if (MoveCount % MultiplierDamage == 0)
+            {
+                Damage *= MultiplierDamage;
+            }
+        }
+    }
+
+    class Mage:Fighter
+    {
+        private int _mana;
+
+        public Mage(string name, float hp,float damage, float armor, int mana, float fullDamage) : base(name,hp, damage, armor,fullDamage)
+        {
+            _mana = mana;
+            SpecialAbility(damage);
+        }
+
+        public override void SpecialAbility(float damage)
+        {
+            int manaCost = 50;
+
+            if((_mana -= manaCost) >= 0)
+            {
+                Damage = damage + 60;
+            }
+        }
+    }
+
+    class Thief : Fighter
+    {
+        private Random _rand = new Random();
+        private int _critChance = 2; 
+
+        public Thief(string name, float hp, float damage, float armor, float fullDamage) : base(name,hp, damage, armor, fullDamage)
+        {
+            SpecialAbility(damage);
+        }
+
+        public override void SpecialAbility(float damage)
+        {
+            if ((MoveCount % _critChance) == 0)
+            {
+                Damage *= _rand.Next(2, 3);
+            }
+        }
+    }
+
+    class Knight : Fighter
+    {
+        private float _amplifierArmor = 0.25f; 
+
+        public Knight(string name, float hp, float damage, int armor, float fullDamage) : base(name,hp, damage, armor, fullDamage)
+        {
+            SpecialAbility(damage);
+        }
+
+        public override void SpecialAbility(float damage)
+        {
+            if( MoveCount > 3)
+            {
+                Armor *= _amplifierArmor;
+            }
+        }
+    }
+
+    class Vampire : Fighter
+    {
+        private float _restoration = 0.2f;
+
+        public Vampire(string name, float hp, float damage, float armor, float fullDamage) : base(name,hp, damage, armor, fullDamage)
+        {
+            SpecialAbility(damage);
+        }
+
+        public override void SpecialAbility( float damage)
+        {
+            HP += damage * _restoration;
+        }
+    }
+}
+ 
