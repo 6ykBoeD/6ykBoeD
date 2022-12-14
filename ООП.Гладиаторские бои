@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+
+
 namespace CSLight
 {
     internal class Program
@@ -35,10 +37,7 @@ namespace CSLight
             HP -= damage - damage / 100 * Armor;
         }
 
-        public virtual void Attack(Fighter enemyFighter)
-        {
-
-        }
+        public virtual void Attack(Fighter enemyFighter) { }
 
         public void ShowStats()
         {
@@ -48,146 +47,97 @@ namespace CSLight
 
     class Warrior : Fighter
     {
-        private float Rage = 0;
+        private float _rage = 0;
         private int MultiplierDamage = 4;
 
-        public Warrior(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
-        {
+        public Warrior(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
+        public override void TakeDamage(float damage)
+        {
+            base.TakeDamage(damage);
+            _rage += damage - damage / 100 * Armor;
         }
 
         public override void Attack(Fighter enemyFighter)
         {
-            Rage += enemyFighter.Damage - enemyFighter.Damage / 100 * Armor;
-            enemyFighter.TakeDamage(ApplyMortalStrike(enemyFighter.HP, enemyFighter.MaxHP));
-        }
-
-        public float ApplyMortalStrike(float hp,float maxHP)
-        {
+            float damage;
             float mortalStrikeDamage;
             int halfHP = 2;
+            int rageCost = 30;
 
-            if (Rage >= 30 && hp <= (maxHP / halfHP))
+            if (_rage >= rageCost && enemyFighter.HP <= (enemyFighter.MaxHP / halfHP))
             {
                 mortalStrikeDamage = Damage * MultiplierDamage;
-                Rage -= 30;
+                _rage -= rageCost;
                 Console.WriteLine("<<<Воин наносит смертоностный удар>>>");
-                return mortalStrikeDamage;
+                damage = mortalStrikeDamage;
             }
             else
             {
-                return Damage;
+               damage = Damage;
             }
+
+            enemyFighter.TakeDamage(damage);
         }
     }
 
     class Mage : Fighter
     {
         private int Mana = 250;
-        public Mage(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
-        {
-
-        }
+        public Mage(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
         {
             int manaRegeneration = 10;
-            enemyFighter.TakeDamage(FireBall());
-            Mana += manaRegeneration;
-        }
-
-        public float FireBall()
-        {
+            float damage;
             int manaCost = 50;
             float fireBallDamage = 30;
 
-            if(Mana >= manaCost)
+            if (Mana >= manaCost)
             {
                 Mana -= manaCost;
                 Console.WriteLine("<<<Огненный шар>>>");
-                return fireBallDamage;
+                damage = fireBallDamage;
             }
             else
             {
-                return Damage;
+                damage = Damage;
             }
+
+            enemyFighter.TakeDamage(damage);
+            Mana += manaRegeneration;
         }
     }
 
     class Druid : Fighter
     {
-        private int _shamanismPoint = 3;
-
-        public Druid(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
-        {
-
-        }
+        public Druid(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
         {
-            Transformation();
-            enemyFighter.TakeDamage(Damage);
-        }
-
-        public void Transformation()
-        {
-            int chance = Random.Next(1, 4);
             float increeseDamage = 2 * Damage;
             float increeseHP = 1.5f * HP;
-            float increeseMaxHP = 1.5f * MaxHP;
-            float increeseArmor = 2* Armor;
+            float increeseArmor = 1.5f * Armor;
 
-            if(_shamanismPoint == 3)
-            {
-                if(chance == 1)
-                {
-                    Console.WriteLine("<<<Облик тигра>>>");
-                    ChangeStats(HP, increeseDamage, Armor, MaxHP);
-                }
-                else if(chance == 2)
-                {
-                    Console.WriteLine("<<<Облик медведя>>>");
-                    ChangeStats(increeseHP, Damage, Armor, increeseMaxHP);
-                }
-                else if(chance == 3)
-                {
-                    Console.WriteLine("<<<Облик бегемота>>>");
-                    ChangeStats(HP, Damage, increeseArmor, MaxHP);
-                }
-            }
-            else if(_shamanismPoint == 0)
-            {
-                Console.WriteLine("<<<Облик человека>>>");
-                ChangeStats(HP,Damage,Armor,MaxHP);
-                _shamanismPoint = 4;
-            }
-
-            _shamanismPoint--;
-        }
-
-        public void ChangeStats(float hp, float damage, float armor, float maxHP)
-        {
-            Damage = damage;
-            HP = hp;
-            Armor = armor;
-            MaxHP = maxHP;
+            Console.WriteLine("<<<Облик медведя>>>");
+            HP = increeseHP;
+            Damage = increeseDamage;
+            Armor = increeseArmor;
+            enemyFighter.TakeDamage(Damage);
         }
     }
 
     class Thief : Fighter
     {
         private int _evadeShance = 3;
-        public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
-        {
-
-        }
+        public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
         {
             enemyFighter.TakeDamage(EvadeAttack());
         }
 
-        public float EvadeAttack()
+        private float EvadeAttack()
         {
             int chance = Random.Next(1,4);
             int evadeDamage = 0;
@@ -207,10 +157,7 @@ namespace CSLight
     class Priest : Fighter
     {
         private int Mana = 250;
-        public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
-        {
-
-        }
+        public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -221,7 +168,7 @@ namespace CSLight
             Mana += manaRegeneration;
         }
 
-        public void Heal()
+        private void Heal()
         {
             float healthThreshold = 0.8f;
             int manaCost = 50;
@@ -235,7 +182,7 @@ namespace CSLight
             }
         }
 
-        public void InnerFire()
+        private void InnerFire()
         {
             int count = 1;
             int manaCost = 10;
@@ -261,7 +208,7 @@ namespace CSLight
             _listFighters = new List<Fighter>() {
             new Warrior("Воин",250,20,10,250),
             new Mage("Маг",150,20,5,150),
-            new Druid("Друид",150,15,10,150),
+            new Druid("Друид",150,10,10,150),
             new Thief("Депутат",125,20,5,125),
             new Priest("Прист", 100,15,8,100)};
         }
@@ -308,34 +255,19 @@ namespace CSLight
             Console.ReadKey();
         }
 
-        public Fighter CreatFighter(int index)
+        private Fighter CreatFighter(int index)
         {
-            switch (index)
-            {
-                case 1:
-                    Fighter warrior = new Warrior(_listFighters[index - 1].Name, _listFighters[index - 1].HP, _listFighters[index - 1].Damage, _listFighters[index - 1].Armor, _listFighters[index - 1].MaxHP);
-                    return warrior;
-                    
-                case 2:
-                    Fighter mage = new Mage(_listFighters[index - 1].Name, _listFighters[index - 1].HP, _listFighters[index - 1].Damage, _listFighters[index - 1].Armor, _listFighters[index - 1].MaxHP);
-                    return mage;
+            List<Fighter> fighters = new List<Fighter>() {
+            new Warrior("Воин",250,20,10,250),
+            new Mage("Маг",150,20,5,150),
+            new Druid("Друид",150,10,10,150),
+            new Thief("Депутат",125,20,5,125),
+            new Priest("Прист", 100,15,8,100)};
 
-                case 3:
-                    Fighter druid = new Druid(_listFighters[index - 1].Name, _listFighters[index - 1].HP, _listFighters[index - 1].Damage, _listFighters[index - 1].Armor, _listFighters[index - 1].MaxHP);
-                    return druid;
-
-                case 4:
-                    Fighter thief = new Thief(_listFighters[index - 1].Name, _listFighters[index - 1].HP, _listFighters[index - 1].Damage, _listFighters[index - 1].Armor, _listFighters[index - 1].MaxHP);
-                    return thief;
-
-                case 5:
-                    Fighter priest = new Priest(_listFighters[index - 1].Name, _listFighters[index - 1].HP, _listFighters[index - 1].Damage, _listFighters[index - 1].Armor, _listFighters[index - 1].MaxHP);
-                    return priest;
-            }
-           return null;
+            return fighters[index - 1];
         }
 
-        public int GetIndex()
+        private int GetIndex()
         {
             bool isTrue = true;
 
@@ -365,3 +297,4 @@ namespace CSLight
         }
     }
 }
+ 
