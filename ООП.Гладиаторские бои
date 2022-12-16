@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-
-
+using System.Runtime.InteropServices;
 
 namespace CSLight
 {
@@ -48,7 +47,7 @@ namespace CSLight
     class Warrior : Fighter
     {
         private float _rage = 0;
-        private int MultiplierDamage = 4;
+        private int _multiplierDamage = 4;
 
         public Warrior(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
@@ -62,12 +61,12 @@ namespace CSLight
         {
             float damage;
             float mortalStrikeDamage;
-            int halfHP = 2;
+            int lowHP = 2;
             int rageCost = 30;
 
-            if (_rage >= rageCost && enemyFighter.HP <= (enemyFighter.MaxHP / halfHP))
+            if (_rage >= rageCost && enemyFighter.HP <= (enemyFighter.MaxHP / lowHP))
             {
-                mortalStrikeDamage = Damage * MultiplierDamage;
+                mortalStrikeDamage = Damage * _multiplierDamage;
                 _rage -= rageCost;
                 Console.WriteLine("<<<Воин наносит смертоностный удар>>>");
                 damage = mortalStrikeDamage;
@@ -83,7 +82,7 @@ namespace CSLight
 
     class Mage : Fighter
     {
-        private int Mana = 250;
+        private int _mana = 250;
         public Mage(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
@@ -93,9 +92,9 @@ namespace CSLight
             int manaCost = 50;
             float fireBallDamage = 30;
 
-            if (Mana >= manaCost)
+            if (_mana >= manaCost)
             {
-                Mana -= manaCost;
+                _mana -= manaCost;
                 Console.WriteLine("<<<Огненный шар>>>");
                 damage = fireBallDamage;
             }
@@ -105,7 +104,7 @@ namespace CSLight
             }
 
             enemyFighter.TakeDamage(damage);
-            Mana += manaRegeneration;
+            _mana += manaRegeneration;
         }
     }
 
@@ -134,64 +133,62 @@ namespace CSLight
 
         public override void Attack(Fighter enemyFighter)
         {
-            enemyFighter.TakeDamage(EvadeAttack());
-        }
-
-        private float EvadeAttack()
-        {
-            int chance = Random.Next(1,4);
+            float damage;
+            int chance = Random.Next(1, 4);
             int evadeDamage = 0;
 
-            if(chance == _evadeShance)
+            if (chance == _evadeShance)
             {
                 Console.WriteLine("<<<Уворот>>>");
-                return evadeDamage ;
+                damage = evadeDamage;
             }
             else
             {
-                return Damage;
+                damage = Damage;
             }
+
+            enemyFighter.TakeDamage(damage);
         }
     }
 
     class Priest : Fighter
     {
-        private int Mana = 250;
+        private int _mana = 250;
         public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
         {
             int manaRegeneration = 10;
-            InnerFire();
+            UseInnerFire();
             enemyFighter.TakeDamage(Damage);
             Heal();
-            Mana += manaRegeneration;
+            _mana += manaRegeneration;
         }
 
         private void Heal()
         {
-            float healthThreshold = 0.8f;
+            float healthThreshold = 0.8f * MaxHP;
             int manaCost = 50;
             int heal = 10;
 
-            if (Mana >= manaCost && MaxHP <= healthThreshold*HP)
+            if (_mana >= manaCost && HP <= healthThreshold)
             {
                 HP += heal;
-                Mana -= manaCost;
+                _mana -= manaCost;
                 Console.WriteLine("<<<Лечение>>>");
             }
         }
 
-        private void InnerFire()
+        private void UseInnerFire()
         {
             int count = 1;
             int manaCost = 10;
-            float lowHP = 0.2f;
+            float lowHP = 0.2f * MaxHP;
 
-            if ( count == 1 && MaxHP <= lowHP * HP)
+            if (count == 1 && HP <= lowHP)
             {
                 Armor += 30;
-                Mana -= manaCost;
+                _mana -= manaCost;
                 Console.WriteLine("<<<Броня повышена>>>");
             }
         }
