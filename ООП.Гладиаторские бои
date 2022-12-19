@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace CSLight
 {
@@ -128,16 +127,25 @@ namespace CSLight
 
     class Thief : Fighter
     {
-        private int _evadeShance = 3;
-        public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+        private int _evadeShance;
+        public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
+        {
+            _evadeShance = Random.Next(101);
+        }
 
         public override void Attack(Fighter enemyFighter)
         {
-            float damage;
-            int chance = Random.Next(1, 4);
+
+            enemyFighter.TakeDamage(Damage);
+        }
+
+        public override void TakeDamage(float damage)
+        {
+            
+            int chance = 25;
             int evadeDamage = 0;
 
-            if (chance == _evadeShance)
+            if (chance <= _evadeShance)
             {
                 Console.WriteLine("<<<Уворот>>>");
                 damage = evadeDamage;
@@ -147,14 +155,18 @@ namespace CSLight
                 damage = Damage;
             }
 
-            enemyFighter.TakeDamage(damage);
+            TakeDamage(damage);
         }
     }
 
     class Priest : Fighter
     {
+        private int _count;
         private int _mana = 250;
-        public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+        public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
+        {
+            _count = 1;
+        }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -167,7 +179,8 @@ namespace CSLight
 
         private void Heal()
         {
-            float healthThreshold = 0.8f * MaxHP;
+            float limitHP = 0.8f;
+            float healthThreshold = limitHP * MaxHP;
             int manaCost = 50;
             int heal = 10;
 
@@ -181,14 +194,16 @@ namespace CSLight
 
         private void UseInnerFire()
         {
-            int count = 1;
             int manaCost = 10;
-            float lowHP = 0.2f * MaxHP;
+            int increeseArmor = 30;
+            float minLimitHP = 0.2f;
+            float lowHP = minLimitHP * MaxHP;
 
-            if (count == 1 && HP <= lowHP)
+            if (_count == 1 && HP <= lowHP && _mana >= manaCost)
             {
-                Armor += 30;
+                Armor += increeseArmor;
                 _mana -= manaCost;
+                _count = 0;
                 Console.WriteLine("<<<Броня повышена>>>");
             }
         }
@@ -202,12 +217,7 @@ namespace CSLight
 
         public Arena()
         {
-            _listFighters = new List<Fighter>() {
-            new Warrior("Воин",250,20,10,250),
-            new Mage("Маг",150,20,5,150),
-            new Druid("Друид",150,10,10,150),
-            new Thief("Депутат",125,20,5,125),
-            new Priest("Прист", 100,15,8,100)};
+            CreateFighterList();
         }
 
         public void Fight()
@@ -220,10 +230,10 @@ namespace CSLight
             
             Console.WriteLine();
             Console.WriteLine("Выберите первого бойца :");
-            _firstFighter = CreatFighter(GetIndex());
+            _firstFighter = CreateFighter(GetIndex());
 
             Console.WriteLine("Выберите второго бойца :");
-            _secondFighter = CreatFighter(GetIndex());
+            _secondFighter = CreateFighter(GetIndex());
 
             while (_firstFighter.HP > 0 && _secondFighter.HP > 0)
             {
@@ -252,16 +262,21 @@ namespace CSLight
             Console.ReadKey();
         }
 
-        private Fighter CreatFighter(int index)
+        private List<Fighter> CreateFighterList()
         {
-            List<Fighter> fighters = new List<Fighter>() {
+            _listFighters = new List<Fighter>() {
             new Warrior("Воин",250,20,10,250),
             new Mage("Маг",150,20,5,150),
             new Druid("Друид",150,10,10,150),
             new Thief("Депутат",125,20,5,125),
-            new Priest("Прист", 100,15,8,100)};
+            new Priest("Прист", 150,15,8,100)};
 
-            return fighters[index - 1];
+            return _listFighters;
+        }
+
+        private Fighter CreateFighter(int index)
+        {
+            return _listFighters[index - 1];
         }
 
         private int GetIndex()
@@ -294,4 +309,3 @@ namespace CSLight
         }
     }
 }
- 
