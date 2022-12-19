@@ -1,0 +1,203 @@
+using System;
+using System.Collections.Generic;
+
+
+namespace ConsoleApp1
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandServeClient = "1";
+            const string CommandExit = "2";
+
+            Shop shop = new Shop();
+            bool isWork = true;
+            
+            while (isWork)
+            {
+                Console.WriteLine($"В очереди {shop._clients.Count} клиентов\n");
+                Console.WriteLine($"Выберите действие \n{CommandServeClient} - Обслужить клиента \n{CommandExit} - Закрыть кассу");
+                
+                if(shop._clients.Count > 0)
+                {
+                    switch (Console.ReadLine())
+                    {
+                        case CommandServeClient:
+                            shop.ServeClient();
+                            break;
+
+                        case CommandExit:
+                            isWork = false;
+                            break;
+                    }
+                }
+                else if(shop._clients.Count == 0)
+                {
+                    Console.WriteLine("Очередь пуста");
+                    isWork = false;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Shop
+    {
+        private Random _random = new Random();
+        public Queue<Client> _clients { get;private set; }
+
+        public Shop()
+        {
+            _clients = CreateClients();
+        }
+
+        private List<Product> _products = new List<Product>()
+        {
+            new Product("Соль", 20),
+            new Product("Картошка", 40),
+            new Product("Свекла", 20),
+            new Product("Лук", 10),
+            new Product("Капуста", 50),
+            new Product("Кофеты", 100),
+            new Product("Йогурт", 35),
+            new Product("Колбаса", 150),
+            new Product("Курица",220),
+            new Product("Свинина",300),
+            new Product("Говядина", 400),
+            new Product("Молоко", 60)
+        };
+
+        private List<Product> GetProducts()
+        {
+            int min = 1;
+            int max = 10;
+            List<Product> products = new List<Product>();
+
+            for (int i = 0; i < _random.Next(min,max); i++)
+            {
+                int index = _random.Next(_products.Count);
+                products.Add(_products[index]);
+            }
+
+            return products;
+        }
+
+        private void CalculateClient(Client client)
+        {
+            bool isSuccess = true;
+            
+            while (isSuccess)
+            {
+                int index = _random.Next(client.Products.Count);
+                client.ShowInfo();
+
+                if (client.CalculateCost() == 0)
+                {
+                    isSuccess = false;
+                }
+                else if (client.CalculateCost() <= client.Money)
+                {
+                    client.BuyProducts();
+                    Console.WriteLine("Спасибо за покупку!!!");
+                    isSuccess = false;
+                }
+                else
+                {
+                    Console.WriteLine($"\nУ вас недостаточно средств");
+                    Console.WriteLine($"Из корзины убрали {client.Products[index].Name}");
+                    client.Products.RemoveAt(index);
+                }
+            }
+        }
+
+        private Queue<Client> CreateClients()
+        {
+            _clients = new Queue<Client>();
+            int minMoney = 50;
+            int maxMoney = 100;
+            int minClients = 2;
+            int maxClients = 5;
+
+            for (int i = 0; i < _random.Next(minClients, maxClients); i++)
+            {
+                _clients.Enqueue(new Client(GetProducts(), _random.Next(minMoney,maxMoney)));
+            }
+
+            return _clients;
+        }
+
+        public void ServeClient()
+        {
+            CalculateClient(_clients.Dequeue());
+        }
+    }
+
+    class Product
+    {
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+
+        public Product(string name, int price)
+        {
+            Name = name;
+            Price = price;
+        }
+    }
+
+    class Client
+    {
+        public int Money { get; private set; }
+        public List<Product> Products { get; private set; }
+
+        public Client(List<Product> product,int money)
+        {
+            Products = product;
+            Money = money;
+        }
+
+        public int CalculateCost()
+        {
+            int sumProducts = 0;
+
+            for (int i = 0; i < Products.Count; i++)
+            {
+                sumProducts += Products[i].Price;
+            }
+
+            return sumProducts;
+        }
+        
+        public int BuyProducts()
+        {
+            return Money -= CalculateCost();
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"\nДенег у клиента : {Money}\n");
+
+            if(Products.Count == 0)
+            {
+                Console.WriteLine("Ваших средств не хватает.Извините");
+            }
+            else
+            {
+                Console.WriteLine("в Корзине лежит :");
+                foreach (Product product in Products)
+                {
+                    Console.WriteLine(product.Name);
+                }
+            }
+
+            if(CalculateCost() == 0) { }
+            else
+            {
+                Console.WriteLine($"\nСтоимость покупок : {CalculateCost()}");
+            }
+            
+        }
+    }
+}
