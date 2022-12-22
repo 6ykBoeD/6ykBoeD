@@ -234,6 +234,17 @@ namespace CSLight
 
             ChoiseFighter();
 
+            while (_firstFighter.HP > 0 && _secondFighter.HP > 0)
+            {
+                Console.WriteLine();
+
+                _firstFighter.Attack(_secondFighter);
+                _secondFighter.Attack(_firstFighter);
+
+                _firstFighter.ShowStats();
+                _secondFighter.ShowStats();
+            }
+
             ShowWinner();
         }
 
@@ -272,17 +283,6 @@ namespace CSLight
 
         private void ShowWinner()
         {
-            while (_firstFighter.HP > 0 && _secondFighter.HP > 0)
-            {
-                Console.WriteLine();
-
-                _firstFighter.Attack(_secondFighter);
-                _secondFighter.Attack(_firstFighter);
-
-                _firstFighter.ShowStats();
-                _secondFighter.ShowStats();
-            }
-
             if (_firstFighter.HP <= 0 && _secondFighter.HP <= 0)
             {
                 Console.WriteLine("Оба бойца погибли!");
