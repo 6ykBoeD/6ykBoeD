@@ -115,16 +115,16 @@ namespace CSLight
 
         public override void Attack(Fighter enemyFighter)
         {
-            float increeseDamage = 2 * Damage;
-            float increeseHP = 1.5f * HP;
-            float increeseArmor = 1.5f * Armor;
+            float increeseDamage = 2;
+            float increeseHP = 1.5f;
+            float increeseArmor = 1.5f;
             
             for (int i = 0; i < CountTransformation; i++)
             {
                 Console.WriteLine("<<<Облик медведя>>>");
-                HP = increeseHP;
-                Damage = increeseDamage;
-                Armor = increeseArmor;
+                HP *= increeseHP ;
+                Damage *= increeseDamage ;
+                Armor *= increeseArmor ;
                 CountTransformation = 0;
             }
             enemyFighter.TakeDamage(Damage);
@@ -141,13 +141,11 @@ namespace CSLight
 
         public override void Attack(Fighter enemyFighter)
         {
-
             enemyFighter.TakeDamage(Damage);
         }
 
         public override void TakeDamage(float damage)
         {
-            
             int chance = 25;
             int evadeDamage = 0;
 
@@ -223,12 +221,7 @@ namespace CSLight
 
         public Arena()
         {
-            int countFighters = 5;
-
-            for (int i = 0; i < countFighters; i++)
-            {
-                _listFighters.Add(CreateFighter(i));
-            }
+            CreateFighterList();
         }
 
         public void Fight()
@@ -238,14 +231,47 @@ namespace CSLight
                 Console.Write(i + 1 + " ");
                 _listFighters[i].ShowStats();
             }
-            
+
+            ChoiseFighter();
+
+            ShowWinner();
+        }
+
+        private Fighter CreateFighter(int index)
+        {
+            switch (index + 1)
+            {
+                case 1:
+                    Warrior warrior = new Warrior("Воин", 250, 20, 10, 250);
+                    return warrior;
+                case 2:
+                    Mage mage = new Mage("Маг", 150, 20, 5, 150);
+                    return mage;
+                case 3:
+                    Druid druid = new Druid("Друид", 150, 10, 10, 150);
+                    return druid;
+                case 4:
+                    Thief thief = new Thief("Депутат", 125, 20, 5, 125);
+                    return thief;
+                case 5:
+                    Priest priest = new Priest("Прист", 150, 15, 8, 100);
+                    return priest;
+            }
+            return null;
+        }
+
+        private void ChoiseFighter()
+        {
             Console.WriteLine();
             Console.WriteLine("Выберите первого бойца :");
             _firstFighter = CreateFighter(GetIndex());
 
             Console.WriteLine("Выберите второго бойца :");
             _secondFighter = CreateFighter(GetIndex());
+        }
 
+        private void ShowWinner()
+        {
             while (_firstFighter.HP > 0 && _secondFighter.HP > 0)
             {
                 Console.WriteLine();
@@ -273,27 +299,16 @@ namespace CSLight
             Console.ReadKey();
         }
 
-        private Fighter CreateFighter(int index)
+        private List<Fighter> CreateFighterList()
         {
-            switch (index + 1)
+            int countFighters = 5;
+
+            for (int i = 0; i < countFighters; i++)
             {
-                case 1:
-                    Warrior warrior = new Warrior("Воин", 250, 20, 10, 250);
-                    return warrior;
-                case 2:
-                    Mage mage = new Mage("Маг", 150, 20, 5, 150);
-                    return mage;
-                case 3:
-                    Druid druid = new Druid("Друид", 150, 10, 10, 150);
-                    return druid;
-                case 4:
-                    Thief thief = new Thief("Депутат", 125, 20, 5, 125);
-                    return thief;
-                case 5:
-                    Priest priest = new Priest("Прист", 150, 15, 8, 100);
-                    return priest;
+                _listFighters.Add(CreateFighter(i));
             }
-            return null;
+
+            return _listFighters;
         }
 
         private int GetIndex()
@@ -326,4 +341,3 @@ namespace CSLight
         }
     }
 }
- 
