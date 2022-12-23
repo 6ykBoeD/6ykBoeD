@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Security.AccessControl;
 
 namespace CSLight
 {
@@ -83,6 +82,7 @@ namespace CSLight
     class Mage : Fighter
     {
         private int _mana = 250;
+
         public Mage(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
@@ -111,6 +111,7 @@ namespace CSLight
     class Druid : Fighter
     {
         private int CountTransformation = 1;
+
         public Druid(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
         public override void Attack(Fighter enemyFighter)
@@ -127,6 +128,7 @@ namespace CSLight
                 Armor *= increeseArmor ;
                 CountTransformation = 0;
             }
+
             enemyFighter.TakeDamage(Damage);
         }
     }
@@ -134,6 +136,7 @@ namespace CSLight
     class Thief : Fighter
     {
         private int _evadeShance;
+
         public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
         {
             _evadeShance = Random.Next(101);
@@ -167,6 +170,7 @@ namespace CSLight
     {
         private int _count;
         private int _mana = 250;
+
         public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
         {
             _count = 1;
