@@ -8,46 +8,15 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            const string CommandServeClient = "1";
-            const string CommandExit = "2";
-
             Shop shop = new Shop();
-            bool isWork = true;
-            
-            while (isWork)
-            {
-                Console.WriteLine($"В очереди {shop._clients.Count} клиентов\n");
-                Console.WriteLine($"Выберите действие \n{CommandServeClient} - Обслужить клиента \n{CommandExit} - Закрыть кассу");
-                
-                if(shop._clients.Count > 0)
-                {
-                    switch (Console.ReadLine())
-                    {
-                        case CommandServeClient:
-                            shop.ServeClient();
-                            break;
-
-                        case CommandExit:
-                            isWork = false;
-                            break;
-                    }
-                }
-                else if(shop._clients.Count == 0)
-                {
-                    Console.WriteLine("Очередь пуста");
-                    isWork = false;
-                }
-
-                Console.ReadKey();
-                Console.Clear();
-            }
+            shop.ServeClient(); 
         }
     }
 
     class Shop
     {
         private Random _random = new Random();
-        public Queue<Client> _clients { get;private set; }
+        private Queue<Client> _clients;
 
         public Shop()
         {
@@ -131,7 +100,37 @@ namespace ConsoleApp1
 
         public void ServeClient()
         {
-            CalculateClient(_clients.Dequeue());
+            const string CommandServeClient = "1";
+            const string CommandExit = "2";
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine($"В очереди {_clients.Count} клиентов\n");
+                Console.WriteLine($"Выберите действие \n{CommandServeClient} - Обслужить клиента \n{CommandExit} - Закрыть кассу");
+
+                if (_clients.Count > 0)
+                {
+                    switch (Console.ReadLine())
+                    {
+                        case CommandServeClient:
+                            CalculateClient(_clients.Dequeue());
+                            break;
+
+                        case CommandExit:
+                            isWork = false;
+                            break;
+                    }
+                }
+                else if (_clients.Count == 0)
+                {
+                    Console.WriteLine("Очередь пуста");
+                    isWork = false;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
         }
     }
 
@@ -186,18 +185,17 @@ namespace ConsoleApp1
             else
             {
                 Console.WriteLine("в Корзине лежит :");
+
                 foreach (Product product in Products)
                 {
                     Console.WriteLine(product.Name);
                 }
             }
 
-            if(CalculateCost() == 0) { }
-            else
+            if(CalculateCost() != 0)
             {
                 Console.WriteLine($"\nСтоимость покупок : {CalculateCost()}");
             }
-            
         }
     }
 }
