@@ -1,0 +1,391 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Arena arena = new Arena();
+            arena.Fight();
+        }
+    }
+
+    class PlayerColor
+    {
+        public List<Fighter> FighterList { get;private set; }
+
+        public PlayerColor()
+        {
+            FighterList = new List<Fighter>();
+        }
+
+        public List<Fighter> CreateTeam(PlayerColor player)
+        {
+            Random random = new Random();
+            int numberFighters = 3;
+            int index = 7;
+
+            for (int i = 0; i < numberFighters; i++)
+            {
+                player.FighterList.Add(CreateFighter(random.Next(index)));
+            }
+
+            for (int i = 0; i < player.FighterList.Count; i++)
+            {
+                Console.Write(i + 1 + " ");
+                player.FighterList[i].ShowStats();
+            }
+
+            return player.FighterList;
+        }
+
+        public Fighter CreateFighter(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    Warrior warrior = new Warrior("Воин",10, 200,200, 10);
+                    return warrior;
+                case 1:
+                    Mage mage = new Mage("Маг",15, 125,125, 5);
+                    return mage;
+                case 2:
+                    Thief thief = new Thief("Вор",20, 150,150, 0);
+                    return thief;
+                case 3:
+                    Archer archer = new Archer("Лучник",25, 120,120, 0);
+                    return archer;
+                case 4:
+                    Knight knight = new Knight("Рыцарь",5, 250,250, 15);
+                    return knight;
+                case 5:
+                    Priest priest = new Priest("Прист",10, 150,150, 0);
+                    return priest;
+                case 6:
+                    Druid druid = new Druid("Друид", 10, 150, 150, 10);
+                    return druid;
+            }
+            return null;
+        }
+
+        private List<Fighter> CreateFighterList()
+        {
+            int countFighters = 7;
+
+            for (int i = 0; i < countFighters; i++)
+            {
+                FighterList.Add(CreateFighter(i));
+            }
+
+            return FighterList;
+        }
+    }
+
+    class Fighter
+    {
+        protected Random Random = new Random();
+        private string _name;
+        public float Damage { get;protected set; }
+        public float HP { get; protected set; }
+        public float MaxHP { get; protected set; }
+        public float Armor { get; protected set; }
+
+        public Fighter(string name ,float damage,float hP,float maxhP,float armor)
+        {
+            _name = name;
+            Damage = damage;
+            HP = hP;
+            MaxHP = maxhP;
+            Armor = armor;
+        }
+
+        public virtual void TakeDamage(float damage)
+        {
+            HP -= damage - damage / 100 * Armor;
+        }
+
+        public virtual void Attack(Fighter enemyFighter)
+        {
+            enemyFighter.TakeDamage(Damage);
+        }
+
+        public void ShowStats()
+        {
+            Console.WriteLine($"{_name} -\t Здоровье = {HP}; Урон = {Damage}; Броня = {Armor}");
+        }
+    }
+
+    class Arena
+    {
+        private PlayerColor Red = new PlayerColor();
+        private PlayerColor Blue = new PlayerColor();
+
+        public void Fight()
+        {
+            ChoiseFightersTeame();
+
+            while (Red.FighterList.Count > 0 && Blue.FighterList.Count > 0)
+            {
+                Red.FighterList[0].Attack(Blue.FighterList[0]);
+                Blue.FighterList[0].Attack(Red.FighterList[0]);
+                Red.FighterList[0].ShowStats();
+
+                if (Red.FighterList[0].HP <= 0)
+                {
+                    Red.FighterList.RemoveAt(0);
+                }
+
+                Blue.FighterList[0].ShowStats();
+
+                if (Blue.FighterList[0].HP <= 0)
+                {
+                    Blue.FighterList.RemoveAt(0);
+                }
+            }
+
+            if (Red.FighterList.Count <= 0)
+            {
+                Console.WriteLine("Победа Синей команды");
+            }
+            else if (Blue.FighterList.Count <= 0)
+            {
+                Console.WriteLine("Победа Красной команды");
+            }
+            else
+            {
+                Console.WriteLine("Ничья");
+            }
+        }
+
+        private void ChoiseFightersTeame()
+        {
+            Console.WriteLine("Сформировать команду красных");
+            Red.CreateTeam(Red);
+
+            Console.WriteLine("Сформировать команду синих");
+            Blue.CreateTeam(Blue);
+        }
+    }
+
+    class Warrior : Fighter
+    {
+        private float _rage = 0;
+        private int _multiplierDamage = 4;
+
+        public Warrior(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+
+        public override void TakeDamage(float damage)
+        {
+            base.TakeDamage(damage);
+            _rage += damage - damage / 100 * Armor;
+        }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            float damage;
+            float mortalStrikeDamage;
+            int lowHP = 2;
+            int rageCost = 30;
+
+            if (_rage >= rageCost && enemyFighter.HP <= (enemyFighter.MaxHP / lowHP))
+            {
+                mortalStrikeDamage = Damage * _multiplierDamage;
+                _rage -= rageCost;
+                Console.WriteLine("<<<Воин наносит смертоностный удар>>>");
+                damage = mortalStrikeDamage;
+            }
+            else
+            {
+                damage = Damage;
+            }
+
+            enemyFighter.TakeDamage(damage);
+        }
+    }
+
+    class Mage : Fighter
+    {
+        private int _mana = 250;
+
+        public Mage(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            int manaRegeneration = 10;
+            float damage;
+            int manaCost = 50;
+            float fireBallDamage = 30;
+
+            if (_mana >= manaCost)
+            {
+                _mana -= manaCost;
+                Console.WriteLine("<<<Огненный шар>>>");
+                damage = fireBallDamage;
+            }
+            else
+            {
+                damage = Damage;
+            }
+
+            enemyFighter.TakeDamage(damage);
+            _mana += manaRegeneration;
+        }
+    }
+
+    class Thief : Fighter
+    {
+        private int _evadeShance;
+
+        public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
+        {
+            _evadeShance = Random.Next(101);
+        }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            enemyFighter.TakeDamage(Damage);
+        }
+
+        public override void TakeDamage(float damage)
+        {
+            int chance = 25;
+            int evadeDamage = 0;
+
+            if (chance <= _evadeShance)
+            {
+                Console.WriteLine("<<<Уворот>>>");
+                damage = evadeDamage;
+            }
+            else
+            {
+                damage = Damage;
+            }
+
+            TakeDamage(damage);
+        }
+    }
+
+    class Archer : Fighter
+    {
+        private float _weakPoint = 1.2f;
+
+        public Archer(string name, float damage, float hp, float maxHP, float armor) : base(name, damage, hp, maxHP, armor) { }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            Damage *= _weakPoint;
+            enemyFighter.TakeDamage(Damage);
+        }
+    }
+
+    class Knight : Fighter
+    {
+        private int _essenceLight = 100;
+
+        public Knight(string name, float damage, float hp,float maxHP, float armor) : base(name, damage, hp,maxHP, armor) { }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            int essenceLightRegeneration = 20;
+            int lightCost = 50;
+            int heal = 5;
+            int lightStrike = 30;
+            float damage = Damage;
+
+            if(lightCost >= _essenceLight)
+            {
+                damage = lightStrike;
+
+                if(MaxHP < HP)
+                {
+                    HP +=heal;
+                }
+            }
+
+            _essenceLight += essenceLightRegeneration;
+            enemyFighter.TakeDamage(damage);
+        }
+    }
+
+    class Priest : Fighter
+    {
+        private int _count;
+        private int _mana = 250;
+
+        public Priest(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
+        {
+            _count = 1;
+        }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            int manaRegeneration = 10;
+            UseInnerFire();
+            enemyFighter.TakeDamage(Damage);
+            Heal();
+            _mana += manaRegeneration;
+        }
+
+        private void Heal()
+        {
+            float limitHP = 0.8f;
+            float healthThreshold = limitHP * MaxHP;
+            int manaCost = 50;
+            int heal = 10;
+
+            if (_mana >= manaCost && HP <= healthThreshold)
+            {
+                HP += heal;
+                _mana -= manaCost;
+                Console.WriteLine("<<<Лечение>>>");
+            }
+        }
+
+        private void UseInnerFire()
+        {
+            int manaCost = 10;
+            int increeseArmor = 30;
+            float minLimitHP = 0.2f;
+            float lowHP = minLimitHP * MaxHP;
+
+            if (_count == 1 && HP <= lowHP && _mana >= manaCost)
+            {
+                Armor += increeseArmor;
+                _mana -= manaCost;
+                _count = 0;
+                Console.WriteLine("<<<Броня повышена>>>");
+            }
+        }
+    }
+
+    class Druid : Fighter
+    {
+        private int _countTransformation = 1;
+
+        public Druid(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+
+        public override void Attack(Fighter enemyFighter)
+        {
+            float increeseDamage = 2;
+            float increeseHP = 1.5f;
+            float increeseArmor = 1.5f;
+
+            for (int i = 0; i < _countTransformation; i++)
+            {
+                Console.WriteLine("<<<Облик медведя>>>");
+                HP *= increeseHP;
+                Damage *= increeseDamage;
+                Armor *= increeseArmor;
+                _countTransformation = 0;
+            }
+
+            enemyFighter.TakeDamage(Damage);
+        }
+    }
+}
