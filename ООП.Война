@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ConsoleApp2
 {
@@ -11,14 +8,15 @@ namespace ConsoleApp2
     {
         static void Main(string[] args)
         {
-            Arena arena = new Arena();
-            arena.Fight();
+            Battlefield battlefield = new Battlefield();
+            battlefield.Fight();
         }
     }
 
     class PlayerColor
     {
-        public List<Fighter> FighterList { get;private set; }
+        static private Random _random = new Random();
+        public List<Fighter> FighterList { get; private set; }
 
         public PlayerColor()
         {
@@ -27,13 +25,13 @@ namespace ConsoleApp2
 
         public List<Fighter> CreateTeam(PlayerColor player)
         {
-            Random random = new Random();
+            
             int numberFighters = 3;
             int index = 7;
 
             for (int i = 0; i < numberFighters; i++)
             {
-                player.FighterList.Add(CreateFighter(random.Next(index)));
+                player.FighterList.Add(CreateFighter(_random.Next(index)));
             }
 
             for (int i = 0; i < player.FighterList.Count; i++)
@@ -50,22 +48,22 @@ namespace ConsoleApp2
             switch (index)
             {
                 case 0:
-                    Warrior warrior = new Warrior("Воин",10, 200,200, 10);
+                    Warrior warrior = new Warrior("Воин", 10, 200, 200, 10);
                     return warrior;
                 case 1:
-                    Mage mage = new Mage("Маг",15, 125,125, 5);
+                    Mage mage = new Mage("Маг", 15, 125, 125, 5);
                     return mage;
                 case 2:
-                    Thief thief = new Thief("Вор",20, 150,150, 0);
+                    Thief thief = new Thief("Вор", 20, 150, 150, 0);
                     return thief;
                 case 3:
-                    Archer archer = new Archer("Лучник",25, 120,120, 0);
+                    Archer archer = new Archer("Лучник", 25, 120, 120, 0);
                     return archer;
                 case 4:
-                    Knight knight = new Knight("Рыцарь",5, 250,250, 15);
+                    Knight knight = new Knight("Рыцарь", 5, 250, 250, 15);
                     return knight;
                 case 5:
-                    Priest priest = new Priest("Прист",10, 150,150, 0);
+                    Priest priest = new Priest("Прист", 10, 150, 150, 0);
                     return priest;
                 case 6:
                     Druid druid = new Druid("Друид", 10, 150, 150, 10);
@@ -77,14 +75,13 @@ namespace ConsoleApp2
 
     class Fighter
     {
-        protected Random Random = new Random();
         private string _name;
-        public float Damage { get;protected set; }
+        public float Damage { get; protected set; }
         public float HP { get; protected set; }
         public float MaxHP { get; protected set; }
         public float Armor { get; protected set; }
 
-        public Fighter(string name ,float damage,float hP,float maxhP,float armor)
+        public Fighter(string name, float damage, float hP, float maxhP, float armor)
         {
             _name = name;
             Damage = damage;
@@ -109,7 +106,7 @@ namespace ConsoleApp2
         }
     }
 
-    class Arena
+    class Battlefield
     {
         private PlayerColor Red = new PlayerColor();
         private PlayerColor Blue = new PlayerColor();
@@ -230,10 +227,10 @@ namespace ConsoleApp2
     class Thief : Fighter
     {
         private int _evadeShance;
-
+        private Random _random = new Random();
         public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
         {
-            _evadeShance = Random.Next(101);
+            _evadeShance = _random.Next(101);
         }
 
         public override void Attack(Fighter enemyFighter)
@@ -277,7 +274,7 @@ namespace ConsoleApp2
     {
         private int _essenceLight = 100;
 
-        public Knight(string name, float damage, float hp,float maxHP, float armor) : base(name, damage, hp,maxHP, armor) { }
+        public Knight(string name, float damage, float hp, float maxHP, float armor) : base(name, damage, hp, maxHP, armor) { }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -287,13 +284,13 @@ namespace ConsoleApp2
             int lightStrike = 30;
             float damage = Damage;
 
-            if(lightCost >= _essenceLight)
+            if (lightCost >= _essenceLight)
             {
                 damage = lightStrike;
 
-                if(MaxHP < HP)
+                if (MaxHP < HP)
                 {
-                    HP +=heal;
+                    HP += heal;
                 }
             }
 
