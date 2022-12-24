@@ -13,17 +13,17 @@ namespace ConsoleApp2
         }
     }
 
-    class PlayerColor
+    class Country
     {
         static private Random _random = new Random();
         public List<Fighter> FighterList { get; private set; }
 
-        public PlayerColor()
+        public Country()
         {
             FighterList = new List<Fighter>();
         }
 
-        public List<Fighter> CreateTeam(PlayerColor player)
+        public List<Fighter> CreateTeam(Country player)
         {
             
             int numberFighters = 3;
@@ -108,8 +108,8 @@ namespace ConsoleApp2
 
     class Battlefield
     {
-        private PlayerColor Red = new PlayerColor();
-        private PlayerColor Blue = new PlayerColor();
+        private Country Red = new Country();
+        private Country Blue = new Country();
 
         public void Fight()
         {
