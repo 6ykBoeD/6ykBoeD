@@ -45,7 +45,7 @@ namespace ConsoleApp2
             return player.FighterList;
         }
 
-        public Fighter CreateFighter(int index)
+        private Fighter CreateFighter(int index)
         {
             switch (index)
             {
@@ -72,18 +72,6 @@ namespace ConsoleApp2
                     return druid;
             }
             return null;
-        }
-
-        private List<Fighter> CreateFighterList()
-        {
-            int countFighters = 7;
-
-            for (int i = 0; i < countFighters; i++)
-            {
-                FighterList.Add(CreateFighter(i));
-            }
-
-            return FighterList;
         }
     }
 
@@ -132,6 +120,7 @@ namespace ConsoleApp2
 
             while (Red.FighterList.Count > 0 && Blue.FighterList.Count > 0)
             {
+                Console.WriteLine();
                 Red.FighterList[0].Attack(Blue.FighterList[0]);
                 Blue.FighterList[0].Attack(Red.FighterList[0]);
                 Red.FighterList[0].ShowStats();
@@ -165,10 +154,10 @@ namespace ConsoleApp2
 
         private void ChoiseFightersTeame()
         {
-            Console.WriteLine("Сформировать команду красных");
+            Console.WriteLine("\nСформировать команду красных");
             Red.CreateTeam(Red);
 
-            Console.WriteLine("Сформировать команду синих");
+            Console.WriteLine("\nСформировать команду синих");
             Blue.CreateTeam(Blue);
         }
     }
