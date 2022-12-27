@@ -1,0 +1,194 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Security.Policy;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+
+namespace Fish
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            const string CommandNextDay = "1";
+            const string CommandAddFish = "2";
+            const string CommandRemoveFish = "3";
+            const string CommandExit = "4";
+
+            Aquarium aquarium = new Aquarium();
+            bool isWork = true;
+
+            while(isWork)
+            {
+                aquarium.ShowBar();
+                Console.WriteLine($"\nВыберите дейтсвие " +
+                    $"\n{CommandNextDay} - следующий день" +
+                    $"\n{CommandAddFish} - добавить рыбу в аквариум" +
+                    $"\n{CommandRemoveFish} - убрать рыбу из аквариума" +
+                    $"\n{CommandExit} - закрыть программу");
+
+                switch(Console.ReadLine())
+                {
+                    case CommandNextDay:
+                    aquarium.Life();
+                    break;
+
+                    case CommandAddFish:
+                    aquarium.AddFish();
+                    break;
+
+                    case CommandRemoveFish:
+                    aquarium.RemoveFish();
+                    break;
+
+                    case CommandExit:
+                    isWork = false;
+                    break;
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+    }
+
+    class Fish
+    {
+        private int _countDay = 0;
+        public string Name { get; private set; }
+        public int HP { get; private set; }
+
+        public Fish(string name,int hp)
+        {
+            Name = name;
+            HP = hp;
+            _countDay++;
+        }
+
+        public void DrawBar(char symbol = ' ')
+        {
+            int oneIncrements = 5;
+            int maxValue = HP / oneIncrements;
+            ConsoleColor color = ConsoleColor.White;
+            ConsoleColor defaultColor = Console.BackgroundColor;
+            string bar = "";
+            int hp = (HP - oneIncrements*_countDay)/oneIncrements;
+
+            for (int i = 0; i < hp; i++)
+            {
+                bar += symbol;
+            }
+
+            Console.Write(Name + "\t- ");
+            Console.Write('[');
+            Console.BackgroundColor = color;
+            Console.Write(bar);
+            Console.BackgroundColor = defaultColor;
+            bar = "";
+
+            for (int i = hp; i < maxValue; i++)
+            {
+                bar += symbol;
+            }
+
+            Console.Write(bar + ']');
+            Console.Write($" Количество дней жизни - {_countDay}\n") ;
+        }
+
+        public void LifeTime()
+        {
+            int lifeTime = 5;
+            HP -= lifeTime;
+        }
+    }
+
+    class Aquarium
+    {
+        private Random _random = new Random();
+        private List<Fish> _listFish = new List<Fish>();
+        private List<Fish> _aquariumFish = new List<Fish>();
+        private int _maxNumberFish = 5;
+
+        public Aquarium()
+        {
+            _listFish = new List<Fish>() { 
+            new Fish("Карась", 50),
+            new Fish("Окунь",75),
+            new Fish("Щука",80),
+            new Fish("Плотва",45),
+            new Fish("Язь",25),
+            new Fish("Акула",100),
+            new Fish("Скат",85),
+            new Fish("Сом",90),
+            new Fish("Минтай",10),
+            new Fish("Сазан",15)};
+
+            FillAquarium();
+        }
+
+        public void ShowBar()
+        {
+            for (int i = 0; i < _aquariumFish.Count; i++)
+            {
+                _aquariumFish[i].DrawBar();
+            }
+        }
+
+        public void Life()
+        {
+            for (int i = 0; i < _aquariumFish.Count; i++)
+            {
+                _aquariumFish[i].LifeTime();
+
+                if (_aquariumFish[i].HP <= 0)
+                {
+                    _aquariumFish.RemoveAt(i);
+                }
+            }
+        }
+
+        public void AddFish()
+        {
+            int index;
+
+            if(_aquariumFish.Count < _maxNumberFish)
+            {
+                index = _random.Next(_listFish.Count);
+                _aquariumFish.Add(_listFish[index]);
+            }
+            else
+            {
+                Console.WriteLine("В аквариумен нет места");
+            }
+        }
+
+        public void RemoveFish()
+        {
+            Console.WriteLine("Введите название рыбы");
+            string name = Console.ReadLine();
+
+            for (int i = 0; i < _aquariumFish.Count; i++)
+            {
+                if (name == _aquariumFish[i].Name)
+                {
+                    _aquariumFish.RemoveAt(i);
+                }
+            }
+        }
+
+        public void FillAquarium()
+        {
+            int index;
+
+            for (int i = 0; i < _maxNumberFish; i++)
+            {
+                index = _random.Next(_listFish.Count);
+                _aquariumFish.Add(_listFish[index]);
+            }
+        }
+    }
+}
