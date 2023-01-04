@@ -72,7 +72,7 @@ namespace CSLight
             }
             else
             {
-               damage = Damage;
+                damage = Damage;
             }
 
             enemyFighter.TakeDamage(damage);
@@ -110,7 +110,7 @@ namespace CSLight
 
     class Druid : Fighter
     {
-        private int CountTransformation = 1;
+        private int _countTransformation = 1;
 
         public Druid(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
 
@@ -119,14 +119,14 @@ namespace CSLight
             float increeseDamage = 2;
             float increeseHP = 1.5f;
             float increeseArmor = 1.5f;
-            
-            for (int i = 0; i < CountTransformation; i++)
+
+            for (int i = 0; i < _countTransformation; i++)
             {
                 Console.WriteLine("<<<Облик медведя>>>");
-                HP *= increeseHP ;
-                Damage *= increeseDamage ;
-                Armor *= increeseArmor ;
-                CountTransformation = 0;
+                HP *= increeseHP;
+                Damage *= increeseDamage;
+                Armor *= increeseArmor;
+                _countTransformation = 0;
             }
 
             enemyFighter.TakeDamage(Damage);
@@ -222,10 +222,16 @@ namespace CSLight
         private Fighter _firstFighter;
         private Fighter _secondFighter;
         private List<Fighter> _listFighters = new List<Fighter>();
+        private List<Fighter> _listFirstFighters = new List<Fighter>();
+        private List<Fighter> _listSecondFighters = new List<Fighter>();
 
         public Arena()
         {
-            CreateFighterList();
+            _listFighters.Add(new Warrior("Воин", 250, 20, 10, 250));
+            _listFighters.Add(new Mage("Маг", 150, 20, 5, 150));
+            _listFighters.Add(new Druid("Друид", 150, 10, 10, 150));
+            _listFighters.Add(new Thief("Депутат", 125, 20, 5, 125));
+            _listFighters.Add(new Priest("Прист", 150, 15, 8, 100));
         }
 
         public void Fight()
@@ -252,26 +258,53 @@ namespace CSLight
             ShowWinner();
         }
 
-        private Fighter CreateFighter(int index)
+        private Fighter CreateFirstFighter(int index)
         {
-            switch (index + 1)
+            _listFirstFighters.Add(new Warrior("Воин", 250, 20, 10, 250));
+            _listFirstFighters.Add(new Mage("Маг", 150, 20, 5, 150));
+            _listFirstFighters.Add(new Druid("Друид", 150, 10, 10, 150));
+            _listFirstFighters.Add(new Thief("Депутат", 125, 20, 5, 125));
+            _listFirstFighters.Add(new Priest("Прист", 150, 15, 8, 100));
+
+            switch (index)
             {
                 case 1:
-                    Warrior warrior = new Warrior("Воин", 250, 20, 10, 250);
-                    return warrior;
+                    return _listFirstFighters[0];
                 case 2:
-                    Mage mage = new Mage("Маг", 150, 20, 5, 150);
-                    return mage;
+                    return _listFirstFighters[1];
                 case 3:
-                    Druid druid = new Druid("Друид", 150, 10, 10, 150);
-                    return druid;
+                    return _listFirstFighters[2];
                 case 4:
-                    Thief thief = new Thief("Депутат", 125, 20, 5, 125);
-                    return thief;
+                    return _listFirstFighters[3];
                 case 5:
-                    Priest priest = new Priest("Прист", 150, 15, 8, 100);
-                    return priest;
+                    return _listFirstFighters[4];
             }
+
+            return null;
+        }
+
+        private Fighter CreateSecondFighter(int index)
+        {
+            _listSecondFighters.Add(new Warrior("Воин", 250, 20, 10, 250));
+            _listSecondFighters.Add(new Mage("Маг", 150, 20, 5, 150));
+            _listSecondFighters.Add(new Druid("Друид", 150, 10, 10, 150));
+            _listSecondFighters.Add(new Thief("Депутат", 125, 20, 5, 125));
+            _listSecondFighters.Add(new Priest("Прист", 150, 15, 8, 100));
+
+            switch (index)
+            {
+                case 1:
+                    return _listSecondFighters[0];
+                case 2:
+                    return _listSecondFighters[1];
+                case 3:
+                    return _listSecondFighters[2];
+                case 4:
+                    return _listSecondFighters[3];
+                case 5:
+                    return _listSecondFighters[4];
+            }
+
             return null;
         }
 
@@ -279,10 +312,10 @@ namespace CSLight
         {
             Console.WriteLine();
             Console.WriteLine("Выберите первого бойца :");
-            _firstFighter = CreateFighter(GetIndex());
+            _firstFighter = CreateFirstFighter(GetIndex());
 
             Console.WriteLine("Выберите второго бойца :");
-            _secondFighter = CreateFighter(GetIndex());
+            _secondFighter = CreateSecondFighter(GetIndex());
         }
 
         private void ShowWinner()
@@ -303,18 +336,6 @@ namespace CSLight
             Console.ReadKey();
         }
 
-        private List<Fighter> CreateFighterList()
-        {
-            int countFighters = 5;
-
-            for (int i = 0; i < countFighters; i++)
-            {
-                _listFighters.Add(CreateFighter(i));
-            }
-
-            return _listFighters;
-        }
-
         private int GetIndex()
         {
             bool isTrue = true;
@@ -325,15 +346,15 @@ namespace CSLight
 
                 if (isSuccess)
                 {
-                    if ( count <= _listFighters.Count && count > 0)
+                    if (count <= _listFighters.Count && count > 0)
                     {
-                        return count - 1;
+                        return count;
                     }
                     else
                     {
                         Console.WriteLine("Бойца под таким номером нет");
                     }
-                    
+
                 }
                 else
                 {
