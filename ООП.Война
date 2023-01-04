@@ -16,31 +16,38 @@ namespace ConsoleApp2
     class Country
     {
         static private Random _random = new Random();
-        public List<Fighter> FighterList { get; private set; }
+        private List<Fighter> _fighterList = new List<Fighter>();
 
-        public Country()
+        public void CreateTeam(Country country)
         {
-            FighterList = new List<Fighter>();
-        }
-
-        public List<Fighter> CreateTeam(Country player)
-        {
-            
             int numberFighters = 3;
-            int index = 7;
+            int index = 6;
 
             for (int i = 0; i < numberFighters; i++)
             {
-                player.FighterList.Add(CreateFighter(_random.Next(index)));
+                country._fighterList.Add(CreateFighter(_random.Next(index)));
             }
 
-            for (int i = 0; i < player.FighterList.Count; i++)
+            for (int i = 0; i < country._fighterList.Count; i++)
             {
                 Console.Write(i + 1 + " ");
-                player.FighterList[i].ShowStats();
+                country._fighterList[i].ShowStats();
             }
+        }
 
-            return player.FighterList;
+        public int ShowCountFighters()
+        {
+            return _fighterList.Count;
+        }
+
+        public Fighter GetFighter()
+        {
+            return _fighterList[0];
+        }
+
+        public void DeleteFighter()
+        {
+            _fighterList.RemoveAt(0);
         }
 
         private Fighter CreateFighter(int index)
@@ -69,11 +76,12 @@ namespace ConsoleApp2
                     Druid druid = new Druid("Друид", 10, 150, 150, 10);
                     return druid;
             }
+            
             return null;
         }
     }
 
-    class Fighter
+    abstract class Fighter
     {
         private string _name;
         public float Damage { get; protected set; }
@@ -108,38 +116,52 @@ namespace ConsoleApp2
 
     class Battlefield
     {
-        private Country Red = new Country();
-        private Country Blue = new Country();
+        private Country _red = new Country();
+        private Country _blue = new Country();
 
         public void Fight()
         {
             ChoiseFightersTeame();
 
-            while (Red.FighterList.Count > 0 && Blue.FighterList.Count > 0)
+            while (_red.ShowCountFighters() > 0 && _blue.ShowCountFighters() > 0)
             {
                 Console.WriteLine();
-                Red.FighterList[0].Attack(Blue.FighterList[0]);
-                Blue.FighterList[0].Attack(Red.FighterList[0]);
-                Red.FighterList[0].ShowStats();
+                _red.GetFighter().Attack(_blue.GetFighter());
+                _blue.GetFighter().Attack(_red.GetFighter());
+                _red.GetFighter().ShowStats();
 
-                if (Red.FighterList[0].HP <= 0)
+                if (_red.GetFighter().HP <= 0)
                 {
-                    Red.FighterList.RemoveAt(0);
+                    _red.DeleteFighter();
                 }
 
-                Blue.FighterList[0].ShowStats();
+                _blue.GetFighter().ShowStats();
 
-                if (Blue.FighterList[0].HP <= 0)
+                if (_blue.GetFighter().HP <= 0)
                 {
-                    Blue.FighterList.RemoveAt(0);
+                    _blue.DeleteFighter();
                 }
             }
 
-            if (Red.FighterList.Count <= 0)
+            ShowWinner();
+        }
+
+        private void ChoiseFightersTeame()
+        {
+            Console.WriteLine("\nСформировать команду красных");
+            _red.CreateTeam(_red);
+
+            Console.WriteLine("\nСформировать команду синих");
+            _blue.CreateTeam(_blue);
+        }
+
+        private void ShowWinner()
+        {
+            if (_red.ShowCountFighters() <= 0)
             {
                 Console.WriteLine("Победа Синей команды");
             }
-            else if (Blue.FighterList.Count <= 0)
+            else if (_blue.ShowCountFighters() <= 0)
             {
                 Console.WriteLine("Победа Красной команды");
             }
@@ -147,15 +169,6 @@ namespace ConsoleApp2
             {
                 Console.WriteLine("Ничья");
             }
-        }
-
-        private void ChoiseFightersTeame()
-        {
-            Console.WriteLine("\nСформировать команду красных");
-            Red.CreateTeam(Red);
-
-            Console.WriteLine("\nСформировать команду синих");
-            Blue.CreateTeam(Blue);
         }
     }
 
@@ -228,6 +241,7 @@ namespace ConsoleApp2
     {
         private int _evadeShance;
         private Random _random = new Random();
+
         public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
         {
             _evadeShance = _random.Next(101);
@@ -243,17 +257,18 @@ namespace ConsoleApp2
             int chance = 25;
             int evadeDamage = 0;
 
-            if (chance <= _evadeShance)
+            if (chance >= _evadeShance)
             {
                 Console.WriteLine("<<<Уворот>>>");
                 damage = evadeDamage;
             }
             else
             {
+                Console.WriteLine("Попали");
                 damage = Damage;
             }
 
-            TakeDamage(damage);
+            HP -= damage - damage / 100 * Armor;
         }
     }
 
