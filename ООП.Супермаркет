@@ -17,12 +17,6 @@ namespace ConsoleApp1
     {
         private Random _random = new Random();
         private Queue<Client> _clients;
-
-        public Shop()
-        {
-            _clients = CreateClients();
-        }
-
         private List<Product> _products = new List<Product>()
         {
             new Product("Соль", 20),
@@ -38,6 +32,11 @@ namespace ConsoleApp1
             new Product("Говядина", 400),
             new Product("Молоко", 60)
         };
+
+        public Shop()
+        {
+            CreateClients();
+        }
 
         private List<Product> GetProducts()
         {
@@ -60,7 +59,7 @@ namespace ConsoleApp1
             
             while (isSuccess)
             {
-                int index = _random.Next(client.Products.Count);
+                int index = _random.Next(client.Count());
                 client.ShowInfo();
 
                 if (client.CalculateCost() == 0)
@@ -76,17 +75,17 @@ namespace ConsoleApp1
                 else
                 {
                     Console.WriteLine($"\nУ вас недостаточно средств");
-                    Console.WriteLine($"Из корзины убрали {client.Products[index].Name}");
-                    client.Products.RemoveAt(index);
+                    Console.WriteLine($"Из корзины убрали {client.NameProduct(index)}");
+                    client.RemoveProduct(index);
                 }
             }
         }
 
-        private Queue<Client> CreateClients()
+        private void CreateClients()
         {
             _clients = new Queue<Client>();
-            int minMoney = 50;
-            int maxMoney = 100;
+            int minMoney = 150;
+            int maxMoney = 500;
             int minClients = 2;
             int maxClients = 5;
 
@@ -94,8 +93,6 @@ namespace ConsoleApp1
             {
                 _clients.Enqueue(new Client(GetProducts(), _random.Next(minMoney,maxMoney)));
             }
-
-            return _clients;
         }
 
         public void ServeClient()
@@ -148,22 +145,37 @@ namespace ConsoleApp1
 
     class Client
     {
+        private List<Product> _products;
         public int Money { get; private set; }
-        public List<Product> Products { get; private set; }
 
         public Client(List<Product> product,int money)
         {
-            Products = product;
+            _products = product;
             Money = money;
+        }
+
+        public int Count()
+        {
+            return _products.Count;
+        }
+
+        public string NameProduct(int index)
+        {
+            return _products[index].Name;
+        }
+
+        public void RemoveProduct(int index)
+        {
+            _products.RemoveAt(index);
         }
 
         public int CalculateCost()
         {
             int sumProducts = 0;
 
-            for (int i = 0; i < Products.Count; i++)
+            for (int i = 0; i < _products.Count; i++)
             {
-                sumProducts += Products[i].Price;
+                sumProducts += _products[i].Price;
             }
 
             return sumProducts;
@@ -178,7 +190,7 @@ namespace ConsoleApp1
         {
             Console.WriteLine($"\nДенег у клиента : {Money}\n");
 
-            if(Products.Count == 0)
+            if(_products.Count == 0)
             {
                 Console.WriteLine("Ваших средств не хватает.Извините");
             }
@@ -186,7 +198,7 @@ namespace ConsoleApp1
             {
                 Console.WriteLine("в Корзине лежит :");
 
-                foreach (Product product in Products)
+                foreach (Product product in _products)
                 {
                     Console.WriteLine(product.Name);
                 }
