@@ -16,38 +16,51 @@ namespace ConsoleApp2
     class Country
     {
         static private Random _random = new Random();
-        private List<Fighter> _fighterList = new List<Fighter>();
+        private Fighter[] _blanks;
+        private List<Fighter> _fighters = new List<Fighter>();
 
-        public void CreateTeam(Country country)
+        public Country()
+        {
+            _blanks = new Fighter[7];
+            _blanks[0] = new Warrior("Воин", 10, 200, 200, 10);
+            _blanks[1] = new Mage("Маг", 15, 125, 125, 5);
+            _blanks[2] = new Thief("Вор", 20, 150, 150, 0);
+            _blanks[3] = new Archer("Лучник", 25, 120, 120, 0);
+            _blanks[4] = new Knight("Рыцарь", 5, 250, 250, 15);
+            _blanks[5] = new Priest("Прист", 10, 150, 150, 0);
+            _blanks[6] = new Druid("Друид", 10, 150, 150, 10);
+        }
+
+        public void CreateTeam()
         {
             int numberFighters = 3;
-            int index = 6;
+            int index = _blanks.Length;
 
             for (int i = 0; i < numberFighters; i++)
             {
-                country._fighterList.Add(CreateFighter(_random.Next(index)));
+                _fighters.Add(CreateFighter(_random.Next(index)));
             }
 
-            for (int i = 0; i < country._fighterList.Count; i++)
+            for (int i = 0; i < _fighters.Count; i++)
             {
                 Console.Write(i + 1 + " ");
-                country._fighterList[i].ShowStats();
+                _fighters[i].ShowStats();
             }
         }
 
         public int ShowCountFighters()
         {
-            return _fighterList.Count;
+            return _fighters.Count;
         }
 
         public Fighter GetFighter()
         {
-            return _fighterList[0];
+            return _fighters[0];
         }
 
         public void DeleteFighter()
         {
-            _fighterList.RemoveAt(0);
+            _fighters.RemoveAt(0);
         }
 
         private Fighter CreateFighter(int index)
@@ -55,28 +68,21 @@ namespace ConsoleApp2
             switch (index)
             {
                 case 0:
-                    Warrior warrior = new Warrior("Воин", 10, 200, 200, 10);
-                    return warrior;
+                    return _blanks[0];
                 case 1:
-                    Mage mage = new Mage("Маг", 15, 125, 125, 5);
-                    return mage;
+                    return _blanks[1];
                 case 2:
-                    Thief thief = new Thief("Вор", 20, 150, 150, 0);
-                    return thief;
+                    return _blanks[2];
                 case 3:
-                    Archer archer = new Archer("Лучник", 25, 120, 120, 0);
-                    return archer;
+                    return _blanks[3];
                 case 4:
-                    Knight knight = new Knight("Рыцарь", 5, 250, 250, 15);
-                    return knight;
+                    return _blanks[4];
                 case 5:
-                    Priest priest = new Priest("Прист", 10, 150, 150, 0);
-                    return priest;
+                    return _blanks[5];
                 case 6:
-                    Druid druid = new Druid("Друид", 10, 150, 150, 10);
-                    return druid;
+                    return _blanks[6];
             }
-            
+
             return null;
         }
     }
@@ -149,25 +155,25 @@ namespace ConsoleApp2
         private void ChoiseFightersTeame()
         {
             Console.WriteLine("\nСформировать команду красных");
-            _red.CreateTeam(_red);
+            _red.CreateTeam();
 
             Console.WriteLine("\nСформировать команду синих");
-            _blue.CreateTeam(_blue);
+            _blue.CreateTeam();
         }
 
         private void ShowWinner()
         {
-            if (_red.ShowCountFighters() <= 0)
+            if (_red.ShowCountFighters() <= 0 && _blue.ShowCountFighters() <= 0)
             {
-                Console.WriteLine("Победа Синей команды");
+                Console.WriteLine("Ничья");
             }
             else if (_blue.ShowCountFighters() <= 0)
             {
                 Console.WriteLine("Победа Красной команды");
             }
-            else
+            else if(_red.ShowCountFighters() <= 0)
             {
-                Console.WriteLine("Ничья");
+                Console.WriteLine("Победа Синей команды");
             }
         }
     }
@@ -280,8 +286,14 @@ namespace ConsoleApp2
 
         public override void Attack(Fighter enemyFighter)
         {
-            Damage *= _weakPoint;
+            UseSpecialAttack();
             enemyFighter.TakeDamage(Damage);
+        }
+
+        public void UseSpecialAttack()
+        {
+            Damage *= _weakPoint;
+            Console.WriteLine("Урон повышен");
         }
     }
 
