@@ -9,7 +9,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             Shop shop = new Shop();
-            shop.ServeClient(); 
+            shop.CalculateClients(); 
         }
     }
 
@@ -17,8 +17,12 @@ namespace ConsoleApp1
     {
         private Random _random = new Random();
         private Queue<Client> _clients;
-        private List<Product> _products = new List<Product>()
+        private List<Product> _products;
+
+        public Shop()
         {
+            _products = new List<Product>()
+            {
             new Product("Соль", 20),
             new Product("Картошка", 40),
             new Product("Свекла", 20),
@@ -31,71 +35,12 @@ namespace ConsoleApp1
             new Product("Свинина",300),
             new Product("Говядина", 400),
             new Product("Молоко", 60)
-        };
+            };
 
-        public Shop()
-        {
             CreateClients();
         }
 
-        private List<Product> GetProducts()
-        {
-            int min = 1;
-            int max = 10;
-            List<Product> products = new List<Product>();
-
-            for (int i = 0; i < _random.Next(min,max); i++)
-            {
-                int index = _random.Next(_products.Count);
-                products.Add(_products[index]);
-            }
-
-            return products;
-        }
-
-        private void CalculateClient(Client client)
-        {
-            bool isSuccess = true;
-            
-            while (isSuccess)
-            {
-                int index = _random.Next(client.Count());
-                client.ShowInfo();
-
-                if (client.CalculateCost() == 0)
-                {
-                    isSuccess = false;
-                }
-                else if (client.CalculateCost() <= client.Money)
-                {
-                    client.BuyProducts();
-                    Console.WriteLine("Спасибо за покупку!!!");
-                    isSuccess = false;
-                }
-                else
-                {
-                    Console.WriteLine($"\nУ вас недостаточно средств");
-                    Console.WriteLine($"Из корзины убрали {client.NameProduct(index)}");
-                    client.RemoveProduct(index);
-                }
-            }
-        }
-
-        private void CreateClients()
-        {
-            _clients = new Queue<Client>();
-            int minMoney = 150;
-            int maxMoney = 500;
-            int minClients = 2;
-            int maxClients = 5;
-
-            for (int i = 0; i < _random.Next(minClients, maxClients); i++)
-            {
-                _clients.Enqueue(new Client(GetProducts(), _random.Next(minMoney,maxMoney)));
-            }
-        }
-
-        public void ServeClient()
+        public void CalculateClients()
         {
             const string CommandServeClient = "1";
             const string CommandExit = "2";
@@ -111,7 +56,7 @@ namespace ConsoleApp1
                     switch (Console.ReadLine())
                     {
                         case CommandServeClient:
-                            CalculateClient(_clients.Dequeue());
+                            ServeClient(_clients.Dequeue());
                             break;
 
                         case CommandExit:
@@ -127,6 +72,64 @@ namespace ConsoleApp1
 
                 Console.ReadKey();
                 Console.Clear();
+            }
+        }
+
+        private List<Product> CreateNewProducts()
+        {
+            int min = 1;
+            int max = 10;
+            int rand = _random.Next(min, max);
+            List<Product> products = new List<Product>();
+
+            for (int i = 0; i < rand; i++)
+            {
+                int index = _random.Next(_products.Count);
+                products.Add(_products[index]);
+            }
+
+            return products;
+        }
+
+        private void ServeClient(Client client)
+        {
+            bool isSuccess = true;
+            
+            while (isSuccess)
+            {
+                int index = _random.Next(client.GetNumberByers());
+                client.ShowInfo();
+
+                if (client.CalculateCost() == 0)
+                {
+                    isSuccess = false;
+                }
+                else if (client.CalculateCost() <= client.Money)
+                {
+                    client.BuyProducts();
+                    Console.WriteLine("Спасибо за покупку!!!");
+                    isSuccess = false;
+                }
+                else
+                {
+                    Console.WriteLine($"\nУ вас недостаточно средств");
+                    Console.WriteLine($"Из корзины убрали {client.ShowNameProduct(index)}");
+                    client.RemoveProduct(index);
+                }
+            }
+        }
+
+        private void CreateClients()
+        {
+            _clients = new Queue<Client>();
+            int minMoney = 150;
+            int maxMoney = 500;
+            int minClients = 2;
+            int maxClients = 5;
+
+            for (int i = 0; i < _random.Next(minClients, maxClients); i++)
+            {
+                _clients.Enqueue(new Client(CreateNewProducts(), _random.Next(minMoney,maxMoney)));
             }
         }
     }
@@ -154,12 +157,12 @@ namespace ConsoleApp1
             Money = money;
         }
 
-        public int Count()
+        public int GetNumberByers()
         {
             return _products.Count;
         }
 
-        public string NameProduct(int index)
+        public string ShowNameProduct(int index)
         {
             return _products[index].Name;
         }
