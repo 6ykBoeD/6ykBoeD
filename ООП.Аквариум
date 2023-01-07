@@ -1,13 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+
 
 namespace Fish
 {
@@ -59,7 +52,7 @@ namespace Fish
 
     class Fish
     {
-        private int _countDay = 0;
+        public int CountDays { get;private set; } = 0;
         public string Name { get; private set; }
         public int HP { get; private set; }
 
@@ -67,12 +60,7 @@ namespace Fish
         {
             Name = name;
             HP = hp;
-            _countDay++;
-        }
-
-        public int ShowDaysLived()
-        {
-            return _countDay;
+            CountDays++;
         }
 
         public void SpendLive()
@@ -84,46 +72,47 @@ namespace Fish
 
     class Aquarium
     {
-        private Bar bar = new Bar();
+        private Bar _bar = new Bar();
         private Random _random = new Random();
-        private List<Fish> _blank = new List<Fish>();
-        private List<Fish> _aquarium = new List<Fish>();
+        private Fish[] _blank;
+        private List<Fish> _container = new List<Fish>();
         private int _maxNumberFish = 5;
 
         public Aquarium()
         {
-            _blank = new List<Fish>() { 
-            new Fish("Карась", 50),
-            new Fish("Окунь",75),
-            new Fish("Щука",80),
-            new Fish("Плотва",45),
-            new Fish("Язь",25),
-            new Fish("Акула",100),
-            new Fish("Скат",85),
-            new Fish("Сом",90),
-            new Fish("Минтай",10),
-            new Fish("Сазан",15)};
+            _blank = new Fish[10];
+            _blank[0] = new Fish("Карась", 50);
+            _blank[1] = new Fish("Окунь", 75);
+            _blank[2] = new Fish("Щука", 80);
+            _blank[3] = new Fish("Плотва", 45);
+            _blank[4] = new Fish("Язь", 25);
+            _blank[5] = new Fish("Акула", 100);
+            _blank[6] = new Fish("Скат", 85);
+            _blank[7] = new Fish("Сом", 90);
+            _blank[8] = new Fish("Минтай", 10);
+            _blank[9] = new Fish("Сазан", 15);
 
-            FillAquarium();
+            Fill();
         }
 
         public void ShowBar()
         {
-            for (int i = 0; i < _aquarium.Count; i++)
+            for (int i = 0; i < _container.Count; i++)
             {
-                bar.Draw(_aquarium[i]);
+                Console.Write($" {i + 1} - ");
+                _bar.Draw(_container[i]);
             }
         }
 
         public void ToLiveOneDay()
         {
-            for (int i = 0; i < _aquarium.Count; i++)
+            for (int i = 0; i < _container.Count; i++)
             {
-                _aquarium[i].SpendLive();
+                _container[i].SpendLive();
 
-                if (_aquarium[i].HP <= 0)
+                if (_container[i].HP <= 0)
                 {
-                    _aquarium.RemoveAt(i);
+                    _container.RemoveAt(i);
                 }
             }
         }
@@ -132,10 +121,10 @@ namespace Fish
         {
             int index;
 
-            if(_aquarium.Count < _maxNumberFish)
+            if(_container.Count < _maxNumberFish)
             {
-                index = _random.Next(_blank.Count);
-                _aquarium.Add(_blank[index]);
+                index = _random.Next(_blank.Length);
+                _container.Add(_blank[index]);
             }
             else
             {
@@ -145,27 +134,49 @@ namespace Fish
 
         public void RemoveFish()
         {
-            Console.WriteLine("Введите название рыбы");
-            string name = Console.ReadLine();
-
-            for (int i = 0; i < _aquarium.Count; i++)
-            {
-                if (name == _aquarium[i].Name)
-                {
-                    _aquarium.RemoveAt(i);
-                }
-            }
+            Console.WriteLine("Введите номер рыбы для удаления");
+            int index = GetIndex();
+            _container.RemoveAt(index);
         }
 
-        private void FillAquarium()
+        private void Fill()
         {
             int index;
 
             for (int i = 0; i < _maxNumberFish; i++)
             {
-                index = _random.Next(_blank.Count);
-                _aquarium.Add(_blank[index]);
+                index = _random.Next(_blank.Length);
+                _container.Add(_blank[index]);
             }
+        }
+
+        private int GetIndex()
+        {
+            bool isTrue = true;
+
+            while (isTrue)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    if (count <= _container.Count && count > 0)
+                    {
+                        return count - 1;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Рыбы под таким номером нет");
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+
+            return 0;
         }
     }
 
@@ -179,7 +190,7 @@ namespace Fish
             ConsoleColor color = ConsoleColor.White;
             ConsoleColor defaultColor = Console.BackgroundColor;
             string bar = "";
-            int hp = (fish.HP - oneIncrements * fish.ShowDaysLived()) / oneIncrements;
+            int hp = (fish.HP - oneIncrements * fish.CountDays) / oneIncrements;
 
             for (int i = 0; i < hp; i++)
             {
@@ -199,7 +210,7 @@ namespace Fish
             }
 
             Console.Write(bar + ']');
-            Console.Write($" Количество дней жизни - {fish.ShowDaysLived()}\n");
+            Console.Write($" Количество дней жизни - {fish.CountDays}\n");
         }
     }
 }
