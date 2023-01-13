@@ -32,7 +32,8 @@ namespace CSLight
 
         public virtual void TakeDamage(float damage)
         {
-            HP -= damage - damage / 100 * Armor;
+            int convertingToPercentages = 100;
+            HP -= damage - damage / convertingToPercentages * Armor;
         }
 
         public virtual void Attack(Fighter enemyFighter) { }
@@ -52,8 +53,9 @@ namespace CSLight
 
         public override void TakeDamage(float damage)
         {
+            int convertingToPercentages = 100;
             base.TakeDamage(damage);
-            _rage += damage - damage / 100 * Armor;
+            _rage += damage - damage / convertingToPercentages * Armor;
         }
 
         public override void Attack(Fighter enemyFighter)
@@ -219,118 +221,81 @@ namespace CSLight
 
     class Arena
     {
-        private Fighter _firstFighter;
-        private Fighter _secondFighter;
-        private List<Fighter> _listFighters = new List<Fighter>();
-        private List<Fighter> _listFirstFighters = new List<Fighter>();
-        private List<Fighter> _listSecondFighters = new List<Fighter>();
+        private Fighter _firstParticipants;
+        private Fighter _secondParticipant;
+        private Fighter[] _participants;
 
         public Arena()
         {
-            _listFighters.Add(new Warrior("Воин", 250, 20, 10, 250));
-            _listFighters.Add(new Mage("Маг", 150, 20, 5, 150));
-            _listFighters.Add(new Druid("Друид", 150, 10, 10, 150));
-            _listFighters.Add(new Thief("Депутат", 125, 20, 5, 125));
-            _listFighters.Add(new Priest("Прист", 150, 15, 8, 100));
+            _participants = new Fighter[5];
+            _participants[0] = new Warrior("Воин", 250, 20, 10, 250);
+            _participants[1] = new Mage("Маг", 150, 20, 5, 150);
+            _participants[2] = new Druid("Друид", 150, 10, 10, 150);
+            _participants[3] = new Thief("Депутат", 125, 20, 5, 125);
+            _participants[4] = new Priest("Прист", 150, 15, 8, 100);
         }
 
         public void Fight()
         {
-            for (int i = 0; i < _listFighters.Count; i++)
+            for (int i = 0; i < _participants.Length; i++)
             {
                 Console.Write(i + 1 + " ");
-                _listFighters[i].ShowStats();
+                _participants[i].ShowStats();
             }
 
             ChoiseFighter();
 
-            while (_firstFighter.HP > 0 && _secondFighter.HP > 0)
+            while (_firstParticipants.HP > 0 && _secondParticipant.HP > 0)
             {
                 Console.WriteLine();
 
-                _firstFighter.Attack(_secondFighter);
-                _secondFighter.Attack(_firstFighter);
+                _firstParticipants.Attack(_secondParticipant);
+                _secondParticipant.Attack(_firstParticipants);
 
-                _firstFighter.ShowStats();
-                _secondFighter.ShowStats();
+                _firstParticipants.ShowStats();
+                _secondParticipant.ShowStats();
             }
 
             ShowWinner();
         }
 
-        private Fighter CreateFirstFighter(int index)
+        private Fighter CreateFighter(int index)
         {
-            _listFirstFighters.Add(new Warrior("Воин", 250, 20, 10, 250));
-            _listFirstFighters.Add(new Mage("Маг", 150, 20, 5, 150));
-            _listFirstFighters.Add(new Druid("Друид", 150, 10, 10, 150));
-            _listFirstFighters.Add(new Thief("Депутат", 125, 20, 5, 125));
-            _listFirstFighters.Add(new Priest("Прист", 150, 15, 8, 100));
-
-            switch (index)
+            List<Fighter> list = new List<Fighter>()
             {
-                case 1:
-                    return _listFirstFighters[0];
-                case 2:
-                    return _listFirstFighters[1];
-                case 3:
-                    return _listFirstFighters[2];
-                case 4:
-                    return _listFirstFighters[3];
-                case 5:
-                    return _listFirstFighters[4];
-            }
-
-            return null;
-        }
-
-        private Fighter CreateSecondFighter(int index)
-        {
-            _listSecondFighters.Add(new Warrior("Воин", 250, 20, 10, 250));
-            _listSecondFighters.Add(new Mage("Маг", 150, 20, 5, 150));
-            _listSecondFighters.Add(new Druid("Друид", 150, 10, 10, 150));
-            _listSecondFighters.Add(new Thief("Депутат", 125, 20, 5, 125));
-            _listSecondFighters.Add(new Priest("Прист", 150, 15, 8, 100));
-
-            switch (index)
-            {
-                case 1:
-                    return _listSecondFighters[0];
-                case 2:
-                    return _listSecondFighters[1];
-                case 3:
-                    return _listSecondFighters[2];
-                case 4:
-                    return _listSecondFighters[3];
-                case 5:
-                    return _listSecondFighters[4];
-            }
-
-            return null;
+                new Warrior("Воин", 250, 20, 10, 250),
+                new Mage("Маг", 150, 20, 5, 150),
+                new Druid("Друид", 150, 10, 10, 150),
+                new Thief("Депутат", 125, 20, 5, 125),
+                new Priest("Прист", 150, 15, 8, 100)
+            };
+            
+            return list[index];
         }
 
         private void ChoiseFighter()
         {
             Console.WriteLine();
             Console.WriteLine("Выберите первого бойца :");
-            _firstFighter = CreateFirstFighter(GetIndex());
+            _firstParticipants = CreateFighter(GetIndex());
 
             Console.WriteLine("Выберите второго бойца :");
-            _secondFighter = CreateSecondFighter(GetIndex());
+            _secondParticipant = CreateFighter(GetIndex());
         }
 
         private void ShowWinner()
         {
-            if (_firstFighter.HP <= 0 && _secondFighter.HP <= 0)
+            if (_firstParticipants.HP <= 0 && _secondParticipant.HP <= 0)
             {
                 Console.WriteLine("Оба бойца погибли!");
             }
-            else if (_secondFighter.HP <= 0)
+            else if (_secondParticipant.HP <= 0)
             {
-                Console.WriteLine($"Победил {_firstFighter.Name}");
+                Console.WriteLine($"Победил {_firstParticipants.Name}");
             }
-            else if (_firstFighter.HP <= 0)
+            else if (_firstParticipants.HP <= 0)
             {
-                Console.WriteLine($"Победил {_secondFighter.Name}");
+                Console.WriteLine($"Победил {_secondParticipant.Name}");
             }
 
             Console.ReadKey();
@@ -346,9 +311,9 @@ namespace CSLight
 
                 if (isSuccess)
                 {
-                    if (count <= _listFighters.Count && count > 0)
+                    if (count <= _participants.Length && count > 0)
                     {
-                        return count;
+                        return count - 1;
                     }
                     else
                     {
