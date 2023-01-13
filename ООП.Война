@@ -16,43 +16,42 @@ namespace ConsoleApp2
     class Country
     {
         static private Random _random = new Random();
-        private List<Fighter> _fighters = new List<Fighter>();
+        private List<Fighter> _participants = new List<Fighter>();
 
         public void CreateTeam()
         {
             int numberFighters = 3;
 
-
             for (int i = 0; i < numberFighters; i++)
             {
-                _fighters.Add(CreateFighters());
+                _participants.Add(CreateFighters());
             }
 
-            for (int i = 0; i < _fighters.Count; i++)
+            for (int i = 0; i < _participants.Count; i++)
             {
                 Console.Write(i + 1 + " ");
-                _fighters[i].ShowStats();
+                _participants[i].ShowStats();
             }
         }
 
         public int ShowCountFighters()
         {
-            return _fighters.Count;
+            return _participants.Count;
         }
 
         public Fighter GetFighter()
         {
-            return _fighters[0];
+            return _participants[0];
         }
 
         public void DeleteFighter()
         {
-            _fighters.RemoveAt(0);
+            _participants.RemoveAt(0);
         }
 
         private Fighter CreateFighters()
         {
-            List<Fighter> fighters = new List<Fighter>()
+            List<Fighter> _participants = new List<Fighter>()
             {
                 new Warrior("Воин", 10, 200, 200, 10),
                 new Mage("Маг", 15, 125, 125, 5),
@@ -63,8 +62,8 @@ namespace ConsoleApp2
                 new Druid("Друид", 10, 150, 150, 10)
             };
 
-            int index = _random.Next(fighters.Count);
-            return fighters[index];
+            int index = _random.Next(_participants.Count);
+            return _participants[index];
         }
     }
 
