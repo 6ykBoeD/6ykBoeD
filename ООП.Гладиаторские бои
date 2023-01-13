@@ -15,11 +15,6 @@ namespace CSLight
     class Fighter
     {
         protected Random Random = new Random();
-        public float Armor { get; protected set; }
-        public float HP { get; protected set; }
-        public float MaxHP { get; protected set; }
-        public float Damage { get; protected set; }
-        public string Name { get; private set; }
 
         public Fighter(string name, float hp, float damage, float armor, float maxHP)
         {
@@ -29,6 +24,12 @@ namespace CSLight
             Armor = armor;
             MaxHP = maxHP;
         }
+
+        public float Armor { get; protected set; }
+        public float HP { get; protected set; }
+        public float MaxHP { get; protected set; }
+        public float Damage { get; protected set; }
+        public string Name { get; private set; }
 
         public virtual void TakeDamage(float damage)
         {
@@ -303,9 +304,9 @@ namespace CSLight
 
         private int GetIndex()
         {
-            bool isTrue = true;
+            bool isWork = true;
 
-            while (isTrue)
+            while (isWork)
             {
                 bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
 
