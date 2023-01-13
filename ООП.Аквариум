@@ -113,18 +113,25 @@ namespace Fish
                 if (_container[i].HP <= 0)
                 {
                     _container.RemoveAt(i);
+                    i--;
                 }
             }
         }
 
         public void AddFish()
         {
-            int index;
+            List<Fish> blank = new List<Fish>() { };
 
-            if(_container.Count < _maxNumberFish)
+            for (int i = 0; i < _blank.Length; i++)
             {
-                index = _random.Next(_blank.Length);
-                _container.Add(_blank[index]);
+                blank.Add(_blank[i]);
+            }
+
+            int index = _random.Next(_blank.Length);
+
+            if (_container.Count < _maxNumberFish)
+            {
+                _container.Add(blank[index]);
             }
             else
             {
@@ -134,9 +141,16 @@ namespace Fish
 
         public void RemoveFish()
         {
-            Console.WriteLine("Введите номер рыбы для удаления");
-            int index = GetIndex();
-            _container.RemoveAt(index);
+            if(_container.Count > 0)
+            {
+                Console.WriteLine("Введите номер рыбы для удаления");
+                int index = GetIndex();
+                _container.RemoveAt(index);
+            }
+            else
+            {
+                Console.WriteLine("Аквариум пуст");
+            }
         }
 
         private void Fill()
