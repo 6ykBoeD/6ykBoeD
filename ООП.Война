@@ -15,7 +15,7 @@ namespace ConsoleApp2
 
     class Country
     {
-        static private Random _random = new Random();
+        private static Random _random = new Random();
         private List<Fighter> _participants = new List<Fighter>();
 
         public void CreateTeam()
@@ -70,23 +70,25 @@ namespace ConsoleApp2
     abstract class Fighter
     {
         private string _name;
-        public float Damage { get; protected set; }
-        public float HP { get; protected set; }
-        public float MaxHP { get; protected set; }
-        public float Armor { get; protected set; }
 
-        public Fighter(string name, float damage, float hP, float maxhP, float armor)
+        public Fighter(string name, float damage, float hp, float maxHp, float armor)
         {
             _name = name;
             Damage = damage;
-            HP = hP;
-            MaxHP = maxhP;
+            Hp = hp;
+            MaxHp = maxHp;
             Armor = armor;
         }
 
+        public float Damage { get; protected set; }
+        public float Hp { get; protected set; }
+        public float MaxHp { get; protected set; }
+        public float Armor { get; protected set; }
+
         public virtual void TakeDamage(float damage)
         {
-            HP -= damage - damage / 100 * Armor;
+            int percentageConverter = 100;
+            Hp -= damage - damage / percentageConverter * Armor;
         }
 
         public virtual void Attack(Fighter enemyFighter)
@@ -96,7 +98,7 @@ namespace ConsoleApp2
 
         public void ShowStats()
         {
-            Console.WriteLine($"{_name} -\t Здоровье = {HP}; Урон = {Damage}; Броня = {Armor}");
+            Console.WriteLine($"{_name} -\t Здоровье = {Hp}; Урон = {Damage}; Броня = {Armor}");
         }
     }
 
@@ -116,14 +118,14 @@ namespace ConsoleApp2
                 _blue.GetFighter().Attack(_red.GetFighter());
                 _red.GetFighter().ShowStats();
 
-                if (_red.GetFighter().HP <= 0)
+                if (_red.GetFighter().Hp <= 0)
                 {
                     _red.DeleteFighter();
                 }
 
                 _blue.GetFighter().ShowStats();
 
-                if (_blue.GetFighter().HP <= 0)
+                if (_blue.GetFighter().Hp <= 0)
                 {
                     _blue.DeleteFighter();
                 }
@@ -163,12 +165,13 @@ namespace ConsoleApp2
         private float _rage = 0;
         private int _multiplierDamage = 4;
 
-        public Warrior(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+        public Warrior(string name, float hp, float damage, float armor, float maxHp) : base(name, hp, damage, armor, maxHp) { }
 
         public override void TakeDamage(float damage)
         {
+            int percentageConverter = 100;
             base.TakeDamage(damage);
-            _rage += damage - damage / 100 * Armor;
+            _rage += damage - damage / percentageConverter * Armor;
         }
 
         public override void Attack(Fighter enemyFighter)
@@ -178,7 +181,7 @@ namespace ConsoleApp2
             int lowHP = 2;
             int rageCost = 30;
 
-            if (_rage >= rageCost && enemyFighter.HP <= (enemyFighter.MaxHP / lowHP))
+            if (_rage >= rageCost && enemyFighter.Hp <= (enemyFighter.MaxHp / lowHP))
             {
                 mortalStrikeDamage = Damage * _multiplierDamage;
                 _rage -= rageCost;
@@ -198,7 +201,7 @@ namespace ConsoleApp2
     {
         private int _mana = 250;
 
-        public Mage(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+        public Mage(string name, float hp, float damage, float armor, float maxHp) : base(name, hp, damage, armor, maxHp) { }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -225,12 +228,13 @@ namespace ConsoleApp2
 
     class Thief : Fighter
     {
-        private int _evadeShance;
+        private int _evadeChance;
+        private int _chanceInPercentage = 101;
         private Random _random = new Random();
 
-        public Thief(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP)
+        public Thief(string name, float hp, float damage, float armor, float maxHp) : base(name, hp, damage, armor, maxHp)
         {
-            _evadeShance = _random.Next(101);
+            _evadeChance = _random.Next(_chanceInPercentage);
         }
 
         public override void Attack(Fighter enemyFighter)
@@ -242,8 +246,9 @@ namespace ConsoleApp2
         {
             int chance = 25;
             int evadeDamage = 0;
+            int percentageConverter = 100;
 
-            if (chance >= _evadeShance)
+            if (chance >= _evadeChance)
             {
                 Console.WriteLine("<<<Уворот>>>");
                 damage = evadeDamage;
@@ -253,8 +258,8 @@ namespace ConsoleApp2
                 Console.WriteLine("Попали");
                 damage = Damage;
             }
-
-            HP -= damage - damage / 100 * Armor;
+            
+            Hp -= damage - damage / percentageConverter * Armor;
         }
     }
 
@@ -262,7 +267,7 @@ namespace ConsoleApp2
     {
         private float _weakPoint = 1.2f;
 
-        public Archer(string name, float damage, float hp, float maxHP, float armor) : base(name, damage, hp, maxHP, armor) { }
+        public Archer(string name, float damage, float hp, float maxHp, float armor) : base(name, damage, hp, maxHp, armor) { }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -281,7 +286,7 @@ namespace ConsoleApp2
     {
         private int _essenceLight = 100;
 
-        public Knight(string name, float damage, float hp, float maxHP, float armor) : base(name, damage, hp, maxHP, armor) { }
+        public Knight(string name, float damage, float hp, float maxHp, float armor) : base(name, damage, hp, maxHp, armor) { }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -295,9 +300,9 @@ namespace ConsoleApp2
             {
                 damage = lightStrike;
 
-                if (MaxHP < HP)
+                if (MaxHp < Hp)
                 {
-                    HP += heal;
+                    Hp += heal;
                 }
             }
 
@@ -327,14 +332,14 @@ namespace ConsoleApp2
 
         private void Heal()
         {
-            float limitHP = 0.8f;
-            float healthThreshold = limitHP * MaxHP;
+            float limitHp = 0.8f;
+            float healthThreshold = limitHp * MaxHp;
             int manaCost = 50;
             int heal = 10;
 
-            if (_mana >= manaCost && HP <= healthThreshold)
+            if (_mana >= manaCost && Hp <= healthThreshold)
             {
-                HP += heal;
+                Hp += heal;
                 _mana -= manaCost;
                 Console.WriteLine("<<<Лечение>>>");
             }
@@ -345,9 +350,9 @@ namespace ConsoleApp2
             int manaCost = 10;
             int increeseArmor = 30;
             float minLimitHP = 0.2f;
-            float lowHP = minLimitHP * MaxHP;
+            float lowHP = minLimitHP * MaxHp;
 
-            if (_count == 1 && HP <= lowHP && _mana >= manaCost)
+            if (_count == 1 && Hp <= lowHP && _mana >= manaCost)
             {
                 Armor += increeseArmor;
                 _mana -= manaCost;
@@ -361,7 +366,7 @@ namespace ConsoleApp2
     {
         private int _countTransformation = 1;
 
-        public Druid(string name, float hp, float damage, float armor, float maxHP) : base(name, hp, damage, armor, maxHP) { }
+        public Druid(string name, float hp, float damage, float armor, float maxHp) : base(name, hp, damage, armor, maxHp) { }
 
         public override void Attack(Fighter enemyFighter)
         {
@@ -372,7 +377,7 @@ namespace ConsoleApp2
             for (int i = 0; i < _countTransformation; i++)
             {
                 Console.WriteLine("<<<Облик медведя>>>");
-                HP *= increeseHP;
+                Hp *= increeseHP;
                 Damage *= increeseDamage;
                 Armor *= increeseArmor;
                 _countTransformation = 0;
