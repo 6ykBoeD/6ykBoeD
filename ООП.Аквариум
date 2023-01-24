@@ -18,7 +18,7 @@ namespace Fish
 
             while (isWork)
             {
-                aquarium.ShowFishs();
+                aquarium.ShowFishes();
                 Console.WriteLine($"\nВыберите дейтсвие " +
                     $"\n{CommandNextDay} - следующий день" +
                     $"\n{CommandAddFish} - добавить рыбу в аквариум" +
@@ -28,7 +28,7 @@ namespace Fish
                 switch (Console.ReadLine())
                 {
                     case CommandNextDay:
-                        aquarium.GrowingUp();
+                        aquarium.Maturing();
                         break;
 
                     case CommandAddFish:
@@ -80,59 +80,41 @@ namespace Fish
     class Aquarium
     {
         private Random _random = new Random();
-        private Fish[] _blank;
-        private List<Fish> _fishs = new List<Fish>();
+        private List<Fish> _fishes = new List<Fish>();
         private int _maxNumberFish = 5;
 
         public Aquarium()
         {
-            _blank = new Fish[10];
-            _blank[0] = new Fish("Карась", 50);
-            _blank[1] = new Fish("Окунь", 75);
-            _blank[2] = new Fish("Щука", 80);
-            _blank[3] = new Fish("Плотва", 45);
-            _blank[4] = new Fish("Язь", 25);
-            _blank[5] = new Fish("Акула", 100);
-            _blank[6] = new Fish("Скат", 85);
-            _blank[7] = new Fish("Сом", 90);
-            _blank[8] = new Fish("Минтай", 10);
-            _blank[9] = new Fish("Сазан", 15);
-
             Fill();
         }
 
-        public void GrowingUp()
+        public void Maturing()
         {
-            for (int i = 0; i < _fishs.Count; i++)
+            for (int i = 0; i < _fishes.Count; i++)
             {
-                _fishs[i].SpendLive();
-                RemovingDead();
+                _fishes[i].SpendLive();
+
+                if (RemoveDead(i))
+                {
+                    i--;
+                }
             }
         }
 
-        public void ShowFishs()
+        public void ShowFishes()
         {
-            for (int i = 0; i < _fishs.Count; i++)
+            for (int i = 0; i < _fishes.Count; i++)
             {
                 Console.Write($" {i + 1} - ");
-                _fishs[i].ShowBar();
+                _fishes[i].ShowBar();
             }
         }
 
         public void AddFish()
         {
-            List<Fish> blank = new List<Fish>() { };
-
-            for (int i = 0; i < _blank.Length; i++)
+            if (_fishes.Count < _maxNumberFish)
             {
-                blank.Add(_blank[i]);
-            }
-
-            int index = _random.Next(_blank.Length);
-
-            if (_fishs.Count < _maxNumberFish)
-            {
-                _fishs.Add(blank[index]);
+                _fishes.Add(CreateFish());
             }
             else
             {
@@ -142,11 +124,11 @@ namespace Fish
 
         public void RemoveFish()
         {
-            if (_fishs.Count > 0)
+            if (_fishes.Count > 0)
             {
                 Console.WriteLine("Введите номер рыбы для удаления");
                 int index = GetIndex();
-                _fishs.RemoveAt(index);
+                _fishes.RemoveAt(index);
             }
             else
             {
@@ -154,27 +136,45 @@ namespace Fish
             }
         }
 
+        private Fish CreateFish()
+        {
+            List<Fish> blank = new List<Fish>()
+            {
+                new Fish("Карась", 50),
+                new Fish("Окунь", 75),
+                new Fish("Щука", 80),
+                new Fish("Плотва", 45),
+                new Fish("Язь", 25),
+                new Fish("Акула", 100),
+                new Fish("Скат", 85),
+                new Fish("Сом", 90),
+                new Fish("Минтай", 10),
+                new Fish("Сазан", 15)
+            };
+
+            int index = _random.Next(blank.Count);
+            return blank[index];
+        }
+
         private void Fill()
         {
-            int index;
-
             for (int i = 0; i < _maxNumberFish; i++)
             {
-                index = _random.Next(_blank.Length);
-                _fishs.Add(_blank[index]);
+                _fishes.Add(CreateFish());
             }
         }
 
-        private void RemovingDead()
+        private bool RemoveDead(int index)
         {
-            for (int i = 0; i < _fishs.Count; i++)
+            if (_fishes[index].Hp <= 0)
             {
-                if (_fishs[i].Hp <= 0)
-                {
-                    Console.WriteLine($"Рыбка {_fishs[i].Name} умерла(((");
-                    _fishs.RemoveAt(i);
-                    i--;
-                }
+                Console.WriteLine($"Рыбка {_fishes[index].Name} умерла(((");
+                _fishes.RemoveAt(index);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -188,7 +188,7 @@ namespace Fish
 
                 if (isSuccess)
                 {
-                    if (count <= _fishs.Count && count > 0)
+                    if (count <= _fishes.Count && count > 0)
                     {
                         return count - 1;
                     }
