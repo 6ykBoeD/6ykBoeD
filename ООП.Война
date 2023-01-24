@@ -16,7 +16,7 @@ namespace ConsoleApp2
     class Country
     {
         private static Random _random = new Random();
-        private List<Fighter> _participants = new List<Fighter>();
+        private List<Fighter> _fighters = new List<Fighter>();
 
         public void CreateTeam()
         {
@@ -24,32 +24,32 @@ namespace ConsoleApp2
 
             for (int i = 0; i < numberFighters; i++)
             {
-                _participants.Add(CreateFighters());
+                _fighters.Add(CreateFighter());
             }
 
-            for (int i = 0; i < _participants.Count; i++)
+            for (int i = 0; i < _fighters.Count; i++)
             {
                 Console.Write(i + 1 + " ");
-                _participants[i].ShowStats();
+                _fighters[i].ShowStats();
             }
         }
 
-        public int ShowCountFighters()
+        public int GetCountFighters()
         {
-            return _participants.Count;
+            return _fighters.Count;
         }
 
         public Fighter GetFighter()
         {
-            return _participants[0];
+            return _fighters[0];
         }
 
         public void DeleteFighter()
         {
-            _participants.RemoveAt(0);
+            _fighters.RemoveAt(0);
         }
 
-        private Fighter CreateFighters()
+        private Fighter CreateFighter()
         {
             List<Fighter> _participants = new List<Fighter>()
             {
@@ -109,23 +109,25 @@ namespace ConsoleApp2
 
         public void Fight()
         {
-            ChoiseFightersTeame();
+            ChooseFightersTeame();
             
-            while (_red.ShowCountFighters() > 0 && _blue.ShowCountFighters() > 0)
+            while (_red.GetCountFighters() > 0 && _blue.GetCountFighters() > 0)
             {
+                Fighter redFighter = _red.GetFighter();
+                Fighter blueFighter= _blue.GetFighter();
                 Console.WriteLine();
-                _red.GetFighter().Attack(_blue.GetFighter());
-                _blue.GetFighter().Attack(_red.GetFighter());
-                _red.GetFighter().ShowStats();
+                redFighter.Attack(blueFighter);
+                blueFighter.Attack(redFighter);
+                redFighter.ShowStats();
 
-                if (_red.GetFighter().Hp <= 0)
+                if (redFighter.Hp <= 0)
                 {
                     _red.DeleteFighter();
                 }
 
-                _blue.GetFighter().ShowStats();
+                blueFighter.ShowStats();
 
-                if (_blue.GetFighter().Hp <= 0)
+                if (blueFighter.Hp <= 0)
                 {
                     _blue.DeleteFighter();
                 }
@@ -134,7 +136,7 @@ namespace ConsoleApp2
             ShowWinner();
         }
 
-        private void ChoiseFightersTeame()
+        private void ChooseFightersTeame()
         {
             Console.WriteLine("\nСформировать команду красных");
             _red.CreateTeam();
@@ -145,15 +147,15 @@ namespace ConsoleApp2
 
         private void ShowWinner()
         {
-            if (_red.ShowCountFighters() <= 0 && _blue.ShowCountFighters() <= 0)
+            if (_red.GetCountFighters() <= 0 && _blue.GetCountFighters() <= 0)
             {
                 Console.WriteLine("Ничья");
             }
-            else if (_blue.ShowCountFighters() <= 0)
+            else if (_blue.GetCountFighters() <= 0)
             {
                 Console.WriteLine("Победа Красной команды");
             }
-            else if(_red.ShowCountFighters() <= 0)
+            else if(_red.GetCountFighters() <= 0)
             {
                 Console.WriteLine("Победа Синей команды");
             }
