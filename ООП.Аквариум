@@ -53,7 +53,7 @@ namespace Fish
 
     class Fish
     {
-        private Renderer _draw = new Renderer();
+        private Renderer _drawer = new Renderer();
 
         public Fish(string name, int hp)
         {
@@ -75,7 +75,7 @@ namespace Fish
 
         public void ShowBar()
         {
-            _draw.Bar(Name, Hp, CountDays);
+            _drawer.Bar(Name, Hp, CountDays);
         }
     }
 
