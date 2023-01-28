@@ -28,7 +28,7 @@ namespace Fish
                 switch (Console.ReadLine())
                 {
                     case CommandNextDay:
-                        aquarium.Maturing();
+                        aquarium.Mature();
                         break;
 
                     case CommandAddFish:
@@ -58,17 +58,35 @@ namespace Fish
         {
             Name = name;
             Hp = hp;
-            CountDays++;
         }
 
         public int CountDays { get; private set; } = 0;
         public string Name { get; private set; }
         public int Hp { get; private set; }
+        public bool IsAlive
+        {
+            private set
+            {
+                if(Hp > 0)
+                {
+                    IsAlive = true;
+                }
+                else
+                {
+                    IsAlive = false;
+                }
+            }
+            get
+            {
+                return IsAlive;
+            }
+        }
 
         public void SpendLive()
         {
             int lifeTime = 5;
             Hp -= lifeTime;
+            CountDays++;
         }
 
         public void ShowBar()
@@ -88,14 +106,17 @@ namespace Fish
             Fill();
         }
 
-        public void Maturing()
+        public void Mature()
         {
             for (int i = 0; i < _fishes.Count; i++)
             {
-                _fishes[i].SpendLive();
-
-                if (RemoveDead(i))
+                if (_fishes[i].IsAlive)
                 {
+                    _fishes[i].SpendLive();
+                }
+                else
+                {
+                    RemoveDead(i);
                     i--;
                 }
             }
@@ -164,18 +185,10 @@ namespace Fish
             }
         }
 
-        private bool RemoveDead(int index)
+        private void RemoveDead(int index)
         {
-            if (_fishes[index].Hp <= 0)
-            {
-                Console.WriteLine($"Рыбка {_fishes[index].Name} умерла(((");
-                _fishes.RemoveAt(index);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            Console.WriteLine($"Рыбка {_fishes[index].Name} умерла(((");
+            _fishes.RemoveAt(index);
         }
 
         private int GetIndex()
