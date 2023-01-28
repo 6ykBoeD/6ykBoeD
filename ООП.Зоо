@@ -1,0 +1,188 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Security;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+
+namespace Zoo
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Zoo zoo = new Zoo();
+            zoo.StartProgram();
+        }
+    }
+
+    class Zoo
+    {
+        private List<Aviary> _cells = new List<Aviary>();
+
+        public Zoo()
+        {
+            _cells.Add(new Aviary(new Cat()));
+            _cells.Add(new Aviary(new Cow()));
+            _cells.Add(new Aviary(new Dog()));
+            _cells.Add(new Aviary(new Duck()));
+            _cells.Add(new Aviary(new Lion()));
+        }
+
+        public void StartProgram()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("\nВыберите номер вальера:");
+                int index = GetIndex();
+                _cells[index].ShowInfo();
+            }
+        }
+
+        private int GetIndex()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                bool isSuccess = int.TryParse(Console.ReadLine(), out int count);
+
+                if (isSuccess)
+                {
+                    if(_cells.Count > 5)
+                    {
+                        
+                        Console.WriteLine("Такого вальера не существует");
+                    }
+                    else
+                    {
+                        return count - 1;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Неверное значение");
+                }
+            }
+
+            return 0;
+        }
+    }
+
+    class Animal
+    {
+        private Random _random = new Random();
+        private int _genderChance = 101;
+        private int _choosingGender = 50;
+
+        public Animal()
+        {
+            if(_random.Next(_genderChance) >= _choosingGender)
+            {
+                Gender = true;
+            }
+            else
+            {
+                Gender = false;
+            }
+        }
+
+        public string MaleName { get; protected set; }
+        public string FemaleName { get; protected set; }
+        public bool Gender { get; protected set; }
+        public string Sound { get; protected set; }
+    }
+
+    class Aviary
+    {
+        private static Random _random = new Random();
+        private static int Ids;
+        private int CountMaleGender;
+        private int CountFemaleGender;
+        private List<Animal> _beasts = new List<Animal>();
+
+        public Aviary(Animal animal)
+        {
+            CreateCell(animal);
+            Console.WriteLine($"[Вальер - {++Ids}]");
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"В этом вальере обитает {CountMaleGender} - {_beasts[0].MaleName} и {CountFemaleGender} - {_beasts[0].FemaleName}.Звук этих животных похож на {_beasts[0].Sound}");
+        }
+
+        public void CreateCell(Animal animal)
+        {
+            int numberBeasts = 5;
+
+            for (int i = 0; i < numberBeasts; i++)
+            {
+                _beasts.Add(animal);
+
+                if (animal.Gender)
+                {
+                    CountMaleGender++;
+                }
+                else
+                {
+                    CountFemaleGender++;
+                }
+            }
+        }
+    }
+
+    class Cat : Animal
+    {
+        public Cat()
+        {
+            MaleName = "Кот";
+            FemaleName = "Кошка";
+            Sound = "Мяу";
+        }
+    }
+
+    class Cow : Animal
+    {
+        public Cow()
+        {
+            MaleName = "Бык";
+            FemaleName = "Корова";
+            Sound = "Мууу";
+        }
+    }
+
+    class Dog : Animal
+    {
+        public Dog()
+        {
+            MaleName = "Пёс";
+            FemaleName = "Собака";
+            Sound = "Гав-гав";
+        }
+    }
+
+    class Duck : Animal
+    {
+        public Duck()
+        {
+            MaleName = "Селезень";
+            FemaleName = "Утка";
+            Sound = "Кря-кря";
+        }
+    }
+
+    class Lion : Animal
+    {
+        public Lion()
+        {
+            MaleName = "Лев";
+            FemaleName = "Львица";
+            Sound = "Грррр";
+        }
+    }
+}
