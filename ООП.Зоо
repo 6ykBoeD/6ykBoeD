@@ -20,15 +20,15 @@ namespace Zoo
 
     class Zoo
     {
-        private List<Aviary> _cells = new List<Aviary>();
+        private List<Aviary> _aviaries = new List<Aviary>();
 
         public Zoo()
         {
-            _cells.Add(new Aviary(new Cat()));
-            _cells.Add(new Aviary(new Cow()));
-            _cells.Add(new Aviary(new Dog()));
-            _cells.Add(new Aviary(new Duck()));
-            _cells.Add(new Aviary(new Lion()));
+            _aviaries.Add(new Aviary(Animals.Cat));
+            _aviaries.Add(new Aviary(Animals.Cow));
+            _aviaries.Add(new Aviary(Animals.Dog));
+            _aviaries.Add(new Aviary(Animals.Duck));
+            _aviaries.Add(new Aviary(Animals.Lion));
         }
 
         public void StartProgram()
@@ -37,9 +37,17 @@ namespace Zoo
 
             while (isWork)
             {
-                Console.WriteLine("\nВыберите номер вальера:");
+                for (int i = 0; i < _aviaries.Count; i++)
+                {
+                    Console.WriteLine($"[Вальер - {_aviaries[i].Id}]");
+                }
+
+                Console.WriteLine("\nВыберите номер вальера:\n");
                 int index = GetIndex();
-                _cells[index].ShowInfo();
+                _aviaries[index].ShowInfo();
+
+                Console.ReadKey();
+                Console.Clear();
             }
         }
 
@@ -53,7 +61,7 @@ namespace Zoo
 
                 if (isSuccess)
                 {
-                    if(_cells.Count > 5)
+                    if(_aviaries.Count > 5)
                     {
                         
                         Console.WriteLine("Такого вальера не существует");
@@ -75,7 +83,7 @@ namespace Zoo
 
     class Animal
     {
-        private Random _random = new Random();
+        private static Random _random = new Random();
         private int _genderChance = 101;
         private int _choosingGender = 50;
 
@@ -83,57 +91,86 @@ namespace Zoo
         {
             if(_random.Next(_genderChance) >= _choosingGender)
             {
-                Gender = true;
+                IsMale = true;
             }
             else
             {
-                Gender = false;
+                IsMale = false;
             }
         }
 
         public string MaleName { get; protected set; }
         public string FemaleName { get; protected set; }
-        public bool Gender { get; protected set; }
+        public bool IsMale { get; protected set; }
         public string Sound { get; protected set; }
     }
 
     class Aviary
     {
-        private static Random _random = new Random();
-        private static int Ids;
-        private int CountMaleGender;
-        private int CountFemaleGender;
+        private static int _ids;
+        private int _countMaleGender;
+        private int _countFemaleGender;
         private List<Animal> _beasts = new List<Animal>();
 
-        public Aviary(Animal animal)
+        public Aviary(Animals animal)
         {
             CreateCell(animal);
-            Console.WriteLine($"[Вальер - {++Ids}]");
+            Id = ++_ids;
         }
+
+        public int Id { get; private set; }
 
         public void ShowInfo()
         {
-            Console.WriteLine($"В этом вальере обитает {CountMaleGender} - {_beasts[0].MaleName} и {CountFemaleGender} - {_beasts[0].FemaleName}.Звук этих животных похож на {_beasts[0].Sound}");
+            Console.WriteLine($"\nВ этом вальере обитает {_countMaleGender} - {_beasts[0].MaleName} и {_countFemaleGender} - {_beasts[0].FemaleName}.Звук этих животных похож на {_beasts[0].Sound}");
         }
 
-        public void CreateCell(Animal animal)
+        private void CreateCell(Animals animal)
         {
             int numberBeasts = 5;
 
             for (int i = 0; i < numberBeasts; i++)
             {
-                _beasts.Add(animal);
+                _beasts.Add(CreateAnimal(animal));
 
-                if (animal.Gender)
+                if (_beasts[i].IsMale)
                 {
-                    CountMaleGender++;
+                    _countMaleGender++;
                 }
                 else
                 {
-                    CountFemaleGender++;
+                    _countFemaleGender++;
                 }
             }
         }
+
+        private Animal CreateAnimal(Animals animal)
+        {
+            switch(animal)
+            {
+                case Animals.Cat: return new Cat();
+
+                case Animals.Cow: return new Cow();
+
+                case Animals.Dog: return new Dog();
+
+                case Animals.Duck: return new Duck();
+
+                case Animals.Lion: return new Lion();
+
+            }
+
+            return null;
+        }
+    }
+
+    enum Animals
+    {
+        Cat = 1,
+        Cow,
+        Dog,
+        Duck,
+        Lion
     }
 
     class Cat : Animal
