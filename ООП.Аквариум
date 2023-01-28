@@ -28,6 +28,7 @@ namespace Fish
                 switch (Console.ReadLine())
                 {
                     case CommandNextDay:
+                        
                         aquarium.Mature();
                         break;
 
@@ -52,7 +53,7 @@ namespace Fish
 
     class Fish
     {
-        private Bar _bar = new Bar();
+        private Renderer _bar = new Renderer();
 
         public Fish(string name, int hp)
         {
@@ -63,24 +64,7 @@ namespace Fish
         public int CountDays { get; private set; } = 0;
         public string Name { get; private set; }
         public int Hp { get; private set; }
-        public bool IsAlive
-        {
-            private set
-            {
-                if(Hp > 0)
-                {
-                    IsAlive = true;
-                }
-                else
-                {
-                    IsAlive = false;
-                }
-            }
-            get
-            {
-                return IsAlive;
-            }
-        }
+        public bool IsAlive => Hp > 0;
 
         public void SpendLive()
         {
@@ -91,7 +75,7 @@ namespace Fish
 
         public void ShowBar()
         {
-            _bar.Draw(Name, Hp, CountDays);
+            _bar.Bar(Name, Hp, CountDays);
         }
     }
 
@@ -113,6 +97,7 @@ namespace Fish
                 if (_fishes[i].IsAlive)
                 {
                     _fishes[i].SpendLive();
+
                 }
                 else
                 {
@@ -221,9 +206,9 @@ namespace Fish
         }
     }
 
-    class Bar
+    class Renderer
     {
-        public void Draw(string name, int hp,int countDays)
+        public void Bar(string name, int hp,int countDays)
         {
             char symbol = ' ';
             int oneIncrements = 5;
@@ -231,7 +216,7 @@ namespace Fish
             ConsoleColor color = ConsoleColor.White;
             ConsoleColor defaultColor = Console.BackgroundColor;
             string bar = "";
-            int hpFish = (hp - oneIncrements * countDays) / oneIncrements;
+            int hpFish = hp  / oneIncrements;
 
             for (int i = 0; i < hpFish; i++)
             {
