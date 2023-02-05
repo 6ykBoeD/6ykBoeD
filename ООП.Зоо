@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+
 
 namespace Zoo
 {
@@ -24,11 +19,12 @@ namespace Zoo
 
         public Zoo()
         {
-            _aviaries.Add(new Aviary(Animals.Cat));
-            _aviaries.Add(new Aviary(Animals.Cow));
-            _aviaries.Add(new Aviary(Animals.Dog));
-            _aviaries.Add(new Aviary(Animals.Duck));
-            _aviaries.Add(new Aviary(Animals.Lion));
+            int numbersAviaries = 5;
+
+            for (int i = 0; i < numbersAviaries; i++)
+            {
+                _aviaries.Add(new Aviary(i));
+            }
         }
 
         public void StartProgram()
@@ -61,7 +57,7 @@ namespace Zoo
 
                 if (isSuccess)
                 {
-                    if(_aviaries.Count > 5)
+                    if(_aviaries.Count > _aviaries.Count)
                     {
                         
                         Console.WriteLine("Такого вальера не существует");
@@ -81,22 +77,16 @@ namespace Zoo
         }
     }
 
-    class Animal
+    abstract class Animal
     {
         private static Random _random = new Random();
-        private int _genderChance = 101;
-        private int _choosingGender = 50;
 
         public Animal()
         {
-            if(_random.Next(_genderChance) >= _choosingGender)
-            {
-                IsMale = true;
-            }
-            else
-            {
-                IsMale = false;
-            }
+            int _genderChance = 101;
+            int _choosingGender = 50;
+
+            IsMale = _random.Next(_genderChance) >= _choosingGender;
         }
 
         public string MaleName { get; protected set; }
@@ -112,9 +102,9 @@ namespace Zoo
         private int _countFemaleGender;
         private List<Animal> _beasts = new List<Animal>();
 
-        public Aviary(Animals animal)
+        public Aviary(int index)
         {
-            CreateCell(animal);
+            CreateCell(index);
             Id = ++_ids;
         }
 
@@ -125,13 +115,13 @@ namespace Zoo
             Console.WriteLine($"\nВ этом вальере обитает {_countMaleGender} - {_beasts[0].MaleName} и {_countFemaleGender} - {_beasts[0].FemaleName}.Звук этих животных похож на {_beasts[0].Sound}");
         }
 
-        private void CreateCell(Animals animal)
+        private void CreateCell(int index)
         {
             int numberBeasts = 5;
 
             for (int i = 0; i < numberBeasts; i++)
             {
-                _beasts.Add(CreateAnimal(animal));
+                _beasts.Add(CreateAnimal(index));
 
                 if (_beasts[i].IsMale)
                 {
@@ -144,33 +134,15 @@ namespace Zoo
             }
         }
 
-        private Animal CreateAnimal(Animals animal)
+        private Animal CreateAnimal(int index)
         {
-            switch(animal)
+            List<Animal> animals = new List<Animal>()
             {
-                case Animals.Cat: return new Cat();
+                new Cat(),new Cow(),new Dog(),new Duck(),new Lion()
+            };
 
-                case Animals.Cow: return new Cow();
-
-                case Animals.Dog: return new Dog();
-
-                case Animals.Duck: return new Duck();
-
-                case Animals.Lion: return new Lion();
-
-            }
-
-            return null;
+            return animals[index];
         }
-    }
-
-    enum Animals
-    {
-        Cat = 1,
-        Cow,
-        Dog,
-        Duck,
-        Lion
     }
 
     class Cat : Animal
