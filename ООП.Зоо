@@ -16,11 +16,10 @@ namespace Zoo
     class Zoo
     {
         private List<Aviary> _aviaries = new List<Aviary>();
+        private int numbersAviaries = 5;
 
         public Zoo()
         {
-            int numbersAviaries = 5;
-
             for (int i = 0; i < numbersAviaries; i++)
             {
                 _aviaries.Add(new Aviary(i));
@@ -40,7 +39,15 @@ namespace Zoo
 
                 Console.WriteLine("\nВыберите номер вальера:\n");
                 int index = GetIndex();
-                _aviaries[index].ShowInfo();
+
+                if(index >= numbersAviaries || index < 0)
+                {
+                    Console.WriteLine("такого вальера не существует");
+                }
+                else
+                {
+                    _aviaries[index].ShowInfo();
+                }
 
                 Console.ReadKey();
                 Console.Clear();
@@ -57,15 +64,7 @@ namespace Zoo
 
                 if (isSuccess)
                 {
-                    if(_aviaries.Count > _aviaries.Count)
-                    {
-                        
-                        Console.WriteLine("Такого вальера не существует");
-                    }
-                    else
-                    {
-                        return count - 1;
-                    }
+                    return count - 1;
                 }
                 else
                 {
@@ -98,13 +97,12 @@ namespace Zoo
     class Aviary
     {
         private static int _ids;
-        private int _countMaleGender;
-        private int _countFemaleGender;
-        private List<Animal> _beasts = new List<Animal>();
+        private AviaryBuilder _builder = new AviaryBuilder();
+        private List<Animal> _animals = new List<Animal>();
 
         public Aviary(int index)
         {
-            CreateCell(index);
+            _builder.CreateCell(index);
             Id = ++_ids;
         }
 
@@ -112,26 +110,49 @@ namespace Zoo
 
         public void ShowInfo()
         {
-            Console.WriteLine($"\nВ этом вальере обитает {_countMaleGender} - {_beasts[0].MaleName} и {_countFemaleGender} - {_beasts[0].FemaleName}.Звук этих животных похож на {_beasts[0].Sound}");
+            Console.WriteLine($"\nВ этом вальере обитает {_builder.CountMaleGender} - {_builder.ShowMaleName()} и {_builder.CountFemaleGender} - {_builder.ShowFemaleName()}" +
+                $".Звук этих животных похож на {_builder.ShowSound()}");
         }
+    }
 
-        private void CreateCell(int index)
+    class AviaryBuilder
+    {
+        public int CountMaleGender { get; private set; }
+        public int CountFemaleGender { get; private set; }
+        private List<Animal> _animals = new List<Animal>();
+
+        public void CreateCell(int index)
         {
             int numberBeasts = 5;
 
             for (int i = 0; i < numberBeasts; i++)
             {
-                _beasts.Add(CreateAnimal(index));
+                _animals.Add(CreateAnimal(index));
 
-                if (_beasts[i].IsMale)
+                if (_animals[i].IsMale)
                 {
-                    _countMaleGender++;
+                    CountMaleGender++;
                 }
                 else
                 {
-                    _countFemaleGender++;
+                    CountFemaleGender++;
                 }
             }
+        }
+
+        public string ShowSound()
+        {
+            return _animals[0].Sound;
+        }
+
+        public string ShowMaleName()
+        {
+            return _animals[0].MaleName;
+        }
+
+        public string ShowFemaleName() 
+        {
+            return _animals[0].FemaleName;
         }
 
         private Animal CreateAnimal(int index)
